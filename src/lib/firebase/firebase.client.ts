@@ -5,12 +5,12 @@ import { initializeApp } from "firebase/app";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyBCFwHcB-6OfTnsJHY6-UxDgz1cKCRlgq4",
-    authDomain: "ocean-cookbook.firebaseapp.com",
-    projectId: "ocean-cookbook",
-    storageBucket: "ocean-cookbook.appspot.com",
-    messagingSenderId: "956768765625",
-    appId: "1:956768765625:web:5f003cb8a7fd2c978afd68"
+    apiKey: import.meta.env.FIREBASE_APIKEY,
+    authDomain: import.meta.env.FIREBASE_AUTHDOMAIN,
+    projectId: import.meta.env.FIREBASE_PROJECTID,
+    storageBucket: import.meta.env.FIREBASE_STORAGEBUCKET,
+    messagingSenderId: import.meta.env.FIREBASE_MESSAGINGSENDERID,
+    appId: import.meta.env.FIREBASE_APPID
 };
 
 // Initialize Firebase
