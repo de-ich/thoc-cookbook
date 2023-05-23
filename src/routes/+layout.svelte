@@ -6,8 +6,8 @@
 	import Header from '../components/Header.svelte';
 	import { page } from '$app/stores';
 	import Loading from '../components/Loading.svelte';
+	import { LOGIN_PAGE_ROUTE } from './routes';
 
-	const LOGIN_PAGE_ROUTE = '/login';
 
 	onMount(() => {
 		const unsubscribe = auth.onAuthStateChanged((user) => {
