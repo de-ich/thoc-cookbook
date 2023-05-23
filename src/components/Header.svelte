@@ -1,9 +1,32 @@
 <script lang="ts">
 	import { authHandlers, authStore } from '../stores/authstore';
+	import {
+		Header,
+		HeaderUtilities,
+		HeaderAction,
+		HeaderGlobalAction,
+		HeaderPanelLinks,
+		HeaderPanelDivider,
+		HeaderPanelLink,
+		SideNav,
+		SideNavItems,
+		SideNavMenu,
+		SideNavMenuItem,
+		SideNavLink,
+		SkipToContent,
+		Content,
+		Grid,
+		Row,
+		Column
+	} from 'carbon-components-svelte';
+	import SettingsAdjust from 'carbon-icons-svelte/lib/SettingsAdjust.svelte';
+	import UserAvatarFilledAlt from 'carbon-icons-svelte/lib/UserAvatarFilledAlt.svelte';
+	import type { User } from 'firebase/auth';
+	import type { Nullable } from 'vitest';
 
-	let email: string | null | undefined = '';
+	let user: Nullable<User> = null;
 	authStore.subscribe((curr) => {
-		email = curr?.currentUser?.email;
+		user = curr?.currentUser;
 	});
 
 	async function logout() {
@@ -13,34 +36,25 @@
 			console.log(err);
 		}
 	}
+
+	let isUserHeaderActionOpen = false;
 </script>
 
-<div class="header">
-	<h1>current user : {email}</h1>
-	<button on:click={logout}>Log out</button>
-</div>
-<div class="separator">
-
-</div>
-
-<style lang="scss">
-	.header {
-		height: 60px;
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-
-		& > * {
-			margin: 0 10px 0 0;
-		}
-
-		h1 {
-			margin-left: auto;
-		}
-	}
-
-    .separator {
-        height: 20px;
-        background-color: lightgrey;
-    }
-</style>
+<Header company="THOC" platformName="Cookbook">
+	<svelte:fragment slot="skip-to-content">
+		<SkipToContent />
+	</svelte:fragment>
+	<HeaderUtilities>
+		<HeaderGlobalAction aria-label="Settings" icon={SettingsAdjust} />
+		<HeaderAction
+			bind:isOpen={isUserHeaderActionOpen}
+			icon={UserAvatarFilledAlt}
+			closeIcon={UserAvatarFilledAlt}
+		>
+			<HeaderPanelLinks>
+				<HeaderPanelDivider>{user?.displayName || user?.email}</HeaderPanelDivider>
+				<HeaderPanelLink on:click={logout}>Logout</HeaderPanelLink>
+			</HeaderPanelLinks>
+		</HeaderAction>
+	</HeaderUtilities>
+</Header>

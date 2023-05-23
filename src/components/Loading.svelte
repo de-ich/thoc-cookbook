@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="mainContainer">Loading...</div>
+    <h3>Loading...</h3>
 </div>
 
 <style>
@@ -10,5 +10,6 @@
         align-content: center;
 		justify-content: center;
 		flex: 1;
+		min-height: 100vh;
 	}
 </style>
