@@ -1,51 +1,57 @@
 <script>
-	import { authHandlers, authStore } from "../stores/authstore";
+	import { authHandlers, authStore } from '../stores/authstore';
+	import Button from '@smui/button';
+	import Textfield from '@smui/textfield';
 
-    let email = '';
-    let password = '';
+	let email = '';
+	let password = '';
 
-    async function handleSubmit () {
-        if (!email || !password) {
-            return;
-        }
+	async function handleSubmit() {
+		if (!email || !password) {
+			return;
+		}
 
-        try {
-            await authHandlers.login(email, password);
-        } catch (err) {
-            console.log(err);
-        }
+		try {
+			await authHandlers.login(email, password);
+		} catch (err) {
+			console.log(err);
+		}
 
-        if ($authStore.currentUser) {
-            window.location.href = '/';
-        }
-    }
+		if ($authStore.currentUser) {
+			window.location.href = '/';
+		}
+	}
 </script>
 
 <div class="container">
-	<h1>Log in</h1>
+	<h3>Log in</h3>
 	<form>
-		<label>
-			<input bind:value={email} type="email" placeholder="Email" />
-		</label>
-		<label>
-			<input bind:value={password} type="password" placeholder="Password" />
-		</label>
-        <button on:click={handleSubmit}>Submit</button>
+		<Textfield bind:value={email} label="Email" required type="email" />
+		<Textfield bind:value={password} label="Password" required type="password" />
+		<Button class="submitButton" on:click={handleSubmit} variant="unelevated">Submit</Button>
 	</form>
 </div>
 
-<style>
+<style lang="scss">
 	.container {
 		display: grid;
 		place-items: center;
 		align-items: center;
-        align-content: center;
+		align-content: center;
 		justify-content: center;
 		flex: 1;
+		min-height: 80vh;
+
+		form {
+			display: flex;
+			flex-direction: column;
+			margin-top: 1rem;
+
+			
+			:global(.submitButton) {
+				margin-top: 1rem;
+			}
+		}
 	}
- 
-    .container form {
-        display: flex;
-        flex-direction: column;
-    }
+
 </style>

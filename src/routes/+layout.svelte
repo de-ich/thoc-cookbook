@@ -1,11 +1,9 @@
 <script lang="ts">
-	import 'carbon-components-svelte/css/white.css';
 	import { onMount } from 'svelte';
 	import { auth } from '../lib/firebase/firebase.client';
 	import { authStore } from '../stores/authstore';
 	import { browser } from '$app/environment';
 	import Header from '../components/Header.svelte';
-	import {Content} from "carbon-components-svelte";
 	import Loading from '../components/Loading.svelte';
 	import { LOGIN_PAGE_ROUTE } from './routes';
 
@@ -33,10 +31,8 @@
 	<Header />
 {/if}
 
-<Content>
-	{#if !$authStore || $authStore.isLoading}
-		<Loading />
-	{:else}
-		<slot />
-	{/if}
-</Content>
+{#if !$authStore || $authStore.isLoading}
+	<Loading />
+{:else}
+	<slot />
+{/if}

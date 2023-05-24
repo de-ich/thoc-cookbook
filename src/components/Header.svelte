@@ -1,32 +1,14 @@
 <script lang="ts">
 	import { authHandlers, authStore } from '../stores/authstore';
-	import {
-		Header,
-		HeaderUtilities,
-		HeaderAction,
-		HeaderGlobalAction,
-		HeaderPanelLinks,
-		HeaderPanelDivider,
-		HeaderPanelLink,
-		SideNav,
-		SideNavItems,
-		SideNavMenu,
-		SideNavMenuItem,
-		SideNavLink,
-		SkipToContent,
-		Content,
-		Grid,
-		Row,
-		Column
-	} from 'carbon-components-svelte';
-	import SettingsAdjust from 'carbon-icons-svelte/lib/SettingsAdjust.svelte';
-	import UserAvatarFilledAlt from 'carbon-icons-svelte/lib/UserAvatarFilledAlt.svelte';
-	import type { User } from 'firebase/auth';
+	import TopAppBar, { Row, Section, Title } from '@smui/top-app-bar';
+	import IconButton from '@smui/icon-button';
+	import Menu from '@smui/menu';
 	import type { Nullable } from 'vitest';
+	import List, { Item, Separator, Text } from '@smui/list';
 
-	let user: Nullable<User> = null;
+	let user: Nullable<string> = null;
 	authStore.subscribe((curr) => {
-		user = curr?.currentUser;
+		user = curr?.currentUser?.displayName || curr?.currentUser?.email;
 	});
 
 	async function logout() {
@@ -37,24 +19,33 @@
 		}
 	}
 
-	let isUserHeaderActionOpen = false;
+	let menu: Menu;
 </script>
 
-<Header company="THOC" platformName="Cookbook">
-	<svelte:fragment slot="skip-to-content">
-		<SkipToContent />
-	</svelte:fragment>
-	<HeaderUtilities>
-		<HeaderGlobalAction aria-label="Settings" icon={SettingsAdjust} />
-		<HeaderAction
-			bind:isOpen={isUserHeaderActionOpen}
-			icon={UserAvatarFilledAlt}
-			closeIcon={UserAvatarFilledAlt}
-		>
-			<HeaderPanelLinks>
-				<HeaderPanelDivider>{user?.displayName || user?.email}</HeaderPanelDivider>
-				<HeaderPanelLink on:click={logout}>Logout</HeaderPanelLink>
-			</HeaderPanelLinks>
-		</HeaderAction>
-	</HeaderUtilities>
-</Header>
+<TopAppBar id="app-bar" variant="static" color="primary">
+	<Row>
+		<Section>
+			<Title>THOC Cookbook</Title>
+		</Section>
+		<Section align="end" toolbar>
+			<div>
+				<IconButton class="material-icons" aria-label="User" on:click={() => menu.setOpen(true)}
+					>person</IconButton
+				>
+			</div>
+			<div id="anchor-right">
+				<Menu bind:this={menu} anchorCorner="BOTTOM_LEFT">
+					<List>
+						<Item disabled>
+							<Text>{user}</Text>
+						</Item>
+						<Separator />
+						<Item>
+							<Text on:click={logout}>Logout</Text>
+						</Item>
+					</List>
+				</Menu>
+			</div>
+		</Section>
+	</Row>
+</TopAppBar>

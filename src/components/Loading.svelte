@@ -10,6 +10,6 @@
         align-content: center;
 		justify-content: center;
 		flex: 1;
-		min-height: 100vh;
+		min-height: 80vh;
 	}
 </style>
