@@ -2,6 +2,7 @@
 
 @use '@material/theme/color-palette';
 
+
 // Svelte Colors!
 @use '@material/theme/index' as theme with ($primary: #ff3e00,
   $secondary: #676778,
@@ -9,6 +10,7 @@
   $background: #fff,
   $error: color-palette.$red-900);
 
+@use '@material/theme/styles';
 @use './Typography';
 
 html,
@@ -17,10 +19,7 @@ body {
   color: theme.$on-surface;
 }
 
-a {
-  color: #40b3ff;
-}
-
-a:visited {
-  color: color.scale(#40b3ff, $lightness: -35%);
+a:link, a:visited, a:hover, a:active {
+  text-decoration: none;
+  color: inherit;
 }

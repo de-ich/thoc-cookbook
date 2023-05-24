@@ -34,5 +34,15 @@
 {#if !$authStore || $authStore.isLoading}
 	<Loading />
 {:else}
-	<slot />
+	<div class="mainContainer">
+		<slot />
+	</div>
 {/if}
+
+<style lang="scss">
+	.mainContainer {
+		margin-left: 2rem;
+		margin-right: 2rem;
+		margin-top: 1rem;
+	}
+</style>

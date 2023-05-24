@@ -2,23 +2,28 @@
 	import type { Recipe } from '$lib/database/Recipe';
 	import { db } from '$lib/firebase/firebase.client';
 	import { collection, getDocs, query } from 'firebase/firestore';
+	import RecipeCard from '../../components/RecipeCard.svelte';
 
-	interface RecipeDictionary {
-		[Key: number]: Recipe;
-	}
-
-	let recipes: RecipeDictionary = {};
+	let recipes: Recipe[] = [];
 
 	const recipesRef = collection(db, 'recipes');
 	getDocs(query(recipesRef)).then((querySnapshot) => {
-		recipes = Object.fromEntries(querySnapshot.docs.map((doc) => [doc.id, doc.data() as Recipe]));
+		recipes = querySnapshot.docs.map((doc) => doc.data() as Recipe);
 	});
 </script>
 
-<h1>{Object.keys(recipes).length} Rezepte</h1>
-
-<ul>
-	{#each Object.entries(recipes) as recipeEntry}
-		<li><a href="/recipes/{recipeEntry[0]}">{recipeEntry[1].name}</a></li>
+<div class="recipeList">
+	<h5>{recipes.length} Rezepte im Kochbuch</h5>
+	{#each recipes as recipe}
+		<RecipeCard recipe={recipe} />
 	{/each}
-</ul>
+</div>
+
+<style lang="scss">
+	.recipeList {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+</style>
