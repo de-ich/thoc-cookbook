@@ -8,22 +8,55 @@
 
 <h3>{recipe.name}</h3>
 
-<img src={recipe.image} alt="recipeImage" />
+{#if (recipe.images || []).length > 0}
+	<div class="imagesContainer">
+		<img src={recipe.images[0]} alt="recipeImage" />
+	</div>
+{/if}
 
-<br />
 <h5>Zutaten:</h5>
 <ul>
 	{#each recipe.ingredients as ingredient}
-		<li>{ingredient.count || ''}{ingredient.unit || ''}{ingredient.count || ingredient.unit ? ' ' : ''}{ingredient.name}</li>
+		<li>
+			{ingredient.count || ''}{ingredient.unit || ''}{ingredient.count || ingredient.unit
+				? ' '
+				: ''}{ingredient.name}
+		</li>
 	{/each}
 </ul>
 
-<br />
-<h5>Zubereitung:</h5>
-{recipe.instructions}
+<div class="instructionsContainer">
+	<h5>Zubereitung:</h5>
+	{#each recipe.instructions as instruction}
+		<div class="instructionContainer">
+			{instruction}
+		</div>
+	{/each}
+</div>
 
 <style lang="scss">
 	img {
 		max-height: 10rem;
+		border-radius: 0.5rem;
+	}
+
+	h5 {
+		margin-top: 2rem;
+		margin-bottom: 0.5rem;
+	}
+
+	ul {
+		list-style-position: inside;
+	}
+
+	.imagesContainer {
+		margin-top: 1rem;
+	}
+
+	.instructionsContainer {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		margin-bottom: 2rem;
 	}
 </style>

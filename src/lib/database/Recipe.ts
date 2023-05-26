@@ -11,17 +11,17 @@
 
 export interface Recipe {
     id:             string;
-    image:          string;
+    images:         string[];
     ingredients:    Ingredient[];
     name:           string;
-    instructions:   string;
+    instructions:   string[];
     addedBy:        string;
     addedTimestamp: string;
-    sourceUrl:      string;
-    prepTime:       string;
-    cookTime:       string;
-    totalTime:      string;
-    recipeYield:    number;
+    sourceUrl?:     string;
+    prepTime?:      string;
+    cookTime?:      string;
+    totalTime?:     string;
+    recipeYield?:   number;
     keywords:       string[];
     comments:       Comment[];
 }
@@ -205,7 +205,7 @@ function r(name: string) {
 const typeMap: any = {
     "Recipe": o([
         { json: "id", js: "id", typ: "" },
-        { json: "image", js: "image", typ: "" },
+        { json: "images", js: "images", typ: "" },
         { json: "ingredients", js: "ingredients", typ: a(r("Ingredient")) },
         { json: "name", js: "name", typ: "" },
         { json: "instructions", js: "instructions", typ: "" },
