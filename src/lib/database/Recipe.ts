@@ -1,5 +1,7 @@
 // created via https://app.quicktype.io/?l=ts
 
+import type { Ingredient } from "parse-ingredient";
+
 // To parse this data:
 //
 //   import { Convert, Recipe } from "./file";
@@ -9,33 +11,25 @@
 // These functions will throw an error if the JSON doesn't
 // match the expected interface, even if the JSON is valid.
 
-export interface Recipe {
-    id:             string;
-    images:         string[];
-    ingredients:    Ingredient[];
-    name:           string;
-    instructions:   string[];
-    addedBy:        string;
+export interface RecipePreview {
+    images: (string | File)[];
+    ingredients: Ingredient[];
+    name: string;
+    instructions: string[];
+    sourceUrl?: string;
+    prepTime?: number;
+    cookTime?: number;
+    totalTime?: number;
+    recipeYield?: number;
+    keywords: string[];
+    comment?: string;
+}
+
+export interface Recipe extends RecipePreview {
+    id: string;
+    addedBy: string;
     addedTimestamp: string;
-    sourceUrl?:     string;
-    prepTime?:      string;
-    cookTime?:      string;
-    totalTime?:     string;
-    recipeYield?:   number;
-    keywords:       string[];
-    comments:       Comment[];
-}
-
-export interface Comment {
-    author:    string;
-    timestamp: string;
-    text:      string;
-}
-
-export interface Ingredient {
-    count?: number;
-    name:   string;
-    unit?:  string;
+    
 }
 
 // Converts JSON strings to/from your types
@@ -45,8 +39,16 @@ export class Convert {
         return cast(JSON.parse(json), r("Recipe"));
     }
 
+    public static toRecipePreview(json: string): RecipePreview {
+        return cast(JSON.parse(json), r("RecipePreview"));
+    }
+
     public static recipeToJson(value: Recipe): string {
         return JSON.stringify(uncast(value, r("Recipe")), null, 2);
+    }
+
+    public static recipePreviewToJson(value: RecipePreview): string {
+        return JSON.stringify(uncast(value, r("RecipePreview")), null, 2);
     }
 }
 
@@ -102,7 +104,7 @@ function transform(val: any, typ: any, getProps: any, key: any = '', parent: any
             const typ = typs[i];
             try {
                 return transform(val, typ, getProps);
-            } catch (_) {}
+            } catch (_) { }
         }
         return invalidValue(typs, val, key, parent);
     }
@@ -161,9 +163,9 @@ function transform(val: any, typ: any, getProps: any, key: any = '', parent: any
     if (Array.isArray(typ)) return transformEnum(typ, val);
     if (typeof typ === "object") {
         return typ.hasOwnProperty("unionMembers") ? transformUnion(typ.unionMembers, val)
-            : typ.hasOwnProperty("arrayItems")    ? transformArray(typ.arrayItems, val)
-            : typ.hasOwnProperty("props")         ? transformObject(getProps(typ), typ.additional, val)
-            : invalidValue(typ, val, key, parent);
+            : typ.hasOwnProperty("arrayItems") ? transformArray(typ.arrayItems, val)
+                : typ.hasOwnProperty("props") ? transformObject(getProps(typ), typ.additional, val)
+                    : invalidValue(typ, val, key, parent);
     }
     // Numbers can be parsed by Date but shouldn't be.
     if (typ === Date && typeof val !== "number") return transformDate(val);
@@ -194,10 +196,6 @@ function o(props: any[], additional: any) {
     return { props, additional };
 }
 
-function m(additional: any) {
-    return { props: [], additional };
-}
-
 function r(name: string) {
     return { ref: name };
 }
@@ -205,24 +203,19 @@ function r(name: string) {
 const typeMap: any = {
     "Recipe": o([
         { json: "id", js: "id", typ: "" },
-        { json: "images", js: "images", typ: "" },
+        { json: "images", js: "images", typ: a(u("", r("File"))) },
         { json: "ingredients", js: "ingredients", typ: a(r("Ingredient")) },
         { json: "name", js: "name", typ: "" },
         { json: "instructions", js: "instructions", typ: "" },
         { json: "addedBy", js: "addedBy", typ: "" },
         { json: "addedTimestamp", js: "addedTimestamp", typ: "" },
         { json: "sourceUrl", js: "sourceUrl", typ: "" },
-        { json: "prepTime", js: "prepTime", typ: "" },
-        { json: "cookTime", js: "cookTime", typ: "" },
-        { json: "totalTime", js: "totalTime", typ: "" },
+        { json: "prepTime", js: "prepTime", typ: 0 },
+        { json: "cookTime", js: "cookTime", typ: 0 },
+        { json: "totalTime", js: "totalTime", typ: 0 },
         { json: "recipeYield", js: "recipeYield", typ: 0 },
         { json: "keywords", js: "keywords", typ: a("") },
-        { json: "comments", js: "comments", typ: a(r("Comment")) },
-    ], false),
-    "Comment": o([
-        { json: "author", js: "author", typ: "" },
-        { json: "timestamp", js: "timestamp", typ: "" },
-        { json: "text", js: "text", typ: "" },
+        { json: "comment", js: "comment", typ: "" },
     ], false),
     "Ingredient": o([
         { json: "count", js: "count", typ: u(undefined, 0) },

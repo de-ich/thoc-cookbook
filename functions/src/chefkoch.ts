@@ -1,9 +1,12 @@
 import { onRequest } from "firebase-functions/v1/https";
+import { Request, Response } from "firebase-functions"
 
-const chefkochApiBaseUrl  = 'https://api.chefkoch.de/v2/';
+const chefkochApiBaseUrl = 'https://api.chefkoch.de/v2/';
 const chefkochApiRecipeBaseUrl = chefkochApiBaseUrl + 'recipes/';
 
 export const fetchRecipe = onRequest(async (req, res) => {
+
+    allowCors(req, res);
 
     const recipeId = req.query.recipeId as string;
     const response = await fetch(chefkochApiRecipeBaseUrl + recipeId);
@@ -25,6 +28,17 @@ export const fetchRecipe = onRequest(async (req, res) => {
     }
 });
 
+function allowCors(req: Request, res: Response) {
+    res.set('Access-Control-Allow-Origin', '*');
+
+    if (req.method === 'OPTIONS') {
+        res.set('Access-Control-Allow-Methods', 'GET');
+        res.set('Access-Control-Max-Age', '3600');
+        res.status(204).send('');
+        return;
+    }
+}
+
 
 const convertToPartialRecipe = (chefkochRecipe: any): any => {
     const recipe: any = {};
@@ -33,7 +47,7 @@ const convertToPartialRecipe = (chefkochRecipe: any): any => {
         throw new Error('Unable to parse recipe name from chefkoch recipe!');
     }
     recipe.name = chefkochRecipe.title;
-    recipe.sourceUrl = chefkochRecipe.siteUrl;
+    recipe.sourceUrl = chefkochRecipe.siteUrl.replaceAll('\\/', '/');
     recipe.sourceId = chefkochRecipe.id;
     recipe.prepTime = chefkochRecipe.preparationTIme;
     recipe.cookTime = chefkochRecipe.cookingTime;
@@ -54,6 +68,13 @@ const convertToPartialRecipe = (chefkochRecipe: any): any => {
     recipe.ingredients = ingredients;
 
     recipe.instructions = chefkochRecipe.instructions.split("\n\n");
+
+    recipe.comments = [];
+    recipe.keywords = [];
+    recipe.images = [];
+
+    const imageUrl = chefkochRecipe.previewImageUrlTemplate ? chefkochRecipe.previewImageUrlTemplate.replaceAll('\\/', '/').replace('<format>', 'crop-960x540') : undefined;
+    recipe.images.push(imageUrl);
 
     return recipe;
 }
