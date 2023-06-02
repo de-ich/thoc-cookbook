@@ -1,5 +1,6 @@
 import { onRequest } from "firebase-functions/v1/https";
 import { Request, Response } from "firebase-functions"
+import { Ingredient, parseIngredient } from "parse-ingredient";
 
 const chefkochApiBaseUrl = 'https://api.chefkoch.de/v2/';
 const chefkochApiRecipeBaseUrl = chefkochApiBaseUrl + 'recipes/';
@@ -19,7 +20,6 @@ export const fetchRecipe = onRequest(async (req, res) => {
 
     try {
         const chefkochRecipe = await response.json();
-        console.log(chefkochRecipe);
         res.json(convertToPartialRecipe(chefkochRecipe));
 
     } catch (error) {
@@ -55,15 +55,17 @@ const convertToPartialRecipe = (chefkochRecipe: any): any => {
     recipe.totalTime = chefkochRecipe.totalTime;
     recipe.recipeYield = chefkochRecipe.servings;
 
-    const ingredients: any[] = []
+    const ingredients: Ingredient[] = []
     for (const ingredientGroup of chefkochRecipe.ingredientGroups) {
         for (const chefkochIngredient of ingredientGroup.ingredients) {
-            const ingredient: any = {
-                name: chefkochIngredient.name,
-                count: chefkochIngredient.amount,
-                unit: chefkochIngredient.unit
-            };
-            ingredients.push(ingredient);
+            let ingredientString;
+            try {
+                ingredientString = [chefkochIngredient.amount || '', chefkochIngredient.unit || '', chefkochIngredient.name].join(' ');
+                const ingredient = parseIngredient(ingredientString);
+                ingredients.push(...ingredient);
+            } catch (err) {
+                throw new Error('Unable to parse ingredient from chefoch recipe (ingredient string was "' + ingredientString + '"!');
+            }
         }
     }
     recipe.ingredients = ingredients;
