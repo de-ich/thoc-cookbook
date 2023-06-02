@@ -1,14 +1,30 @@
 <script lang="ts">
 	import type { Recipe } from '$lib/database/Recipe';
+	import type { Ingredient } from 'parse-ingredient';
 	/** @type {import('./$types').PageData} */
 	export let data: any;
 
 	let recipe: Recipe = data.recipe;
+
+	const getIngredientString = (ingredient: Ingredient): string => {
+		let ret =
+			(ingredient.quantity || '') + (ingredient.quantity2 ? '-' + ingredient.quantity2 : '');
+
+		if (ingredient.unitOfMeasure) {
+			ret += ingredient.unitOfMeasure;
+		}
+
+		if (ingredient.description) {
+			ret += ' ' + ingredient.description;
+		}
+
+		return ret.trim();
+	};
 </script>
 
 <h3>{recipe.name}</h3>
 
-{#if (recipe.images || []).length > 0}
+{#if (recipe.images || []).length > 0 && typeof recipe.images[0] === 'string'}
 	<div class="imagesContainer">
 		<img src={recipe.images[0]} alt="recipeImage" />
 	</div>
@@ -18,9 +34,7 @@
 <ul>
 	{#each recipe.ingredients as ingredient}
 		<li>
-			{ingredient.count || ''}{ingredient.unit || ''}{ingredient.count || ingredient.unit
-				? ' '
-				: ''}{ingredient.name}
+			{getIngredientString(ingredient)}
 		</li>
 	{/each}
 </ul>

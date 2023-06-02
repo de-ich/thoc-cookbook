@@ -37,7 +37,6 @@
 		(value: RecipePreview) =>
 			value.ingredients
 				.map((ingredient) => {
-					console.log(ingredient);
 					let ret =
 						(ingredient.quantity || '') + (ingredient.quantity2 ? '-' + ingredient.quantity2 : '');
 
