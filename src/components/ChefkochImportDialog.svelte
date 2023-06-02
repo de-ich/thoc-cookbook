@@ -16,7 +16,7 @@
 		fetchRecipe(recipeUrl).then((recipePreview) => {
 			recipePreviewStore.set(recipePreview);
 			goto('/addrecipe');
-		});
+		}).catch((error) => console.log(error));
 	}
 </script>
 
