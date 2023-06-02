@@ -13,13 +13,15 @@
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
 		"prepare": "npm run smui-theme-light",
-		"smui-theme-light": "smui-theme compile static/smui.css -i src/theme"
+		"smui-theme-light": "smui-theme compile static/smui.css -i src/theme",
+		"start-emulators": "firebase emulators:start"
 	},
 	"devDependencies": {
 		"@material/typography": "^14.0.0",
 		"@playwright/test": "^1.28.1",
 		"@smui/button": "^7.0.0-beta.8",
 		"@smui/common": "^7.0.0-beta.8",
+		"@smui/dialog": "^7.0.0-beta.8",
 		"@smui/icon-button": "^7.0.0-beta.8",
 		"@smui/list": "^7.0.0-beta.8",
 		"@smui/menu": "^7.0.0-beta.8",
@@ -28,6 +30,7 @@
 		"@smui/top-app-bar": "^7.0.0-beta.8",
 		"@sveltejs/adapter-auto": "^2.0.1",
 		"@sveltejs/kit": "^1.16.3",
+		"@sveltejs/vite-plugin-svelte": "^2.4.1",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
 		"eslint": "^8.28.0",
@@ -38,14 +41,18 @@
 		"sass": "^1.62.1",
 		"smui-theme": "^7.0.0-beta.8",
 		"svelte": "^3.54.0",
+		"svelte-adapter-firebase": "^0.15.0",
 		"svelte-check": "^3.3.2",
 		"tslib": "^2.4.1",
 		"typescript": "^4.9.3",
-		"vite": "^4.0.0",
+		"vite": "^4.3.2",
 		"vitest": "^0.25.3"
 	},
 	"type": "module",
 	"dependencies": {
-		"firebase": "^9.22.0"
+		"firebase": "^9.22.0",
+		"firebase-admin": "^11.8.0",
+		"firebase-functions": "^4.4.0",
+		"parse-ingredient": "^0.6.0"
 	}
 }

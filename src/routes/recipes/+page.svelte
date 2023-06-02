@@ -9,11 +9,11 @@
 	const recipesRef = collection(db, 'recipes');
 	getDocs(query(recipesRef)).then((querySnapshot) => {
 		recipes = querySnapshot.docs.map((doc) => doc.data() as Recipe);
-	});
+	});	
 </script>
 
 <div class="recipeList">
-	<h5>{recipes.length} Rezepte im Kochbuch</h5>
+	<h5>Alle Rezepte</h5>
 	{#each recipes as recipe}
 		<RecipeCard recipe={recipe} />
 	{/each}
