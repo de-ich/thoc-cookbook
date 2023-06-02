@@ -5,6 +5,8 @@
 	import Menu from '@smui/menu';
 	import type { Nullable } from 'vitest';
 	import List, { Item, Separator, Text } from '@smui/list';
+	import chefkochLogo from '$lib/assets/chefkoch-logo.svg';
+	import ChefkochImportDialog from './ChefkochImportDialog.svelte';
 
 	let user: Nullable<string> = null;
 	authStore.subscribe((curr) => {
@@ -19,7 +21,10 @@
 		}
 	}
 
-	let menu: Menu;
+	let userMenu: Menu;
+	let importMenu: Menu;
+	let showChefkochImportDialog = false;
+
 </script>
 
 <TopAppBar id="app-bar" variant="static" color="primary">
@@ -29,19 +34,37 @@
 		</Section>
 		<Section align="end" toolbar>
 			<div>
-				<IconButton class="material-icons" aria-label="User" on:click={() => menu.setOpen(true)}
+				<Menu bind:this={importMenu} anchorCorner="BOTTOM_LEFT">
+					<List>
+						<Item disabled>
+							<Text>Rezept importieren</Text>
+						</Item>
+						<Separator />
+						<Item on:SMUI:action={() => (showChefkochImportDialog = true)}>
+							<img class="chefkoch-icon mdc-button__icon" src={chefkochLogo} alt="chefkoch-logo" />
+							<Text>chefkoch.de</Text>
+						</Item>
+					</List>
+				</Menu>
+				<IconButton
+					class="material-icons"
+					aria-label="Import"
+					on:click={() => importMenu.setOpen(true)}>input</IconButton
+				>
+
+				<IconButton class="material-icons" aria-label="User" on:click={() => userMenu.setOpen(true)}
 					>person</IconButton
 				>
 			</div>
 			<div id="anchor-right">
-				<Menu bind:this={menu} anchorCorner="BOTTOM_LEFT">
+				<Menu bind:this={userMenu} anchorCorner="BOTTOM_LEFT">
 					<List>
 						<Item disabled>
 							<Text>{user}</Text>
 						</Item>
 						<Separator />
-						<Item>
-							<Text on:click={logout}>Logout</Text>
+						<Item on:SMUI:action={logout}>
+							<Text>Logout</Text>
 						</Item>
 					</List>
 				</Menu>
@@ -49,3 +72,5 @@
 		</Section>
 	</Row>
 </TopAppBar>
+
+<ChefkochImportDialog bind:open={showChefkochImportDialog} />
