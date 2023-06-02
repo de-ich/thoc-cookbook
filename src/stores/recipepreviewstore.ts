@@ -9,13 +9,13 @@ const getEmptyRecipePreview = () => {
         name: '',
         instructions: [],
         sourceUrl: undefined,
-        sourceId: undefined,
         prepTime: undefined,
         cookTime: undefined,
+        restingTime: undefined,
         totalTime: undefined,
         recipeYield: undefined,
         keywords: [],
-        comments: []
+        comment: undefined
     };
 }
 
@@ -28,7 +28,7 @@ export const transformedRecipePreviewStore = (inTransformer?: any, outTransforme
 
     const { subscribe } = derived(recipePreviewStore, $recipePreviewStore => transformIn($recipePreviewStore));
     const set = (value: any) => recipePreviewStore.set(transformOut(value));
-    
+
     return { subscribe, set };
 };
 

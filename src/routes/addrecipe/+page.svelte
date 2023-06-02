@@ -55,7 +55,7 @@
 		(value: string) => {
 			return {
 				...recipePreview,
-				ingredients: value.split('\n').map((ingredient) => parseIngredient(ingredient))
+				ingredients: parseIngredient(value)
 			};
 		}
 	);
@@ -70,8 +70,8 @@
 		(value: string) => {
 			const existingImageFiles = recipePreview.images.filter((image) => typeof image !== 'string');
 			const newImages: (string | File)[] = [];
-			newImages.concat(existingImageFiles);
-			newImages.concat(value.split('\n').map((imageUrl) => imageUrl.trim()));
+			newImages.push(...existingImageFiles);
+			newImages.push(...value.split('\n').map((imageUrl) => imageUrl.trim()));
 			return { ...recipePreview, images: newImages };
 		}
 	);
@@ -80,8 +80,8 @@
 		(value: File[]) => {
 			const existingImageUrl = recipePreview.images.filter((image) => typeof image === 'string');
 			const newImages: (string | File)[] = [];
-			newImages.concat(existingImageUrl);
-			newImages.concat(value);
+			newImages.push(...existingImageUrl);
+			newImages.push(...value);
 			return { ...recipePreview, images: newImages };
 		}
 	);
