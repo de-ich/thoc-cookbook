@@ -1,5 +1,6 @@
 // created via https://app.quicktype.io/?l=ts
 
+import type { FieldValue } from "firebase/firestore";
 import type { Ingredient } from "parse-ingredient";
 
 // To parse this data:
@@ -29,8 +30,8 @@ export interface RecipePreview {
 export interface Recipe extends RecipePreview {
     id: string;
     addedBy: string;
-    addedTimestamp: string;
-    
+    addedTimestamp: FieldValue;
+
 }
 
 // Converts JSON strings to/from your types
