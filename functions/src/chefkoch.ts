@@ -49,7 +49,8 @@ const convertToPartialRecipe = (chefkochRecipe: any): any => {
     recipe.name = chefkochRecipe.title;
     recipe.sourceUrl = chefkochRecipe.siteUrl.replaceAll('\\/', '/');
     recipe.sourceId = chefkochRecipe.id;
-    recipe.prepTime = chefkochRecipe.preparationTIme;
+    recipe.prepTime = chefkochRecipe.preparationTime;
+    recipe.restingTime = chefkochRecipe.restingTime;
     recipe.cookTime = chefkochRecipe.cookingTime;
     recipe.totalTime = chefkochRecipe.totalTime;
     recipe.recipeYield = chefkochRecipe.servings;

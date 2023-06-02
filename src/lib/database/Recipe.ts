@@ -19,6 +19,7 @@ export interface RecipePreview {
     sourceUrl?: string;
     prepTime?: number;
     cookTime?: number;
+    restingTime?: number;
     totalTime?: number;
     recipeYield?: number;
     keywords: string[];
@@ -212,14 +213,10 @@ const typeMap: any = {
         { json: "sourceUrl", js: "sourceUrl", typ: "" },
         { json: "prepTime", js: "prepTime", typ: 0 },
         { json: "cookTime", js: "cookTime", typ: 0 },
+        { json: "restingTime", js: "restingTime", typ: 0 },
         { json: "totalTime", js: "totalTime", typ: 0 },
         { json: "recipeYield", js: "recipeYield", typ: 0 },
         { json: "keywords", js: "keywords", typ: a("") },
         { json: "comment", js: "comment", typ: "" },
-    ], false),
-    "Ingredient": o([
-        { json: "count", js: "count", typ: u(undefined, 0) },
-        { json: "name", js: "name", typ: "" },
-        { json: "unit", js: "unit", typ: u(undefined, "") },
     ], false),
 };
