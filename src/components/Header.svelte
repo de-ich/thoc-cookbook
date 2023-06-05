@@ -7,6 +7,8 @@
 	import List, { Item, Separator, Text } from '@smui/list';
 	import chefkochLogo from '$lib/assets/chefkoch-logo.svg';
 	import ChefkochImportDialog from './ChefkochImportDialog.svelte';
+	import { clearRecipePreview } from '../stores/recipepreviewstore';
+	import { goto } from '$app/navigation';
 
 	let user: Nullable<string> = null;
 	authStore.subscribe((curr) => {
@@ -24,7 +26,6 @@
 	let userMenu: Menu;
 	let importMenu: Menu;
 	let showChefkochImportDialog = false;
-
 </script>
 
 <TopAppBar id="app-bar" variant="static" color="primary">
@@ -46,6 +47,14 @@
 						</Item>
 					</List>
 				</Menu>
+				<IconButton
+					class="material-icons"
+					aria-label="Import"
+					on:click={() => {
+						clearRecipePreview();
+						goto('/addrecipe');
+					}}>add</IconButton
+				>
 				<IconButton
 					class="material-icons"
 					aria-label="Import"
