@@ -1,23 +1,8 @@
-import { derived, writable, type Writable } from 'svelte/store';
-import type { RecipePreview } from '$lib/database/Recipe';
+import { derived, writable } from 'svelte/store';
+import { getEmptyRecipePreview, type RecipePreview } from '$lib/database/Recipe';
 
 
-const getEmptyRecipePreview = () => {
-    return {
-        images: [],
-        ingredients: [],
-        name: '',
-        instructions: [],
-        sourceUrl: undefined,
-        prepTime: undefined,
-        cookTime: undefined,
-        restingTime: undefined,
-        totalTime: undefined,
-        recipeYield: undefined,
-        keywords: [],
-        comment: undefined
-    };
-}
+
 
 export const recipePreviewStore = writable<RecipePreview>(getEmptyRecipePreview());
 

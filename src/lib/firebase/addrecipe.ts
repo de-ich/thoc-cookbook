@@ -1,7 +1,7 @@
 
 import { collection, setDoc, doc, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "./firebase.client";
-import type { Recipe, RecipePreview } from "$lib/database/Recipe";
+import { type Recipe, type RecipePreview, getEmptyRecipePreview } from "$lib/database/Recipe";
 
 export const addRecipe = async (recipePreview: RecipePreview): Promise<string> => {
 
@@ -14,6 +14,7 @@ export const addRecipe = async (recipePreview: RecipePreview): Promise<string> =
     const newId = docRef.id;
 
     const recipe: Recipe = {
+        ...getEmptyRecipePreview(),
         ...recipePreview,
         id: newId,
         addedTimestamp: serverTimestamp(),

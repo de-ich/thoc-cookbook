@@ -17,14 +17,31 @@ export interface RecipePreview {
     ingredients: Ingredient[];
     name: string;
     instructions: string[];
-    sourceUrl?: string;
-    prepTime?: number;
-    cookTime?: number;
-    restingTime?: number;
-    totalTime?: number;
-    recipeYield?: number;
+    sourceUrl: string | null;
+    prepTime: number | null;
+    cookTime: number | null;
+    restingTime: number | null;
+    totalTime: number | null;
+    recipeYield: number | null;
     keywords: string[];
-    comment?: string;
+    comment: string | null;
+}
+
+export const getEmptyRecipePreview = (): RecipePreview => {
+    return {
+        images: [],
+        ingredients: [],
+        name: '',
+        instructions: [],
+        sourceUrl: null,
+        prepTime: null,
+        cookTime: null,
+        restingTime: null,
+        totalTime: null,
+        recipeYield: null,
+        keywords: [],
+        comment: null
+    };
 }
 
 export interface Recipe extends RecipePreview {
