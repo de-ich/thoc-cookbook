@@ -1,5 +1,7 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import type { Recipe } from '$lib/database/Recipe';
+	import IconButton from '@smui/icon-button';
 	import type { Ingredient } from 'parse-ingredient';
 	/** @type {import('./$types').PageData} */
 	export let data: any;
@@ -23,6 +25,11 @@
 </script>
 
 <h3>{recipe.name}</h3>
+<IconButton
+	class="material-icons"
+	aria-label="Edit"
+	on:click={() => goto(`/recipes/${recipe.id}/edit`)}>edit</IconButton
+>
 
 {#if (recipe.images || []).length > 0 && typeof recipe.images[0] === 'string'}
 	<div class="imagesContainer">

@@ -3,7 +3,7 @@
 	import { onDestroy } from 'svelte';
 	import type { RecipePreview } from '$lib/database/Recipe';
 	import Button from '@smui/button';
-	import { addRecipe } from '$lib/firebase/addrecipe';
+	import { addRecipe } from '$lib/firebase/recipe';
 	import { goto } from '$app/navigation';
 	import RecipeEdit from '../../components/RecipeEdit.svelte';
 

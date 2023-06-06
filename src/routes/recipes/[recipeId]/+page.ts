@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
 import type { Recipe } from '$lib/database/Recipe';
 import { db } from '$lib/firebase/firebase.client';
-import { collection, doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ params }) {

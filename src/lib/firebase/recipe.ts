@@ -29,3 +29,21 @@ export const addRecipe = async (recipePreview: RecipePreview): Promise<string> =
     });
 
 }
+
+export const updateRecipe = async (recipe: Recipe): Promise<string> => {
+
+    if (!auth.currentUser) {
+        throw Error('Unable to get current user id!')
+    }
+
+    const collectionRef = collection(db, "recipes");
+    const docRef = doc(collectionRef, recipe.id);
+
+    return setDoc(docRef, recipe).then(() => {
+        console.log("Document update with ID: ", recipe.id);
+        return recipe.id;
+    }).catch(function (error) {
+        throw Error("Error adding document: ", error);
+    });
+
+}
