@@ -1,13 +1,10 @@
-import { onRequest } from "firebase-functions/v1/https";
-import { Request, Response } from "firebase-functions"
+import { onRequest } from "firebase-functions/v2/https";
 import { Ingredient, parseIngredient } from "parse-ingredient";
 
 const chefkochApiBaseUrl = 'https://api.chefkoch.de/v2/';
 const chefkochApiRecipeBaseUrl = chefkochApiBaseUrl + 'recipes/';
 
-export const fetchRecipe = onRequest(async (req, res) => {
-
-    allowCors(req, res);
+export const fetchRecipe = onRequest({cors: true}, async (req, res) => {
 
     const recipeId = req.query.recipeId as string;
     const response = await fetch(chefkochApiRecipeBaseUrl + recipeId);
@@ -27,18 +24,6 @@ export const fetchRecipe = onRequest(async (req, res) => {
         res.send((error as Error)?.message || 'Unable to parse recipe information from response from chefkoch.de!');
     }
 });
-
-function allowCors(req: Request, res: Response) {
-    res.set('Access-Control-Allow-Origin', '*');
-
-    if (req.method === 'OPTIONS') {
-        res.set('Access-Control-Allow-Methods', 'GET');
-        res.set('Access-Control-Max-Age', '3600');
-        res.status(204).send('');
-        return;
-    }
-}
-
 
 const convertToPartialRecipe = (chefkochRecipe: any): any => {
     const recipe: any = {};
