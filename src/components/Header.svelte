@@ -31,7 +31,7 @@
 <TopAppBar id="app-bar" variant="static" color="primary">
 	<Row>
 		<Section>
-			<Title>THOC Cookbook</Title>
+			<Title on:click={() => goto('/')}>THOC Cookbook</Title>
 		</Section>
 		<Section align="end" toolbar>
 			<div>
@@ -83,3 +83,9 @@
 </TopAppBar>
 
 <ChefkochImportDialog bind:open={showChefkochImportDialog} />
+
+<style lang="scss">
+	:global(.mdc-top-app-bar__title:hover) {
+		cursor: pointer;
+	}
+</style>
