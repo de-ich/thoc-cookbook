@@ -1,31 +1,29 @@
-import { onRequest } from "firebase-functions/v2/https";
+import { HttpsError, onCall } from "firebase-functions/v2/https";
 import { Ingredient, parseIngredient } from "parse-ingredient";
+import { RecipePreview } from "./database/Recipe";
 
 const chefkochApiBaseUrl = 'https://api.chefkoch.de/v2/';
 const chefkochApiRecipeBaseUrl = chefkochApiBaseUrl + 'recipes/';
 
-export const fetchRecipe = onRequest({cors: true}, async (req, res) => {
+export const fetchRecipe = onCall(async (request) => {
 
-    const recipeId = req.query.recipeId as string;
+    const recipeId = request.data.recipeId as string;
     const response = await fetch(chefkochApiRecipeBaseUrl + recipeId);
 
     if (!response.ok) {
-        res.statusCode = response.status;
-        res.send(`Unable to retrieve recipe with ID ${recipeId} from chefkoch.de! The following error occurred: ${response.statusText}`);
-        return;
+        throw new HttpsError("not-found", `Unable to retrieve recipe with ID ${recipeId} from chefkoch.de! The following error occurred: ${response.statusText}`);
     }
 
     try {
         const chefkochRecipe = await response.json();
-        res.json(convertToPartialRecipe(chefkochRecipe));
+        return convertToPartialRecipe(chefkochRecipe);
 
     } catch (error) {
-        res.statusCode = 500;
-        res.send((error as Error)?.message || 'Unable to parse recipe information from response from chefkoch.de!');
+        throw new HttpsError("internal", (error as Error)?.message || 'Unable to parse recipe information from response from chefkoch.de!');
     }
 });
 
-const convertToPartialRecipe = (chefkochRecipe: any): any => {
+const convertToPartialRecipe = (chefkochRecipe: any): RecipePreview => {
     const recipe: any = {};
 
     if (!chefkochRecipe.title) {

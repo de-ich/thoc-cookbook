@@ -1,6 +1,9 @@
 import type { RecipePreview } from '$lib/database/Recipe';
+import { httpsCallable } from '$lib/firebase/firebase.client';
 
 const chefkochRecipeUrlRegex = new RegExp('https://www.chefkoch.de/rezepte/([0-9]+)(/[.]*)?');
+
+const fetchRecipeCallable = httpsCallable('fetchRecipe');
 
 export const fetchRecipe = async (recipeIdOrUrl: string): Promise<RecipePreview> => {
 
@@ -17,5 +20,5 @@ export const fetchRecipe = async (recipeIdOrUrl: string): Promise<RecipePreview>
         recipeId = match[1];
     }
 
-    return await fetch('http://127.0.0.1:5001/thoc-cookbook/us-central1/fetchRecipe?recipeId=' + recipeId).then((response: Response) => response.json()).then((json: any) => json as RecipePreview);
+    return fetchRecipeCallable({ recipeId: recipeId }).then(result => result.data as RecipePreview);
 }
