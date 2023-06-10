@@ -9,8 +9,9 @@
 
 import { initializeApp } from "firebase-admin/app";
 import { fetchRecipe } from "./chefkoch";
+import { downloadFile } from "./download";
 
 initializeApp();
 
-export { fetchRecipe };
+export { fetchRecipe, downloadFile };
 
