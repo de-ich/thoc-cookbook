@@ -8,10 +8,10 @@
  */
 
 import { initializeApp } from "firebase-admin/app";
-import { fetchRecipe } from "./chefkoch";
+import { fetchRecipe, fetchRecipesFromAllUserCollections } from "./chefkoch";
 import { downloadFile } from "./download";
 
 initializeApp();
 
-export { fetchRecipe, downloadFile };
+export { fetchRecipe, fetchRecipesFromAllUserCollections, downloadFile };
 

@@ -8,7 +8,16 @@ const chefkochApiRecipeBaseUrl = chefkochApiBaseUrl + 'recipes/';
 export const fetchRecipe = onCall(async (request) => {
 
     const recipeId = request.data.recipeId as string;
-    const response = await fetch(chefkochApiRecipeBaseUrl + recipeId);
+    return internalFetchRecipe(recipeId);
+});
+
+const internalFetchRecipe = async (recipeId: string, chefkochCookie?: string) => {
+
+    const headers: HeadersInit = chefkochCookie ? { "Cookie": chefkochCookie } : {}
+
+    const response = await fetch(chefkochApiRecipeBaseUrl + recipeId, {
+        headers: headers
+    });
 
     if (!response.ok) {
         throw new HttpsError("not-found", `Unable to retrieve recipe with ID ${recipeId} from chefkoch.de! The following error occurred: ${response.statusText}`);
@@ -21,7 +30,7 @@ export const fetchRecipe = onCall(async (request) => {
     } catch (error) {
         throw new HttpsError("internal", (error as Error)?.message || 'Unable to parse recipe information from response from chefkoch.de!');
     }
-});
+}
 
 const convertToPartialRecipe = (chefkochRecipe: any): RecipePreview => {
     const recipe: any = {};
@@ -31,7 +40,7 @@ const convertToPartialRecipe = (chefkochRecipe: any): RecipePreview => {
     }
     recipe.name = chefkochRecipe.title;
     recipe.sourceUrl = chefkochRecipe.siteUrl.replaceAll('\\/', '/');
-    recipe.sourceId = chefkochRecipe.id;
+    recipe.sourceId = chefkochRecipe.id || chefkochRecipe.sourceId;
     recipe.prepTime = chefkochRecipe.preparationTime;
     recipe.restingTime = chefkochRecipe.restingTime;
     recipe.cookTime = chefkochRecipe.cookingTime;
@@ -64,3 +73,72 @@ const convertToPartialRecipe = (chefkochRecipe: any): RecipePreview => {
 
     return recipe;
 }
+
+export const fetchRecipesFromAllUserCollections = onCall(async (request) => {
+
+    const chefkochCookie = request.data.chefkochCookie as string;
+
+    if (!chefkochCookie) {
+        throw new HttpsError("invalid-argument", 'No chefkoch cookie was passed in the request');
+    }
+
+    const fetchedRecipes: RecipePreview[] = [];
+
+    const headers = {
+        "Cookie": chefkochCookie
+    };
+
+    try {
+
+        console.log("=== Retrieving User ID ===");
+        const getUserUrl = 'https://www.chefkoch.de/benutzer/me';
+        const getUserFromReponse = async (response: Response) => response.json().then(json => json.id);
+        const userId = await fetch(getUserUrl, {
+            headers: headers
+        }).then(getUserFromReponse);
+        console.log("UserID: ", userId);
+
+        console.log("=== Retrieving User Collections ===");
+        const getUserCollectionsUrl = 'https://api.chefkoch.de/v2/cookbooks/user-' + userId + '/collections?offset=0&limit=100';
+        const getUserCollectionsFromResponse = async (response: Response) => response.json().then(json => json.results.map((result: any) => result.id));
+        const userCollections = await fetch(getUserCollectionsUrl, {
+            headers: headers
+        }).then(getUserCollectionsFromResponse);
+        console.log("User Collections: ", userCollections);
+
+        for (const collectionId of userCollections) {
+            const getCollectionNameAndRecipesCountUrl = 'https://api.chefkoch.de/v2/cookbooks/user-' + userId + '/recipes?categoryId=' + collectionId + '&offset=0&limit=0';
+            const getCollectionNameAndRecipesCount = async (response: Response) => response.json().then(json => {
+                return { count: json.count, name: json.category.name };
+            });
+            const collectionNameAndRecipesCount: any = await fetch(getCollectionNameAndRecipesCountUrl, {
+                headers: headers
+            }).then(getCollectionNameAndRecipesCount);
+            console.log("=== Retrieving " + collectionNameAndRecipesCount.count + " Recipes from Collection " + collectionNameAndRecipesCount.name);
+
+            const getCollectionRecipesUrl = 'https://api.chefkoch.de/v2/cookbooks/user-' + userId + '/recipes?categoryId=' + collectionId + '&offset=0&limit=' + collectionNameAndRecipesCount.count;
+            const getCollectionRecipes = async (response: Response) => response.json().then(json => json.results);
+            const recipes = await fetch(getCollectionRecipesUrl, {
+                headers: headers
+            }).then(getCollectionRecipes);
+
+            for (const recipe of recipes) {
+                const recipeId = recipe.recipe.id || recipe.recipe.sourceId;
+                const recipeNote = recipe.note;
+
+                const recipePreview = await internalFetchRecipe(recipeId, chefkochCookie).catch(error => {
+                    throw Error('An error occurred while trying to import recipe with ID ' + recipeId + ' (' + JSON.stringify(recipe.recipe) + ')');
+                });
+                fetchedRecipes.push({ ...recipePreview, comment: recipeNote })
+            }
+        }
+
+    } catch (error) {
+        throw new HttpsError("internal", (error as Error)?.message || 'An error occurred while trying to request information from chefkoch.de!');
+    }
+
+    console.log("=== Finishing");
+    console.log("Retrieved a total of " + fetchedRecipes.length + " recipes.");
+
+    return fetchedRecipes;
+});
