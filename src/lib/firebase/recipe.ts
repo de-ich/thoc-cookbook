@@ -13,7 +13,12 @@ export const addRecipe = async (recipePreview: RecipePreview | Recipe): Promise<
 
     const collectionRef = collection(db, "recipes");
     // either get the existing document (if the provided preview already represents a recipe) or create a new document
-    const docRef = doc(collectionRef, (recipePreview as Recipe).id);
+    let docRef;
+    if ((recipePreview as Recipe)?.id) {
+        docRef = doc(collectionRef, (recipePreview as Recipe).id);
+    } else {
+        docRef = doc(collectionRef);
+    }
     const docId = docRef.id;
 
     const recipe: Recipe = {
