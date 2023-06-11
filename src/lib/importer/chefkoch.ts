@@ -22,3 +22,9 @@ export const fetchRecipe = async (recipeIdOrUrl: string): Promise<RecipePreview>
 
     return fetchRecipeCallable({ recipeId: recipeId }).then(result => result.data as RecipePreview);
 }
+
+const fetchRecipesFromAllUserCollectionsCallable = httpsCallable('fetchRecipesFromAllUserCollections');
+
+export const fetchRecipesFromAllUserCollections = async (chefkochCookie: string): Promise<RecipePreview[]> => {
+    return fetchRecipesFromAllUserCollectionsCallable({ chefkochCookie: chefkochCookie }).then(result => result.data as RecipePreview[]);
+}
