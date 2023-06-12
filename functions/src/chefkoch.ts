@@ -48,7 +48,8 @@ const convertToPartialRecipe = (chefkochRecipe: any): RecipePreview => {
     recipe.recipeYield = chefkochRecipe.servings;
 
     const ingredients: Ingredient[] = []
-    for (const ingredientGroup of chefkochRecipe.ingredientGroups) {
+
+    for (const ingredientGroup of chefkochRecipe.ingredientGroups || []) {
         for (const chefkochIngredient of ingredientGroup.ingredients) {
             let ingredientString;
             try {
@@ -60,9 +61,19 @@ const convertToPartialRecipe = (chefkochRecipe: any): RecipePreview => {
             }
         }
     }
+
+    for (const ingredientString of splitStringInLinesAndFilterEmpty(chefkochRecipe.ingredientsText)) {
+        try {
+            const ingredient = parseIngredient(ingredientString);
+            ingredients.push(...ingredient);
+        } catch (err) {
+            throw new Error('Unable to parse ingredient from chefoch recipe (ingredient string was "' + ingredientString + '"!');
+        }
+    }
+
     recipe.ingredients = ingredients;
 
-    recipe.instructions = chefkochRecipe.instructions.split("\n\n");
+    recipe.instructions = splitStringInLinesAndFilterEmpty(chefkochRecipe.instructions);
 
     recipe.comments = [];
     recipe.keywords = [];
@@ -72,6 +83,10 @@ const convertToPartialRecipe = (chefkochRecipe: any): RecipePreview => {
     recipe.images.push(imageUrl);
 
     return recipe;
+}
+
+const splitStringInLinesAndFilterEmpty = (text: string) => {
+    return (text || '').split(/[\n\r]/).filter((line: string) => !line.match(/^[\s]*$/));
 }
 
 export const fetchRecipesFromAllUserCollections = onCall(async (request) => {
