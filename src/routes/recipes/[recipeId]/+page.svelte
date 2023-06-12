@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import type { Recipe } from '$lib/database/Recipe';
 	import IconButton from '@smui/icon-button';
+	import formatQuantity from 'format-quantity';
 	import type { Ingredient } from 'parse-ingredient';
 	/** @type {import('./$types').PageData} */
 	export let data: any;
@@ -10,7 +11,8 @@
 
 	const getIngredientString = (ingredient: Ingredient): string => {
 		let ret =
-			(ingredient.quantity || '') + (ingredient.quantity2 ? '-' + ingredient.quantity2 : '');
+				(ingredient.quantity != null ? formatQuantity(ingredient.quantity) : '') +
+				(ingredient.quantity2 != null ? '-' + formatQuantity(ingredient.quantity2) : '');;
 
 		if (ingredient.unitOfMeasure) {
 			ret += ingredient.unitOfMeasure;

@@ -2,6 +2,7 @@
 	import Textfield from '@smui/textfield';
 	import { getEmptyRecipePreview, type RecipePreview } from '$lib/database/Recipe';
 	import { parseIngredient } from '$lib/ingredient-parser';
+	import { formatQuantity } from 'format-quantity';
 
 	// either pass in an existing Recipe/RecipePreview (when editing a recipe) or use an
 	// empty preview (when creating a new recipe)
@@ -15,7 +16,8 @@
 	let ingredients = recipePreview.ingredients
 		.map((ingredient) => {
 			let ret =
-				(ingredient.quantity || '') + (ingredient.quantity2 ? '-' + ingredient.quantity2 : '');
+				(ingredient.quantity != null ? formatQuantity(ingredient.quantity) : '') +
+				(ingredient.quantity2 != null ? '-' + formatQuantity(ingredient.quantity2) : '');
 
 			if (ingredient.unitOfMeasure) {
 				ret += ingredient.unitOfMeasure;
@@ -46,7 +48,7 @@
 		const existingImageFiles = recipePreview.images.filter((image) => typeof image !== 'string');
 		const newImages: (string | File)[] = [];
 		newImages.push(...existingImageFiles);
-		if(recipeImageUrls.length > 0) {
+		if (recipeImageUrls.length > 0) {
 			newImages.push(...recipeImageUrls.split('\n').map((imageUrl) => imageUrl.trim()));
 		}
 		recipePreview.images = newImages;
