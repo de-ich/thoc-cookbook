@@ -19,12 +19,12 @@
 
 	.recipeCard {
 		background-color: var(--mdc-theme-background);
-        border: .2rem solid var(--mdc-theme-primary);
+        border: .05rem solid var(--mdc-theme-secondary);
         border-radius: .5rem;
         padding: .5rem;
 
 		&:hover {
-			border-color: var(--mdc-theme-secondary);
+			color: var(--mdc-theme-primary);
 		}
 	}
 </style>
