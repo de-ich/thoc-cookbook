@@ -26,6 +26,7 @@
 		"@smui/list": "^7.0.0-beta.8",
 		"@smui/menu": "^7.0.0-beta.8",
 		"@smui/menu-surface": "^7.0.0-beta.8",
+		"@smui/segmented-button": "^7.0.0-beta.8",
 		"@smui/textfield": "^7.0.0-beta.8",
 		"@smui/top-app-bar": "^7.0.0-beta.8",
 		"@sveltejs/adapter-auto": "^2.0.1",

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import type { Recipe } from '$lib/database/Recipe';
+	import { RecipeYieldType } from '$lib/database/Recipe';
 	import IconButton from '@smui/icon-button';
 	import List, { Item, Text } from '@smui/list';
 	import formatQuantity from 'format-quantity';
@@ -44,20 +45,31 @@
 		}
 	};
 
-	const getIngredientWithUpdatedCounts = (ingredient: Ingredient, intendedYield: number) => {
-		return {
-			...ingredient,
-			quantity: ingredient.quantity
-				? (ingredient.quantity / (recipe.recipeYield || 1)) * intendedYield
-				: null,
-			quantity2: ingredient.quantity2
-				? (ingredient.quantity2 / (recipe.recipeYield || 1)) * intendedYield
-				: null
-		};
+	const DEFAULT_SERVINGS = 1;
+	const DEFAULT_BAKING_DISH_SIZE = 26;
+
+	const getScaledIngredientQuantity = (quantity: number | null, recipeYield: number | null, intendedYield: number, yieldType: RecipeYieldType) => {
+		if (quantity == null) {
+			return null;
+		}
+
+		if (yieldType === RecipeYieldType.BakingDish) {
+			return quantity * Math.pow(intendedYield, 2) / Math.pow(recipeYield || DEFAULT_BAKING_DISH_SIZE, 2);
+		} else {
+			return (quantity / (recipeYield || DEFAULT_SERVINGS)) * intendedYield
+		}
+	}
+
+	const getIngredientWithUpdatedCounts = (ingredient: Ingredient, intendedYield: number, yieldType: RecipeYieldType = RecipeYieldType.Serving) => {
+			return {
+				...ingredient,
+				quantity: getScaledIngredientQuantity(ingredient.quantity, recipe.recipeYield, intendedYield, yieldType),
+				quantity2: getScaledIngredientQuantity(ingredient.quantity2, recipe.recipeYield, intendedYield, yieldType)
+			};
 	};
 
 	$: ingredientsForCurrentYield = recipe.ingredients.map((ingredient) =>
-		getIngredientWithUpdatedCounts(ingredient, currentYield)
+		getIngredientWithUpdatedCounts(ingredient, currentYield, recipe.recipeYieldType)
 	);
 
 	const getQuantityDisplayValue = (quantity: number) => {
@@ -102,9 +114,9 @@
 				Zutaten für
 				<IconButton class="material-icons" on:click={decreaseYield} size="button">remove</IconButton
 				>
-				{getQuantityDisplayValue(currentYield)}
+				{recipe.recipeYieldType === RecipeYieldType.BakingDish ? getQuantityDisplayValue(currentYield) + 'er' : getQuantityDisplayValue(currentYield)}
 				<IconButton class="material-icons" on:click={increaseYield} size="button">add</IconButton>
-				Portionen:
+				{recipe.recipeYieldType === RecipeYieldType.BakingDish ? 'Backform' : 'Portionen'}
 			</h5>
 		{:else}
 			<h5>Zutaten</h5>
