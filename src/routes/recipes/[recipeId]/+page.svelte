@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import type { Recipe } from '$lib/database/Recipe';
 	import IconButton from '@smui/icon-button';
+	import List, { Item, Text } from '@smui/list';
 	import formatQuantity from 'format-quantity';
 	import type { Ingredient } from 'parse-ingredient';
 
@@ -90,13 +91,13 @@
 		{:else}
 			<h5>Zutaten</h5>
 		{/if}
-		<ul>
+		<List nonInteractive>
 			{#each ingredientsForCurrentYield as ingredient}
-				<li>
+				<Item>
 					{getIngredientString(ingredient)}
-				</li>
+				</Item>
 			{/each}
-		</ul>
+		</List>
 	</div>
 
 	<div class="instructionsContainer">
@@ -138,10 +139,6 @@
 		line-height: 2em;
 	}
 
-	ul {
-		list-style-position: inside;
-	}
-
 	.imagesContainer {
 		margin-top: 1rem;
 	}
@@ -150,6 +147,7 @@
 		display: flex;
 		flex-direction: row;
 		align-items: flex-start;
+		column-gap: 2rem;
 	}
 
 	@media (max-width: 800px) {
@@ -161,6 +159,10 @@
 	.ingredientsContainer {
 		width: 25rem;
 		min-width: 25rem;
+
+		:global(.mdc-deprecated-list-item) {
+			height: 2em;
+		}
 	}
 
 	.instructionsContainer {
@@ -169,5 +171,6 @@
 		flex-direction: column;
 		gap: 0.5rem;
 		margin-bottom: 2rem;
+		max-width: 35rem;
 	}
 </style>
