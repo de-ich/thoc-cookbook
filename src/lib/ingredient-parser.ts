@@ -26,6 +26,12 @@ const additionalUOMs = {
     Teelöffel: { short: 'TL', plural: 'Teelöffel', alternates: ['TL.'] }
 };
 
+const startsWithFloatRegex = /^[0-9]+,[0-9]+/;
+
 export const parseIngredient = (ingredientString: string) => {
-    return parse(ingredientString.trim(), { additionalUOMs: additionalUOMs })
+    let ingredientStringToParse = ingredientString.trim()
+    if (ingredientStringToParse.match(startsWithFloatRegex) != null) {
+        ingredientStringToParse = ingredientStringToParse.replace(',', '.');
+    }
+    return parse(ingredientStringToParse, { additionalUOMs: additionalUOMs })
 };

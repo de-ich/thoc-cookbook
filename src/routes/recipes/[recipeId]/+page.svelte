@@ -84,9 +84,9 @@
 		if (parsedFormattedQuantity + '' !== formattedQuantity) {
 			return formattedQuantity;
 		} else if (parsedFormattedQuantity < 0.1) {
-			return '' + Math.round(parsedFormattedQuantity * 100) / 100;
+			return ('' + Math.round(parsedFormattedQuantity * 100) / 100).replace('.', ',');
 		} else {
-			return  '' + Math.round(parsedFormattedQuantity * 10) / 10;
+			return  ('' + Math.round(parsedFormattedQuantity * 10) / 10).replace('.', ',');
 		}
 	}
 </script>
