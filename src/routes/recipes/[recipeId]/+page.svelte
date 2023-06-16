@@ -14,8 +14,8 @@
 
 	const getIngredientString = (ingredient: Ingredient): string => {
 		let ret =
-			(ingredient.quantity != null ? formatQuantity(ingredient.quantity) : '') +
-			(ingredient.quantity2 != null ? '-' + formatQuantity(ingredient.quantity2) : '');
+			(ingredient.quantity != null ? getQuantityDisplayValue(ingredient.quantity) : '') +
+			(ingredient.quantity2 != null ? '-' + getQuantityDisplayValue(ingredient.quantity2) : '');
 
 		if (ingredient.unitOfMeasure) {
 			ret += ingredient.unitOfMeasure;
@@ -59,6 +59,24 @@
 	$: ingredientsForCurrentYield = recipe.ingredients.map((ingredient) =>
 		getIngredientWithUpdatedCounts(ingredient, currentYield)
 	);
+
+	const getQuantityDisplayValue = (quantity: number) => {
+
+		let formattedQuantity = quantity > 1 ? quantity + '' : formatQuantity(quantity);
+
+		if (formattedQuantity === null) {
+			return null;
+		}
+
+		let parsedFormattedQuantity = parseFloat(formattedQuantity);
+		if (parsedFormattedQuantity + '' !== formattedQuantity) {
+			return formattedQuantity;
+		} else if (parsedFormattedQuantity < 0.1) {
+			return '' + Math.round(parsedFormattedQuantity * 100) / 100;
+		} else {
+			return  '' + Math.round(parsedFormattedQuantity * 10) / 10;
+		}
+	}
 </script>
 
 <div class="headingContainer">
@@ -84,7 +102,7 @@
 				Zutaten für
 				<IconButton class="material-icons" on:click={decreaseYield} size="button">remove</IconButton
 				>
-				{formatQuantity(currentYield)}
+				{getQuantityDisplayValue(currentYield)}
 				<IconButton class="material-icons" on:click={increaseYield} size="button">add</IconButton>
 				Portionen:
 			</h5>
