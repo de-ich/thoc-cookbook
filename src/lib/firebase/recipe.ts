@@ -1,5 +1,5 @@
 
-import { collection, setDoc, doc, serverTimestamp } from "firebase/firestore";
+import { collection, setDoc, doc, serverTimestamp, getDocFromServer } from "firebase/firestore";
 import { auth, db, httpsCallable } from "./firebase.client";
 import { type Recipe, type RecipePreview, getEmptyRecipePreview } from "$lib/database/Recipe";
 import { getDownloadURL, getStorage, ref, uploadBytes, type StorageReference } from "firebase/storage";
@@ -21,18 +21,32 @@ export const addRecipe = async (recipePreview: RecipePreview | Recipe): Promise<
     }
     const docId = docRef.id;
 
+    const existingOrEmptyDocoument = await getDocFromServer(docRef).then(snapshot => snapshot.data() as Recipe) || getEmptyRecipePreview();
+
     const recipe: Recipe = {
-        ...getEmptyRecipePreview(),
+        ...existingOrEmptyDocoument,
         ...recipePreview,
         id: docId,
         addedTimestamp: serverTimestamp(),
-        addedBy: auth.currentUser?.uid
+        addedBy: auth.currentUser?.uid,
+        images: []
     }
 
     const storage = getStorage();
     const recipeImagesRef = ref(storage, `images/${docId}`);
 
-    recipe.images = await moveImagesToStorage(recipe.images, recipeImagesRef).catch((error) => console.log(error)) || [];
+    for (const image of recipePreview.images) {
+        let imageUrl;
+        if (existingOrEmptyDocoument.images.includes(image)) {
+            imageUrl = image;
+        } else {
+            imageUrl = await moveImageToStorage(image, recipeImagesRef);
+        }
+        if (imageUrl) {
+            recipe.images.push(imageUrl);
+        }
+        // FIXME we should also remove deleted images from storage
+    }
 
     return setDoc(docRef, recipe).then(() => {
         console.log("Document written with ID: ", docId);
@@ -43,25 +57,16 @@ export const addRecipe = async (recipePreview: RecipePreview | Recipe): Promise<
 
 }
 
-const moveImagesToStorage = async (images: (string | File)[], folderRef: StorageReference) => {
-
-    const moveImagePromises = images.map((recipeImage) => {
-        if (typeof (recipeImage) !== 'string') {
-            // a local image from the file system
-            // -> upload to our bucket
-            return uploadLocalImageToStorage(recipeImage as File, folderRef);
-        } else if (!recipeImage.startsWith(folderRef.fullPath)) {
-            // the image is from an external source (not yet at the correct location)
-            // -> copy to our bucket
-            return copyRemoteImageToStorage(recipeImage, folderRef);
-        } else {
-            // the image is already at the correct location
-            // -> return the existing URL
-            return new Promise<string>(() => recipeImage);
-        }
-    });
-
-    return Promise.all(moveImagePromises);
+const moveImageToStorage = async (recipeImage: (string | File), folderRef: StorageReference) => {
+    if (typeof (recipeImage) !== 'string') {
+        // a local image from the file system
+        // -> upload to our bucket
+        return uploadLocalImageToStorage(recipeImage as File, folderRef);
+    } else {
+        // the image is from an external source (not yet at the correct location)
+        // -> copy to our bucket
+        return copyRemoteImageToStorage(recipeImage, folderRef);
+    }
 }
 
 const uploadLocalImageToStorage = async (image: File, folderRef: StorageReference): Promise<string> => {
