@@ -129,15 +129,15 @@
 	</div>
 {/if}
 
-<div class="keywordsContainer">
-	{#if (recipe.keywords || []).length > 0}
-	<Set chips={recipe.keywords.filter(keyword => keyword)} let:chip nonInteractive>
-	  <Chip {chip}>
-		<ChipText>{chip}</ChipText>
-	  </Chip>
-	</Set>
-	{/if}
-</div>
+{#if (recipe.keywords || []).length > 0}
+	<div class="keywordsContainer">
+		<Set chips={recipe.keywords.filter((keyword) => keyword)} let:chip nonInteractive>
+			<Chip {chip}>
+				<ChipText>{chip}</ChipText>
+			</Chip>
+		</Set>
+	</div>
+{/if}
 
 <div class="ingredientsAndInstructionsContainer">
 	<div class="ingredientsContainer">

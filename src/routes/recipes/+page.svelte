@@ -8,18 +8,24 @@
 	import Icon from '@smui/textfield/icon';
 	import Fuse from 'fuse.js';
 	import IconButton from '@smui/icon-button';
+	import KeywordFilter from '../../components/KeywordFilter.svelte';
+	import Chip, { Set, TrailingAction, Text } from '@smui/chips';
 
 	let allRecipes: Recipe[] = [];
 	let filteredRecipes: Recipe[] = [];
 	let fuse: Fuse<Recipe>;
 	let searchText: string | undefined;
+	let selectedKeywords: string[];
 	let loadingRecipes = true;
 
 	const recipesRef = collection(db, 'recipes');
-	const getAllRecipes = () => getDocs(query(recipesRef, orderBy("name"))).then((querySnapshot) => querySnapshot.docs.map((doc) => doc.data() as Recipe));
+	const getAllRecipes = () =>
+		getDocs(query(recipesRef, orderBy('name'))).then((querySnapshot) =>
+			querySnapshot.docs.map((doc) => doc.data() as Recipe)
+		);
 
 	getAllRecipes().then((recipes) => {
-		allRecipes = recipes
+		allRecipes = recipes;
 		filteredRecipes = [...recipes];
 		fuse = new Fuse(recipes, {
 			keys: ['name'],
@@ -36,13 +42,25 @@
 	};
 
 	const startSearch = () => {
+		let recipes = [...allRecipes];
 		if (searchText) {
 			const searchResult = fuse?.search(searchText);
-			filteredRecipes = searchResult?.map((result) => result.item) || [];
-		} else {
-			filteredRecipes = [...allRecipes];
+			recipes = searchResult?.map((result) => result.item) || [];
 		}
+
+		if (selectedKeywords && selectedKeywords.length > 0) {
+			recipes = recipes.filter((recipe) =>
+				selectedKeywords.every((k) => recipe.keywords.includes(k))
+			);
+		}
+
+		filteredRecipes = recipes.filter((recipes) => recipes.keywords);
 	};
+
+	$: {
+		startSearch();
+		selectedKeywords = selectedKeywords;
+	}
 </script>
 
 <div class="recipeList">
@@ -58,17 +76,41 @@
 				on:blur={startSearch}
 			>
 				<Icon class="material-icons" slot="leadingIcon">search</Icon>
-				<IconButton class="material-icons" slot="trailingIcon" on:click={() => {
-					searchText = undefined;
-					document.querySelector('.searchField label')?.classList.remove('mdc-text-field--focused');
-					document.querySelector('.searchField label>div')?.classList.remove('mdc-notched-outline--notched');
-					startSearch();
-				}}>clear</IconButton>
+				<IconButton
+					class="material-icons"
+					slot="trailingIcon"
+					on:click={() => {
+						searchText = undefined;
+						document
+							.querySelector('.searchField label')
+							?.classList.remove('mdc-text-field--focused');
+						document
+							.querySelector('.searchField label>div')
+							?.classList.remove('mdc-notched-outline--notched');
+						startSearch();
+					}}>clear</IconButton
+				>
 				<HelperText slot="helper">Suche starten mit Enter</HelperText>
 			</Textfield>
 		</div>
+		<div class="keywordFilter">
+			<KeywordFilter
+				availableKeywords={allRecipes.flatMap((recipe) => recipe.keywords)}
+				bind:selectedKeywords
+			/>
+		</div>
+		{#if (selectedKeywords || []).length > 0}
+			<div class="keywordChips">
+				<Set style="display: inline-block;" bind:chips={selectedKeywords} let:chip>
+					<Chip {chip}>
+						<Text tabindex={0}>{chip}</Text>
+						<TrailingAction icon$class="material-icons">cancel</TrailingAction>
+					</Chip>
+				</Set>
+			</div>
+		{/if}
 	</div>
-	{#if (loadingRecipes)}
+	{#if loadingRecipes}
 		<div class="loadingContainer">
 			<h6>Rezepte werden geladen...</h6>
 		</div>
@@ -90,13 +132,24 @@
 		.searchAndFilterArea {
 			display: flex;
 			flex-direction: row;
+			flex-wrap: wrap;
 
 			.searchField {
-				width: 100%;
+				flex-grow: 1;
+				flex-shrink: 0;
 
 				:global(label) {
 					width: 100%;
 				}
+			}
+
+			.keywordFilter {
+				order: -1;
+				flex-basis: 20%;
+			}
+
+			.keywordChips {
+				flex-basis: 100%;
 			}
 		}
 
