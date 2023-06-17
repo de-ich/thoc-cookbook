@@ -48,24 +48,46 @@
 	const DEFAULT_SERVINGS = 1;
 	const DEFAULT_BAKING_DISH_SIZE = 26;
 
-	const getScaledIngredientQuantity = (quantity: number | null, recipeYield: number | null, intendedYield: number, yieldType: RecipeYieldType) => {
+	const getScaledIngredientQuantity = (
+		quantity: number | null,
+		recipeYield: number | null,
+		intendedYield: number,
+		yieldType: RecipeYieldType
+	) => {
 		if (quantity == null) {
 			return null;
 		}
 
 		if (yieldType === RecipeYieldType.BakingDish) {
-			return quantity * Math.pow(intendedYield, 2) / Math.pow(recipeYield || DEFAULT_BAKING_DISH_SIZE, 2);
+			return (
+				(quantity * Math.pow(intendedYield, 2)) /
+				Math.pow(recipeYield || DEFAULT_BAKING_DISH_SIZE, 2)
+			);
 		} else {
-			return (quantity / (recipeYield || DEFAULT_SERVINGS)) * intendedYield
+			return (quantity / (recipeYield || DEFAULT_SERVINGS)) * intendedYield;
 		}
-	}
+	};
 
-	const getIngredientWithUpdatedCounts = (ingredient: Ingredient, intendedYield: number, yieldType: RecipeYieldType = RecipeYieldType.Serving) => {
-			return {
-				...ingredient,
-				quantity: getScaledIngredientQuantity(ingredient.quantity, recipe.recipeYield, intendedYield, yieldType),
-				quantity2: getScaledIngredientQuantity(ingredient.quantity2, recipe.recipeYield, intendedYield, yieldType)
-			};
+	const getIngredientWithUpdatedCounts = (
+		ingredient: Ingredient,
+		intendedYield: number,
+		yieldType: RecipeYieldType = RecipeYieldType.Serving
+	) => {
+		return {
+			...ingredient,
+			quantity: getScaledIngredientQuantity(
+				ingredient.quantity,
+				recipe.recipeYield,
+				intendedYield,
+				yieldType
+			),
+			quantity2: getScaledIngredientQuantity(
+				ingredient.quantity2,
+				recipe.recipeYield,
+				intendedYield,
+				yieldType
+			)
+		};
 	};
 
 	$: ingredientsForCurrentYield = recipe.ingredients.map((ingredient) =>
@@ -73,7 +95,6 @@
 	);
 
 	const getQuantityDisplayValue = (quantity: number) => {
-
 		let formattedQuantity = quantity > 1 ? quantity + '' : formatQuantity(quantity);
 
 		if (formattedQuantity === null) {
@@ -86,9 +107,9 @@
 		} else if (parsedFormattedQuantity < 0.1) {
 			return ('' + Math.round(parsedFormattedQuantity * 100) / 100).replace('.', ',');
 		} else {
-			return  ('' + Math.round(parsedFormattedQuantity * 10) / 10).replace('.', ',');
+			return ('' + Math.round(parsedFormattedQuantity * 10) / 10).replace('.', ',');
 		}
-	}
+	};
 </script>
 
 <div class="headingContainer">
@@ -114,7 +135,9 @@
 				Zutaten für
 				<IconButton class="material-icons" on:click={decreaseYield} size="button">remove</IconButton
 				>
-				{recipe.recipeYieldType === RecipeYieldType.BakingDish ? getQuantityDisplayValue(currentYield) + 'er' : getQuantityDisplayValue(currentYield)}
+				{recipe.recipeYieldType === RecipeYieldType.BakingDish
+					? getQuantityDisplayValue(currentYield) + 'er'
+					: getQuantityDisplayValue(currentYield)}
 				<IconButton class="material-icons" on:click={increaseYield} size="button">add</IconButton>
 				{recipe.recipeYieldType === RecipeYieldType.BakingDish ? 'Backform' : 'Portionen'}
 			</h5>
@@ -130,26 +153,26 @@
 		</List>
 	</div>
 
-	<div class="instructionsContainer">
-		<h5>Zubereitung:</h5>
-		{#each recipe.instructions as instruction}
-			<div class="instructionContainer">
-				{instruction}
+	<div class="instructionsAndCommentContainer">
+		<div class="instructionsContainer">
+			<h5>Zubereitung:</h5>
+			{#each recipe.instructions as instruction}
+				<div class="instructionContainer">
+					{instruction}
+				</div>
+			{/each}
+		</div>
+
+		{#if recipe.comment}
+			<div class="commentsContainer">
+				<h6>Kommentar:</h6>
+				<div class="commentContainer">
+					{recipe.comment}
+				</div>
 			</div>
-		{/each}
+		{/if}
 	</div>
 </div>
-
-{#if recipe.comment}
-	<div class="commentContainer">
-		<h5>Kommentar:</h5>
-		{#each recipe.instructions as instruction}
-			<div class="instructionContainer">
-				{instruction}
-			</div>
-		{/each}
-	</div>
-{/if}
 
 <style lang="scss">
 	.headingContainer {
