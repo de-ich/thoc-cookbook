@@ -6,6 +6,7 @@
 	import List, { Item, Text } from '@smui/list';
 	import formatQuantity from 'format-quantity';
 	import type { Ingredient } from 'parse-ingredient';
+	import Chip, { Set, Text as ChipText } from '@smui/chips';
 
 	/** @type {import('./$types').PageData} */
 	export let data: any;
@@ -127,6 +128,16 @@
 		<img src={recipe.images[0]} alt="recipeImage" />
 	</div>
 {/if}
+
+<div class="keywordsContainer">
+	{#if (recipe.keywords || []).length > 0}
+	<Set chips={recipe.keywords.filter(keyword => keyword)} let:chip nonInteractive>
+	  <Chip {chip}>
+		<ChipText>{chip}</ChipText>
+	  </Chip>
+	</Set>
+	{/if}
+</div>
 
 <div class="ingredientsAndInstructionsContainer">
 	<div class="ingredientsContainer">

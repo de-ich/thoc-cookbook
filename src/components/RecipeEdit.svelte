@@ -47,7 +47,7 @@
 
 	let keywords = recipePreview.keywords.join(', ');
 	$: {
-		recipePreview.keywords = keywords.split(',').map((keyword) => keyword.trim());
+		recipePreview.keywords = keywords.split(',').map((keyword) => keyword.trim()).filter((keyword) => keyword);
 	}
 
 	let recipeImageUrls = recipePreview.images
