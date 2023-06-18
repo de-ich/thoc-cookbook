@@ -109,7 +109,9 @@ const knownImageExtensions = ["JPG", "JPEG", "JPE", "BMP", "GIF", "PNG"];
 
 const copyRemoteImageToStorage = async (imageUrl: string, folderRef: StorageReference): Promise<string> => {
 
-    const downloadedFile = await fetchRecipeCallable({ url: imageUrl }).then(result => result.data) as DownloadedFile;
+    const downloadedFile = await fetchRecipeCallable({ url: imageUrl }).then(result => result.data as DownloadedFile).catch(error => {
+        throw Error(`The following error occurred while trying to download image from URL ${imageUrl}: ${error.message || ''}`);
+    });
 
     let imageFileExtension = imageUrl.split('.').pop() || '';
 

@@ -57,7 +57,7 @@
 		const existingImageFiles = recipePreview.images.filter((image) => typeof image !== 'string');
 		const newImages: (string | File)[] = [];
 		newImages.push(...existingImageFiles);
-		if (recipeImageUrls.length > 0) {
+		if ((recipeImageUrls || []).length > 0) {
 			newImages.push(...recipeImageUrls.split('\n').map((imageUrl) => imageUrl.trim()));
 		}
 		recipePreview.images = newImages;
