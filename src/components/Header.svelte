@@ -9,9 +9,12 @@
 	import ChefkochImportDialog from './ChefkochImportDialog.svelte';
 	import { clearRecipePreview } from '../stores/recipepreviewstore';
 	import { goto } from '$app/navigation';
+	import { onDestroy } from 'svelte';
+	import { createError } from '../stores/errormessagestore';
+	import ErrorDialog from './ErrorDialog.svelte';
 
 	let user: Nullable<string> = null;
-	authStore.subscribe((curr) => {
+	const unsubscribeAuthStore = authStore.subscribe((curr) => {
 		user = curr?.currentUser?.displayName || curr?.currentUser?.email;
 	});
 
@@ -19,13 +22,17 @@
 		try {
 			await authHandlers.logout();
 		} catch (err) {
-			console.log(err);
+			createError(err as Error);
 		}
 	}
 
 	let userMenu: Menu;
 	let importMenu: Menu;
 	let showChefkochImportDialog = false;
+
+	onDestroy(() => {
+		unsubscribeAuthStore();
+	});
 </script>
 
 <TopAppBar id="app-bar" variant="static" color="primary">
@@ -83,6 +90,8 @@
 </TopAppBar>
 
 <ChefkochImportDialog bind:open={showChefkochImportDialog} />
+
+<ErrorDialog />
 
 <style lang="scss">
 	:global(.mdc-top-app-bar__title:hover) {

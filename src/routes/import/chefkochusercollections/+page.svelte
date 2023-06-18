@@ -6,6 +6,7 @@
 	import Button, { Label } from '@smui/button';
 	import Dialog, { Actions, Content, Title } from '@smui/dialog';
 	import Textfield from '@smui/textfield';
+	import { createError } from '../../../stores/errormessagestore';
 
 	let chefkochCookie: string = '';
 	let recipes: RecipePreview[] = [];
@@ -42,7 +43,7 @@
 				addedRecipes = recipeIds.length;
 				log += '\nDone! ' + addedRecipes + ' reipes imported';
 			})
-			.catch((error) => console.log(error));
+			.catch(createError);
 	};
 </script>
 

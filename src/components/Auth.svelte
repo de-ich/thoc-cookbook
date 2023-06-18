@@ -1,7 +1,8 @@
-<script>
+<script lang="ts">
 	import { authHandlers, authStore } from '../stores/authstore';
 	import Button from '@smui/button';
 	import Textfield from '@smui/textfield';
+	import { createError } from '../stores/errormessagestore';
 
 	let email = '';
 	let password = '';
@@ -14,7 +15,7 @@
 		try {
 			await authHandlers.login(email, password);
 		} catch (err) {
-			console.log(err);
+			createError(err as Error);
 		}
 
 		if ($authStore.currentUser) {

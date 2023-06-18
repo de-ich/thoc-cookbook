@@ -4,6 +4,7 @@
 	import { updateRecipe } from '$lib/firebase/recipe';
 	import { goto } from '$app/navigation';
 	import RecipeEdit from '../../../../components/RecipeEdit.svelte';
+	import { createError } from '../../../../stores/errormessagestore';
 
 	/** @type {import('./$types').PageData} */
 	export let data: any;
@@ -13,7 +14,7 @@
 	const updateRecipeInDatabase = () => {
 		updateRecipe(recipe)
 			.then((newRecipeId) => goto('/recipes/' + newRecipeId))
-			.catch((error: any) => console.log(error));
+			.catch(createError);
 	};
 </script>
 

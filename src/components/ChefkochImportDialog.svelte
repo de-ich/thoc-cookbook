@@ -5,6 +5,7 @@
 	import Textfield from '@smui/textfield';
 	import { goto } from '$app/navigation';
 	import { recipePreviewStore } from '../stores/recipepreviewstore';
+	import { createError } from '../stores/errormessagestore';
 
 	export let open: boolean = true;
 	let recipeUrl: string | null = null;
@@ -18,7 +19,7 @@
 				recipePreviewStore.set(recipePreview);
 				goto('/addrecipe');
 			})
-			.catch((error) => console.log(error));
+			.catch(createError);
 	}
 </script>
 

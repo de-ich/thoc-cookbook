@@ -6,11 +6,11 @@
 	import { addRecipe } from '$lib/firebase/recipe';
 	import { goto } from '$app/navigation';
 	import RecipeEdit from '../../components/RecipeEdit.svelte';
+	import { createError } from '../../stores/errormessagestore';
 
 	let recipePreview: RecipePreview;
 	const unsubcribe = recipePreviewStore.subscribe((value) => {
 		recipePreview = value;
-		console.log(value);
 	});
 
 	onDestroy(() => {
@@ -21,7 +21,7 @@
 	const addRecipeToDatabase = () => {
 		addRecipe(recipePreview)
 			.then((newRecipeId) => goto('/recipes/' + newRecipeId))
-			.catch((error: any) => console.log(error));
+			.catch(createError);
 	};
 </script>
 
