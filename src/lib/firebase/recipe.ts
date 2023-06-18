@@ -1,9 +1,21 @@
 
-import { collection, setDoc, doc, serverTimestamp, getDocFromServer } from "firebase/firestore";
+import { collection, setDoc, doc, serverTimestamp, getDocFromServer, getDoc } from "firebase/firestore";
 import { auth, db, httpsCallable } from "./firebase.client";
 import { type Recipe, type RecipePreview, getEmptyRecipePreview } from "$lib/database/Recipe";
 import { getDownloadURL, getStorage, ref, uploadBytes, type StorageReference } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
+
+export const getRecipe = async (recipeId: string) => {
+    const recipeRef = doc(db, 'recipes', recipeId);
+    return getDoc(recipeRef).
+        then(doc => doc.data() as Recipe)
+        .catch(() => { throw Error(`Unable to find recipe with id ${recipeId} in database!`); })
+        .then((data) => {
+            return {
+                recipe: data
+            };
+        });
+}
 
 export const addRecipe = async (recipePreview: RecipePreview | Recipe): Promise<string> => {
 
