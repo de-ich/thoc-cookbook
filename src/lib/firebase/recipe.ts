@@ -1,5 +1,5 @@
 
-import { collection, setDoc, doc, serverTimestamp, getDocFromServer, getDoc, getDocs, query, orderBy } from "firebase/firestore";
+import { collection, setDoc, doc, serverTimestamp, getDocFromServer, getDoc, getDocs, query, orderBy, where } from "firebase/firestore";
 import { auth, db, httpsCallable } from "./firebase.client";
 import { type Recipe, type RecipePreview, getEmptyRecipePreview } from "$lib/database/Recipe";
 import { getDownloadURL, getStorage, ref, uploadBytes, type StorageReference } from "firebase/storage";
@@ -29,6 +29,11 @@ export const getAllRecipes = async () => {
     return getDocs(query(recipeCollectionRef, orderBy('name'))).then((querySnapshot) =>
         querySnapshot.docs.map((doc) => doc.data() as Recipe)
     );
+}
+
+export const checkRecipeWithSourceIdDoesNotYetExist = async (sourceId: string | number): Promise<boolean> => {
+    const q = query(recipeCollectionRef, where("sourceId", "==", sourceId));
+    return await getDocs(q).then(snapshot => snapshot.docs).then(documents => documents && documents.length > 0);
 }
 
 export const addRecipe = async (recipePreview: RecipePreview | Recipe): Promise<string> => {

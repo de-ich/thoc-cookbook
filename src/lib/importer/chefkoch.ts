@@ -1,5 +1,6 @@
 import type { RecipePreview } from '$lib/database/Recipe';
 import { httpsCallable } from '$lib/firebase/firebase.client';
+import { checkRecipeWithSourceIdDoesNotYetExist } from '$lib/firebase/recipe';
 
 const chefkochRecipeUrlRegex = new RegExp('https://www.chefkoch.de/rezepte/([0-9]+)(/[.]*)?');
 
@@ -8,6 +9,7 @@ const fetchRecipeCallable = httpsCallable('fetchRecipe');
 export const fetchRecipe = async (recipeIdOrUrl: string): Promise<RecipePreview> => {
 
     let recipeId = null;
+
     if (parseInt(recipeIdOrUrl)) {
         recipeId = recipeIdOrUrl;
     } else {
@@ -18,6 +20,12 @@ export const fetchRecipe = async (recipeIdOrUrl: string): Promise<RecipePreview>
         }
 
         recipeId = match[1];
+    }
+
+    const alreadyExists = await checkRecipeWithSourceIdDoesNotYetExist(recipeId);
+
+    if (alreadyExists) {
+        throw new Error(`Chefkoch recipe with id ${recipeId} already exists in the database!`);
     }
 
     return fetchRecipeCallable({ recipeId: recipeId }).then(result => result.data as RecipePreview);

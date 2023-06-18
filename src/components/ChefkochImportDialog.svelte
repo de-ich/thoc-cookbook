@@ -13,10 +13,12 @@
 		if (!recipeUrl) {
 			return;
 		}
-		fetchRecipe(recipeUrl).then((recipePreview) => {
-			recipePreviewStore.set(recipePreview);
-			goto('/addrecipe');
-		}).catch((error) => console.log(error));
+		fetchRecipe(recipeUrl)
+			.then((recipePreview) => {
+				recipePreviewStore.set(recipePreview);
+				goto('/addrecipe');
+			})
+			.catch((error) => console.log(error));
 	}
 </script>
 

@@ -13,28 +13,36 @@
 	let showDialog = false;
 
 	let fetchRecipes = () => {
-		log += "Fetching recipes...";
-		fetchRecipesFromAllUserCollections(chefkochCookie).then(fetchedRrecipes => {
-			
-			log += ("\nDone. Fetched " + fetchedRrecipes.length + " recipes.");
-			recipes = [...fetchedRrecipes];
-		}).then(() => showDialog = true).catch(error => console.error('an error occurred: ', error));
+		log += 'Fetching recipes...';
+		fetchRecipesFromAllUserCollections(chefkochCookie)
+			.then((fetchedRrecipes) => {
+				log += '\nDone. Fetched ' + fetchedRrecipes.length + ' recipes.';
+				recipes = [...fetchedRrecipes];
+			})
+			.then(() => (showDialog = true))
+			.catch((error) => console.error('an error occurred: ', error));
 	};
 
-	let log : string = '';
+	let log: string = '';
 
 	let addedRecipes = 0;
 	let showResultDialog = addedRecipes != 0;
 
 	let importRecipes = () => {
-		log += "\nImporting Recipes";
-		Promise.all(recipes.map(recipe => addRecipe(recipe).then(recipeId => {
-			log += ("\Imported recipe with id" + recipeId);
-			return recipeId;
-		}))).then(recipeIds => {
-			addedRecipes = recipeIds.length;
-			log += ("\nDone! " + addedRecipes + " reipes imported");
-		}).catch(error => console.log(error));
+		log += '\nImporting Recipes';
+		Promise.allSettled(
+			recipes.map((recipe) =>
+				addRecipe(recipe).then((recipeId) => {
+					log += 'Imported recipe with id' + recipeId;
+					return recipeId;
+				})
+			)
+		)
+			.then((recipeIds) => {
+				addedRecipes = recipeIds.length;
+				log += '\nDone! ' + addedRecipes + ' reipes imported';
+			})
+			.catch((error) => console.log(error));
 	};
 </script>
 
@@ -51,12 +59,12 @@
 <Button class="submitButton" on:click={fetchRecipes} variant="unelevated">Importieren</Button>
 
 <Textfield
-		style="width: 100%;min-height: 20rem;"
-		helperLine$style="width: 100%;"
-		textarea
-		required
-		bind:value={log}
-	/>
+	style="width: 100%;min-height: 20rem;"
+	helperLine$style="width: 100%;"
+	textarea
+	required
+	bind:value={log}
+/>
 
 <Dialog bind:open={showDialog} aria-labelledby="simple-title" aria-describedby="simple-content">
 	<Title id="simple-title">{recipes.length} Rezepte von Chefkoch.de importieren?</Title>
@@ -73,7 +81,11 @@
 	</Actions>
 </Dialog>
 
-<Dialog bind:open={showResultDialog} aria-labelledby="simple-title" aria-describedby="simple-content">
+<Dialog
+	bind:open={showResultDialog}
+	aria-labelledby="simple-title"
+	aria-describedby="simple-content"
+>
 	<Title id="simple-title">Erfolg</Title>
 	<Content id="simple-content">
 		{addedRecipes} Rezepte importiert!
