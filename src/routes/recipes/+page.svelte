@@ -1,7 +1,5 @@
 <script lang="ts">
 	import type { Recipe } from '$lib/database/Recipe';
-	import { db } from '$lib/firebase/firebase.client';
-	import { collection, getDocs, orderBy, query, where } from 'firebase/firestore';
 	import RecipeCard from '../../components/RecipeCard.svelte';
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
@@ -10,6 +8,7 @@
 	import IconButton from '@smui/icon-button';
 	import KeywordFilter from '../../components/KeywordFilter.svelte';
 	import Chip, { Set, TrailingAction, Text } from '@smui/chips';
+	import { getAllRecipes } from '$lib/firebase/recipe';
 
 	let allRecipes: Recipe[] = [];
 	let filteredRecipes: Recipe[] = [];
@@ -17,12 +16,6 @@
 	let searchText: string | undefined;
 	let selectedKeywords: string[];
 	let loadingRecipes = true;
-
-	const recipesRef = collection(db, 'recipes');
-	const getAllRecipes = () =>
-		getDocs(query(recipesRef, orderBy('name'))).then((querySnapshot) =>
-			querySnapshot.docs.map((doc) => doc.data() as Recipe)
-		);
 
 	getAllRecipes().then((recipes) => {
 		allRecipes = recipes;

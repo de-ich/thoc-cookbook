@@ -7,6 +7,7 @@ export interface RecipePreview {
     name: string;
     instructions: string[];
     sourceUrl: string | null;
+    sourceId: string | number | null;
     prepTime: number | null;
     cookTime: number | null;
     restingTime: number | null;
@@ -29,6 +30,7 @@ export const getEmptyRecipePreview = (): RecipePreview => {
         name: '',
         instructions: [],
         sourceUrl: null,
+        sourceId: null,
         prepTime: null,
         cookTime: null,
         restingTime: null,

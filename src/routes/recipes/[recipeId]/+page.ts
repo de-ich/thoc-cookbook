@@ -8,7 +8,12 @@ import { getRecipe } from '$lib/firebase/recipe';
 export async function load({ params }) {
 
     const recipeId = params['recipeId'];
-    return getRecipe(recipeId).catch((error) => {
+    return getRecipe(recipeId).then(recipe => {
+        return {
+            recipe: recipe
+        };
+    }).catch((error) => {
         throw error(404, error.message || 'Not found');
     });
+
 }

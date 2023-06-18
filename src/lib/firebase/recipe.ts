@@ -1,20 +1,34 @@
 
-import { collection, setDoc, doc, serverTimestamp, getDocFromServer, getDoc } from "firebase/firestore";
+import { collection, setDoc, doc, serverTimestamp, getDocFromServer, getDoc, getDocs, query, orderBy } from "firebase/firestore";
 import { auth, db, httpsCallable } from "./firebase.client";
 import { type Recipe, type RecipePreview, getEmptyRecipePreview } from "$lib/database/Recipe";
 import { getDownloadURL, getStorage, ref, uploadBytes, type StorageReference } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
 
-export const getRecipe = async (recipeId: string) => {
-    const recipeRef = doc(db, 'recipes', recipeId);
-    return getDoc(recipeRef).
-        then(doc => doc.data() as Recipe)
-        .catch(() => { throw Error(`Unable to find recipe with id ${recipeId} in database!`); })
-        .then((data) => {
-            return {
-                recipe: data
-            };
-        });
+const recipeCollectionRef = collection(db, "recipes");
+
+export const getExistingOrNewRecipeRef = (recipeId: string | null) => {
+    if (recipeId != null) {
+        return doc(recipeCollectionRef, recipeId);
+    } else {
+        return doc(recipeCollectionRef);
+    }
+}
+
+export const getRecipe = async (recipeId: string, fromServer: boolean = false) => {
+    const recipeRef = getExistingOrNewRecipeRef(recipeId);
+
+    let doc = fromServer ? getDocFromServer(recipeRef) : getDoc(recipeRef);
+
+    return doc.then(doc => doc.data() as Recipe)
+        .catch(() => { throw Error(`Unable to find recipe with id ${recipeId} in database!`); });
+}
+
+export const getAllRecipes = async () => {
+
+    return getDocs(query(recipeCollectionRef, orderBy('name'))).then((querySnapshot) =>
+        querySnapshot.docs.map((doc) => doc.data() as Recipe)
+    );
 }
 
 export const addRecipe = async (recipePreview: RecipePreview | Recipe): Promise<string> => {
@@ -23,17 +37,11 @@ export const addRecipe = async (recipePreview: RecipePreview | Recipe): Promise<
         throw Error('Unable to get current user id!')
     }
 
-    const collectionRef = collection(db, "recipes");
     // either get the existing document (if the provided preview already represents a recipe) or create a new document
-    let docRef;
-    if ((recipePreview as Recipe)?.id) {
-        docRef = doc(collectionRef, (recipePreview as Recipe).id);
-    } else {
-        docRef = doc(collectionRef);
-    }
+    const docRef = getExistingOrNewRecipeRef((recipePreview as Recipe)?.id || null);
     const docId = docRef.id;
 
-    const existingOrEmptyDocoument = await getDocFromServer(docRef).then(snapshot => snapshot.data() as Recipe) || getEmptyRecipePreview();
+    const existingOrEmptyDocoument = await getRecipe(docId, true).then(recipe => recipe).catch(() => getEmptyRecipePreview());
 
     const recipe: Recipe = {
         ...existingOrEmptyDocoument,
