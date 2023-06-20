@@ -9,6 +9,7 @@
 	import KeywordFilter from '../../components/KeywordFilter.svelte';
 	import Chip, { Set, TrailingAction, Text } from '@smui/chips';
 	import { getAllRecipes } from '$lib/firebase/recipe';
+	import { createError } from '../../stores/errormessagestore';
 
 	let allRecipes: Recipe[] = [];
 	let filteredRecipes: Recipe[] = [];
@@ -24,8 +25,7 @@
 			keys: ['name'],
 			threshold: 0.2
 		});
-		loadingRecipes = false;
-	});
+	}).catch((error) => createError('Unable to retrieve recipes: ' + error.message || '')).finally(() => loadingRecipes = false);
 
 	const startSearchOnEnter = (keyboardEvent: Event) => {
 		const keyCode = (keyboardEvent as KeyboardEvent)?.keyCode;
