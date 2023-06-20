@@ -1,6 +1,6 @@
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 
-export const downloadFile = onCall(async (request) => {
+export const downloadFile = onCall({ maxInstances: 1 }, async (request) => {
 
     const url = request.data.url as string;
 

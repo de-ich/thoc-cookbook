@@ -5,7 +5,7 @@ import { RecipePreview } from "./database/Recipe";
 const chefkochApiBaseUrl = 'https://api.chefkoch.de/v2/';
 const chefkochApiRecipeBaseUrl = chefkochApiBaseUrl + 'recipes/';
 
-export const fetchRecipe = onCall(async (request) => {
+export const fetchRecipe = onCall({ maxInstances: 1 }, async (request) => {
 
     const recipeId = request.data.recipeId as string;
     return internalFetchRecipe(recipeId);
@@ -89,7 +89,7 @@ const splitStringInLinesAndFilterEmpty = (text: string) => {
     return (text || '').split(/[\n\r]/).filter((line: string) => !line.match(/^[\s]*$/));
 }
 
-export const fetchRecipesFromAllUserCollections = onCall(async (request) => {
+export const fetchRecipesFromAllUserCollections = onCall({ maxInstances: 1 }, async (request) => {
 
     const chefkochCookie = request.data.chefkochCookie as string;
 
