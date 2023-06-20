@@ -1,8 +1,13 @@
 rules_version = '2';
 service firebase.storage {
-  match /b/{bucket}/o {
-    match /{allPaths=**} {
-      allow read, write: if false;
+  match /b/thoc-cookbook.appspot.com/o {
+
+    function isSignedIn() {
+      return request.auth != null && request.auth.uid != null;
+    }
+
+    match /images/{recipeId}/{image} {
+      allow get, write: if isSignedIn();
     }
   }
 }
