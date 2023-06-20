@@ -1,9 +1,24 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if
-          request.time < timestamp.date(2023, 6, 20);
+
+    function isSignedIn() {
+      return request.auth != null && request.auth.uid != null;
+    }
+
+    function recipeIsValid(resourceId) {
+      let hasId = 'id' in request.resource.data;
+      let hasName = 'name' in request.resource.data && request.resource.data.name.size() > 0;
+      let idMatchesResourceId = request.resource.data.id == resourceId;
+      return hasId && idMatchesResourceId && hasName;
+    }
+
+    match /recipes/{recipeId} {
+    	// currently, deleting documents is not allowed
+      allow read: if isSignedIn();
+      allow create, update: if 
+      	isSignedIn() && 
+      	recipeIsValid(recipeId);
     }
   }
 }
