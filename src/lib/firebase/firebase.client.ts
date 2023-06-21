@@ -6,15 +6,16 @@ import { getAuth } from 'firebase/auth';
 import { getFirestore } from "firebase/firestore";
 import { getFunctions } from 'firebase/functions';
 import { httpsCallableFromURL } from 'firebase/functions';
+import {PUBLIC_FIREBASE_APIKEY, PUBLIC_FIREBASE_APPID, PUBLIC_FIREBASE_AUTHDOMAIN, PUBLIC_FIREBASE_FUNCTIONSBASEURL, PUBLIC_FIREBASE_MESSAGINGSENDERID, PUBLIC_FIREBASE_PROJECTID, PUBLIC_FIREBASE_STORAGEBUCKET} from '$env/static/public';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: import.meta.env.VITE_FIREBASE_APIKEY,
-    authDomain: import.meta.env.VITE_FIREBASE_AUTHDOMAIN,
-    projectId: import.meta.env.VITE_FIREBASE_PROJECTID,
-    storageBucket: import.meta.env.VITE_FIREBASE_STORAGEBUCKET,
-    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGINGSENDERID,
-    appId: import.meta.env.VITE_FIREBASE_APPID
+    apiKey: PUBLIC_FIREBASE_APIKEY,
+    authDomain: PUBLIC_FIREBASE_AUTHDOMAIN,
+    projectId: PUBLIC_FIREBASE_PROJECTID,
+    storageBucket: PUBLIC_FIREBASE_STORAGEBUCKET,
+    messagingSenderId: PUBLIC_FIREBASE_MESSAGINGSENDERID,
+    appId: PUBLIC_FIREBASE_APPID
 };
 
 // Initialize Firebase
@@ -29,7 +30,7 @@ export const auth = getAuth(firebaseapp);
 export const db = getFirestore(firebaseapp);
 export const functions = getFunctions(firebaseapp);
 
-const firebaseFunctionsBaseURL = import.meta.env.VITE_FIREBASE_FUNCTIONSBASEURL;
+const firebaseFunctionsBaseURL = PUBLIC_FIREBASE_FUNCTIONSBASEURL;
 
 export const httpsCallable = (name: string) => {
     return httpsCallableFromURL(functions, firebaseFunctionsBaseURL + name);
