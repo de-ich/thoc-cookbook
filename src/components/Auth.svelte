@@ -12,13 +12,13 @@
 			return;
 		}
 
-		try {
-			await authHandlers.login(email, password);
-		} catch (err) {
-			createError(err as Error);
-		}
+		const loginResult = await authHandlers.login(email, password).catch(createError);
 
-		if ($authStore.currentUser) {
+		if (loginResult) {
+			createError(loginResult);
+		} else if (!$authStore.currentUser) {
+			createError('Login unsuccessful!');
+		} else {
 			window.location.href = '/';
 		}
 	}
@@ -48,11 +48,9 @@
 			flex-direction: column;
 			margin-top: 1rem;
 
-			
 			:global(.submitButton) {
 				margin-top: 1rem;
 			}
 		}
 	}
-
 </style>

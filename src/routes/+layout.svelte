@@ -6,6 +6,7 @@
 	import Header from '../components/Header.svelte';
 	import Loading from '../components/Loading.svelte';
 	import { LOGIN_PAGE_ROUTE } from './routes';
+	import ErrorDialog from '../components/ErrorDialog.svelte';
 
 	onMount(() => {
 		const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -38,6 +39,8 @@
 		<slot />
 	</div>
 {/if}
+
+<ErrorDialog />
 
 <style lang="scss">
 	.mainContainer {

@@ -11,7 +11,6 @@
 	import { goto } from '$app/navigation';
 	import { onDestroy } from 'svelte';
 	import { createError } from '../stores/errormessagestore';
-	import ErrorDialog from './ErrorDialog.svelte';
 
 	let user: Nullable<string> = null;
 	const unsubscribeAuthStore = authStore.subscribe((curr) => {
@@ -90,8 +89,6 @@
 </TopAppBar>
 
 <ChefkochImportDialog bind:open={showChefkochImportDialog} />
-
-<ErrorDialog />
 
 <style lang="scss">
 	:global(.mdc-top-app-bar__title:hover) {
