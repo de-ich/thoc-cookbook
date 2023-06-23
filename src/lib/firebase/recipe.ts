@@ -18,10 +18,14 @@ export const getExistingOrNewRecipeRef = (recipeId: string | null) => {
 export const getRecipe = async (recipeId: string, fromServer: boolean = false) => {
     const recipeRef = getExistingOrNewRecipeRef(recipeId);
 
-    let doc = fromServer ? getDocFromServer(recipeRef) : getDoc(recipeRef);
+    const recipeDocumentPromise = fromServer ? getDocFromServer(recipeRef) : getDoc(recipeRef);
+    const recipeDocument = await recipeDocumentPromise.then(document => document.data() as Recipe);
 
-    return doc.then(doc => doc.data() as Recipe)
-        .catch(() => { throw Error(`Unable to find recipe with id ${recipeId} in database!`); });
+    if (recipeDocument) {
+        return recipeDocument;
+    }
+
+    throw Error(`Unable to find recipe with id ${recipeId} in database!`);
 }
 
 export const getAllRecipes = async () => {
