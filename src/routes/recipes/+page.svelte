@@ -18,14 +18,17 @@
 	let selectedKeywords: string[];
 	let loadingRecipes = true;
 
-	getAllRecipes().then((recipes) => {
-		allRecipes = recipes;
-		filteredRecipes = [...recipes];
-		fuse = new Fuse(recipes, {
-			keys: ['name'],
-			threshold: 0.2
-		});
-	}).catch((error) => createError('Unable to retrieve recipes: ' + error.message || '')).finally(() => loadingRecipes = false);
+	getAllRecipes()
+		.then((recipes) => {
+			allRecipes = recipes;
+			filteredRecipes = [...recipes];
+			fuse = new Fuse(recipes, {
+				keys: ['name'],
+				threshold: 0.2
+			});
+		})
+		.catch((error) => createError('Unable to retrieve recipes: ' + error.message || ''))
+		.finally(() => (loadingRecipes = false));
 
 	const startSearchOnEnter = (keyboardEvent: Event) => {
 		const keyCode = (keyboardEvent as KeyboardEvent)?.keyCode;
@@ -58,6 +61,12 @@
 
 <div class="recipeList">
 	<div class="searchAndFilterArea">
+		<div class="keywordFilter">
+			<KeywordFilter
+				availableKeywords={allRecipes.flatMap((recipe) => recipe.keywords)}
+				bind:selectedKeywords
+			/>
+		</div>
 		<div class="searchField">
 			<Textfield
 				class="searchField"
@@ -85,12 +94,6 @@
 				>
 				<HelperText slot="helper">Suche starten mit Enter</HelperText>
 			</Textfield>
-		</div>
-		<div class="keywordFilter">
-			<KeywordFilter
-				availableKeywords={allRecipes.flatMap((recipe) => recipe.keywords)}
-				bind:selectedKeywords
-			/>
 		</div>
 		{#if (selectedKeywords || []).length > 0}
 			<div class="keywordChips">
@@ -126,6 +129,11 @@
 			display: flex;
 			flex-direction: row;
 			flex-wrap: wrap;
+			column-gap: 1rem;
+
+			@media (max-width: 800px) {
+				flex-direction: column;
+			}
 
 			.searchField {
 				flex-grow: 1;
@@ -137,12 +145,18 @@
 			}
 
 			.keywordFilter {
-				order: -1;
 				flex-basis: 20%;
+
+				@media (max-width: 800px) {
+					order: 1;
+				}
 			}
 
 			.keywordChips {
 				flex-basis: 100%;
+				@media (max-width: 800px) {
+					order: 2;
+				}
 			}
 		}
 

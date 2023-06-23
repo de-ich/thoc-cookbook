@@ -27,4 +27,12 @@
 
 <RecipeEdit bind:recipePreview />
 
-<Button class="submitButton" on:click={addRecipeToDatabase} variant="unelevated">Speichern</Button>
+<div class="submitButtonContainer">
+	<Button class="submitButton" on:click={addRecipeToDatabase} variant="unelevated">Speichern</Button>
+</div>
+
+<style lang="scss">
+	.submitButtonContainer {
+		margin-top: 1rem;
+	}
+</style>

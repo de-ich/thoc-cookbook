@@ -1,6 +1,5 @@
 <script lang="ts">
 	import Autocomplete from '@smui-extra/autocomplete';
-	
 
 	export let availableKeywords: string[];
 	export let selectedKeywords: string[] = [];
@@ -23,12 +22,22 @@
 	}
 </script>
 
-<Autocomplete
-    bind:this={selector}
-    options={remainingKeywords}
-    bind:value
-    label="Nach Kategorien filtern"
-    on:SMUIAutocomplete:selected={handleSelection}
-    textfield$variant="outlined"
-/>
+<div class="autocompleteContainer">
+	<Autocomplete
+		bind:this={selector}
+		options={remainingKeywords}
+		bind:value
+		label="Nach Kategorien filtern"
+		on:SMUIAutocomplete:selected={handleSelection}
+		textfield$variant="outlined"
+		style="width: 100%;"
+	/>
+</div>
 
+<style lang="scss">
+	.autocompleteContainer {
+		:global(label) {
+			width: 100%;
+		}
+	}
+</style>
