@@ -14,7 +14,7 @@
 
 		const loginResult = await authHandlers.login(email, password).catch(createError);
 
-		if (loginResult) {
+		if (loginResult && loginResult.message) {
 			createError(loginResult);
 		} else if (!$authStore.currentUser) {
 			createError('Login unsuccessful!');
@@ -26,11 +26,11 @@
 
 <div class="container">
 	<h3>Log in</h3>
-	<form>
+	<div class="loginForm">
 		<Textfield bind:value={email} label="Email" required type="email" />
 		<Textfield bind:value={password} label="Password" required type="password" />
 		<Button class="submitButton" on:click={handleSubmit} variant="unelevated">Submit</Button>
-	</form>
+	</div>
 </div>
 
 <style lang="scss">
@@ -43,7 +43,7 @@
 		flex: 1;
 		min-height: 80vh;
 
-		form {
+		.loginForm {
 			display: flex;
 			flex-direction: column;
 			margin-top: 1rem;

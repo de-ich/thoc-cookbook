@@ -7,6 +7,6 @@ export const confirmError = () => {
 }
 
 export const createError = (error: Error | string) => {
-    const errorMessage = typeof (error) === 'string' ? error : error.message || 'Internal Error!';
+    const errorMessage = typeof (error) === 'string' ? error : (error.message || 'Internal Error!');
     errorMessageStore.set(errorMessage);
 }
