@@ -5,8 +5,8 @@ import { deleteApp, getApp, getApps, initializeApp } from "firebase/app";
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from "firebase/firestore";
 import { getFunctions } from 'firebase/functions';
-import { httpsCallableFromURL } from 'firebase/functions';
-import {PUBLIC_FIREBASE_APIKEY, PUBLIC_FIREBASE_APPID, PUBLIC_FIREBASE_AUTHDOMAIN, PUBLIC_FIREBASE_FUNCTIONSBASEURL, PUBLIC_FIREBASE_MESSAGINGSENDERID, PUBLIC_FIREBASE_PROJECTID, PUBLIC_FIREBASE_STORAGEBUCKET} from '$env/static/public';
+import { httpsCallableFromURL, httpsCallable as firebaseHttpsCallable } from 'firebase/functions';
+import { PUBLIC_FIREBASE_APIKEY, PUBLIC_FIREBASE_APPID, PUBLIC_FIREBASE_AUTHDOMAIN, PUBLIC_FIREBASE_FUNCTIONSBASEURL, PUBLIC_FIREBASE_MESSAGINGSENDERID, PUBLIC_FIREBASE_PROJECTID, PUBLIC_FIREBASE_STORAGEBUCKET } from '$env/static/public';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -33,5 +33,10 @@ export const functions = getFunctions(firebaseapp);
 const firebaseFunctionsBaseURL = PUBLIC_FIREBASE_FUNCTIONSBASEURL;
 
 export const httpsCallable = (name: string) => {
-    return httpsCallableFromURL(functions, firebaseFunctionsBaseURL + name);
+    if (firebaseFunctionsBaseURL) {
+        // use a custom URL to invoke the function, e.g. for local development
+        return httpsCallableFromURL(functions, firebaseFunctionsBaseURL + name);
+    } else {
+        return firebaseHttpsCallable(functions, name);
+    }
 }
