@@ -121,6 +121,8 @@ export const fetchRecipesFromAllUserCollections = onCall({ maxInstances: 1 }, as
         }).then(getUserCollectionsFromResponse);
         console.log("User Collections: ", userCollections);
 
+        const addedRecipeIds: string[] = [];
+
         for (const collectionId of userCollections) {
             const getCollectionNameAndRecipesCountUrl = 'https://api.chefkoch.de/v2/cookbooks/user-' + userId + '/recipes?categoryId=' + collectionId + '&offset=0&limit=0';
             const getCollectionNameAndRecipesCount = async (response: Response) => response.json().then(json => {
@@ -139,11 +141,18 @@ export const fetchRecipesFromAllUserCollections = onCall({ maxInstances: 1 }, as
 
             for (const recipe of recipes) {
                 const recipeId = recipe.recipe.id || recipe.recipe.sourceId;
+
+                if (addedRecipeIds.includes(recipeId)) {
+                    console.log(`Skipping recipe with ID ${recipeId} because it was already imported.`);
+                    continue;
+                }
+
                 const recipeNote = recipe.note;
 
                 const recipeDraft = await internalFetchRecipe(recipeId, chefkochCookie).catch(error => {
                     throw Error('An error occurred while trying to import recipe with ID ' + recipeId + ' (' + JSON.stringify(recipe.recipe) + ')');
                 });
+                addedRecipeIds.push(recipeId);
                 fetchedRecipes.push({ ...recipeDraft, comment: recipeNote })
             }
         }
