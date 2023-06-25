@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import type { Recipe } from '$lib/database/Recipe';
+	import type { RecipeDetails } from '$lib/database/Recipe';
 	import { RecipeYieldType } from '$lib/database/Recipe';
 	import IconButton from '@smui/icon-button';
 	import List, { Item, Text } from '@smui/list';
@@ -11,7 +11,7 @@
 	/** @type {import('./$types').PageData} */
 	export let data: any;
 
-	let recipe: Recipe = data.recipe;
+	let recipe: RecipeDetails = data.recipe;
 	let currentYield = recipe.recipeYield || 1;
 
 	const getIngredientString = (ingredient: Ingredient): string => {

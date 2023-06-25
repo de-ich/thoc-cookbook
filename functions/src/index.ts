@@ -8,10 +8,17 @@
  */
 
 import { initializeApp } from "firebase-admin/app";
-import { fetchRecipe, fetchRecipesFromAllUserCollections } from "./chefkoch";
-import { downloadFile } from "./download";
+import { setGlobalOptions } from "firebase-functions/v2/options";
 
+// we need to initialize the app before importing the functions as initialization 
+// code in theses files may rely on the app being initialized
 initializeApp();
 
-export { fetchRecipe, fetchRecipesFromAllUserCollections, downloadFile };
+setGlobalOptions({ maxInstances: 2 });
+
+import { fetchRecipe, fetchRecipesFromAllUserCollections } from "./chefkoch";
+import { downloadFile } from "./download";
+import { updateRecipePreview } from "./database";
+
+export { fetchRecipe, fetchRecipesFromAllUserCollections, downloadFile, updateRecipePreview };
 

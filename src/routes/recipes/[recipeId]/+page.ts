@@ -1,14 +1,10 @@
-import { error } from '@sveltejs/kit';
-import type { Recipe } from '$lib/database/Recipe';
-import { db } from '$lib/firebase/firebase.client';
-import { doc, getDoc } from 'firebase/firestore';
-import { getRecipe } from '$lib/firebase/recipe';
+import { getRecipeDetails } from '$lib/firebase/recipe';
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ params }) {
 
     const recipeId = params['recipeId'];
-    return getRecipe(recipeId).then(recipe => {
+    return getRecipeDetails(recipeId).then(recipe => {
         return {
             recipe: recipe
         };

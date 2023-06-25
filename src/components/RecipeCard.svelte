@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { Recipe } from '$lib/database/Recipe';
+	import type { RecipePreview } from '$lib/database/Recipe';
 
-	export let recipe: Recipe;
+	export let recipe: RecipePreview;
 </script>
 
 <div class="recipeCardContainer">
@@ -19,9 +19,9 @@
 
 	.recipeCard {
 		background-color: var(--mdc-theme-background);
-        border: .05rem solid var(--mdc-theme-secondary);
-        border-radius: .5rem;
-        padding: .5rem;
+		border: 0.05rem solid var(--mdc-theme-secondary);
+		border-radius: 0.5rem;
+		padding: 0.5rem;
 
 		&:hover {
 			color: var(--mdc-theme-primary);

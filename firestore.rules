@@ -13,12 +13,17 @@ service cloud.firestore {
       return hasId && idMatchesResourceId && hasName;
     }
 
-    match /recipes/{recipeId} {
+    match /recipeDetails/{recipeId} {
     	// currently, deleting documents is not allowed
       allow read: if isSignedIn();
       allow create, update: if 
       	isSignedIn() && 
       	recipeIsValid(recipeId);
+    }
+
+    match /recipePreviews/{recipeId} {
+    	// allow only read because documents are updated via a background function
+      allow read: if isSignedIn();
     }
   }
 }

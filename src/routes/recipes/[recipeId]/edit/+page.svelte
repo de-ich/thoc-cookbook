@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Recipe } from '$lib/database/Recipe';
+	import type { RecipeDetails } from '$lib/database/Recipe';
 	import Button from '@smui/button';
 	import { updateRecipe } from '$lib/firebase/recipe';
 	import { goto } from '$app/navigation';
@@ -9,7 +9,7 @@
 	/** @type {import('./$types').PageData} */
 	export let data: any;
 
-	let recipe: Recipe = data.recipe;
+	let recipe: RecipeDetails = data.recipe;
 
 	const updateRecipeInDatabase = () => {
 		updateRecipe(recipe)

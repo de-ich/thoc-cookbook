@@ -1,58 +1,59 @@
 
 import { collection, setDoc, doc, serverTimestamp, getDocFromServer, getDoc, getDocs, query, orderBy, where } from "firebase/firestore";
 import { auth, db, httpsCallable } from "./firebase.client";
-import { type Recipe, type RecipeDraft, getEmptyRecipeDraft } from "$lib/database/Recipe";
+import { type RecipeDetails, type RecipeDraft, getEmptyRecipeDraft, type RecipePreview } from "$lib/database/Recipe";
 import { getDownloadURL, getStorage, ref, uploadBytes, type StorageReference } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
 
-const recipeCollectionRef = collection(db, "recipes");
+const recipePreviewCollectionRef = collection(db, "recipePreviews");
+const recipeDetailsCollectionRef = collection(db, "recipeDetails");
 
-export const getExistingOrNewRecipeRef = (recipeId: string | null) => {
+export const getExistingOrNewRecipeDetailsRef = (recipeId: string | null) => {
     if (recipeId != null) {
-        return doc(recipeCollectionRef, recipeId);
+        return doc(recipeDetailsCollectionRef, recipeId);
     } else {
-        return doc(recipeCollectionRef);
+        return doc(recipeDetailsCollectionRef);
     }
 }
 
-export const getRecipe = async (recipeId: string, fromServer: boolean = false) => {
-    const recipeRef = getExistingOrNewRecipeRef(recipeId);
+export const getRecipeDetails = async (recipeId: string, fromServer: boolean = false) => {
+    const recipeRef = getExistingOrNewRecipeDetailsRef(recipeId);
 
     const recipeDocumentPromise = fromServer ? getDocFromServer(recipeRef) : getDoc(recipeRef);
-    const recipeDocument = await recipeDocumentPromise.then(document => document.data() as Recipe);
+    const recipeDocument = await recipeDocumentPromise.then(document => document.data() as RecipeDetails);
 
     if (recipeDocument) {
         return recipeDocument;
     }
 
-    throw Error(`Unable to find recipe with id ${recipeId} in database!`);
+    throw Error(`Unable to find details for recipe with id ${recipeId} in database!`);
 }
 
-export const getAllRecipes = async () => {
+export const getAllRecipePreviews = async () => {
 
-    return getDocs(query(recipeCollectionRef, orderBy('name'))).then((querySnapshot) =>
-        querySnapshot.docs.map((doc) => doc.data() as Recipe)
+    return getDocs(query(recipePreviewCollectionRef, orderBy('name'))).then((querySnapshot) =>
+        querySnapshot.docs.map((doc) => doc.data() as RecipePreview)
     );
 }
 
 export const checkRecipeWithSourceIdDoesNotYetExist = async (sourceId: string | number): Promise<boolean> => {
-    const q = query(recipeCollectionRef, where("sourceId", "==", sourceId));
+    const q = query(recipeDetailsCollectionRef, where("sourceId", "==", sourceId));
     return await getDocs(q).then(snapshot => snapshot.docs).then(documents => documents && documents.length > 0);
 }
 
-export const addRecipe = async (recipeDraft: RecipeDraft | Recipe): Promise<string> => {
+export const addRecipe = async (recipeDraft: RecipeDraft | RecipeDetails): Promise<string> => {
 
     if (!auth.currentUser) {
         throw Error('Unable to get current user id!')
     }
 
     // either get the existing document (if the provided draft already represents a recipe) or create a new document
-    const docRef = getExistingOrNewRecipeRef((recipeDraft as Recipe)?.id || null);
+    const docRef = getExistingOrNewRecipeDetailsRef((recipeDraft as RecipeDetails)?.id || null);
     const docId = docRef.id;
 
-    const existingOrEmptyDocoument = await getRecipe(docId, true).then(recipe => recipe).catch(() => getEmptyRecipeDraft());
+    const existingOrEmptyDocoument = await getRecipeDetails(docId, true).then(recipe => recipe).catch(() => getEmptyRecipeDraft());
 
-    const recipe: Recipe = {
+    const recipe: RecipeDetails = {
         ...existingOrEmptyDocoument,
         ...recipeDraft,
         id: docId,
@@ -76,6 +77,7 @@ export const addRecipe = async (recipeDraft: RecipeDraft | Recipe): Promise<stri
         }
         // FIXME we should also remove deleted images from storage
     }
+
 
     return setDoc(docRef, recipe).then(() => {
         console.log("Document written with ID: ", docId);
@@ -108,12 +110,12 @@ export interface DownloadedFile {
     contentType: string;
 };
 
-const fetchRecipeCallable = httpsCallable('downloadFile');
+const downloadFileCallable = httpsCallable('downloadFile');
 const knownImageExtensions = ["JPG", "JPEG", "JPE", "BMP", "GIF", "PNG"];
 
 const copyRemoteImageToStorage = async (imageUrl: string, folderRef: StorageReference): Promise<string> => {
 
-    const downloadedFile = await fetchRecipeCallable({ url: imageUrl }).then(result => result.data as DownloadedFile).catch(error => {
+    const downloadedFile = await downloadFileCallable({ url: imageUrl }).then(result => result.data as DownloadedFile).catch(error => {
         throw Error(`The following error occurred while trying to download image from URL ${imageUrl}: ${error.message || ''}`);
     });
 
@@ -143,7 +145,7 @@ const uploadImageToStorage = async (image: Blob, imageName: string, folderRef: S
     });
 };
 
-export const updateRecipe = async (recipe: Recipe): Promise<string> => {
+export const updateRecipe = async (recipe: RecipeDetails): Promise<string> => {
 
     return addRecipe(recipe);
 }

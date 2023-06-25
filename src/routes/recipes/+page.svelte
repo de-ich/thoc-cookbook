@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Recipe } from '$lib/database/Recipe';
+	import type { RecipePreview } from '$lib/database/Recipe';
 	import RecipeCard from '../../components/RecipeCard.svelte';
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
@@ -8,17 +8,17 @@
 	import IconButton from '@smui/icon-button';
 	import KeywordFilter from '../../components/KeywordFilter.svelte';
 	import Chip, { Set, TrailingAction, Text } from '@smui/chips';
-	import { getAllRecipes } from '$lib/firebase/recipe';
+	import { getAllRecipePreviews } from '$lib/firebase/recipe';
 	import { createError } from '../../stores/errormessagestore';
 
-	let allRecipes: Recipe[] = [];
-	let filteredRecipes: Recipe[] = [];
-	let fuse: Fuse<Recipe>;
+	let allRecipes: RecipePreview[] = [];
+	let filteredRecipes: RecipePreview[] = [];
+	let fuse: Fuse<RecipePreview>;
 	let searchText: string | undefined;
 	let selectedKeywords: string[];
 	let loadingRecipes = true;
 
-	getAllRecipes()
+	getAllRecipePreviews()
 		.then((recipes) => {
 			allRecipes = recipes;
 			filteredRecipes = [...recipes];
