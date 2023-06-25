@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Textfield from '@smui/textfield';
-	import { getEmptyRecipePreview, type RecipePreview } from '$lib/database/Recipe';
+	import { getEmptyRecipeDraft, type RecipeDraft } from '$lib/database/Recipe';
 	import { parseIngredient } from '$lib/ingredient-parser';
 	import { formatQuantity } from 'format-quantity';
 	import SegmentedButton, { Segment } from '@smui/segmented-button';
@@ -8,21 +8,21 @@
 	import { RecipeYieldType } from '$lib/database/Recipe';
 	import { onMount } from 'svelte';
 
-	// either pass in an existing Recipe/RecipePreview (when editing a recipe) or use an
-	// empty preview (when creating a new recipe)
-	export let recipePreview: RecipePreview = getEmptyRecipePreview();
+	// either pass in an existing Recipe/RecipeDraft (when editing a recipe) or use an
+	// empty draft (when creating a new recipe)
+	export let recipeDraft: RecipeDraft = getEmptyRecipeDraft();
 
 	onMount(() => {
 		// make sure all fields are properly initialized
-		recipePreview = { ...getEmptyRecipePreview(), ...recipePreview };
+		recipeDraft = { ...getEmptyRecipeDraft(), ...recipeDraft };
 	});
 
-	let instructions = recipePreview.instructions.join('\n');
+	let instructions = recipeDraft.instructions.join('\n');
 	$: {
-		recipePreview.instructions = instructions.split('\n').map((instruction) => instruction.trim());
+		recipeDraft.instructions = instructions.split('\n').map((instruction) => instruction.trim());
 	}
 
-	let ingredients = recipePreview.ingredients
+	let ingredients = recipeDraft.ingredients
 		.map((ingredient) => {
 			let ret =
 				(ingredient.quantity != null ? formatQuantity(ingredient.quantity) : '') +
@@ -42,30 +42,31 @@
 		.join('\n');
 
 	$: {
-		recipePreview.ingredients = parseIngredient(ingredients);
+		recipeDraft.ingredients = parseIngredient(ingredients);
 	}
 
-	let keywords = recipePreview.keywords.join(', ');
+	let keywords = recipeDraft.keywords.join(', ');
 	$: {
-		recipePreview.keywords = keywords.split(',').map((keyword) => keyword.trim()).filter((keyword) => keyword);
+		recipeDraft.keywords = keywords
+			.split(',')
+			.map((keyword) => keyword.trim())
+			.filter((keyword) => keyword);
 	}
 
-	let recipeImageUrls = recipePreview.images
-		.filter((image) => typeof image === 'string')
-		.join('\n');
+	let recipeImageUrls = recipeDraft.images.filter((image) => typeof image === 'string').join('\n');
 	$: {
-		const existingImageFiles = recipePreview.images.filter((image) => typeof image !== 'string');
+		const existingImageFiles = recipeDraft.images.filter((image) => typeof image !== 'string');
 		const newImages: (string | File)[] = [];
 		newImages.push(...existingImageFiles);
 		if ((recipeImageUrls || []).length > 0) {
 			newImages.push(...recipeImageUrls.split('\n').map((imageUrl) => imageUrl.trim()));
 		}
-		recipePreview.images = newImages;
+		recipeDraft.images = newImages;
 	}
 
 	let recipeImageFiles: FileList;
 	$: {
-		const existingImageUrl = recipePreview.images.filter((image) => typeof image === 'string');
+		const existingImageUrl = recipeDraft.images.filter((image) => typeof image === 'string');
 		const newImages: (string | File)[] = [];
 		newImages.push(...existingImageUrl);
 		if (recipeImageFiles) {
@@ -73,16 +74,16 @@
 				newImages.push(file);
 			}
 		}
-		recipePreview.images = newImages;
+		recipeDraft.images = newImages;
 	}
 </script>
 
-<div class="recipePreviewContainer">
+<div class="recipeDraftContainer">
 	<Textfield
 		id="recipeTitle"
 		variant="outlined"
 		type="text"
-		bind:value={recipePreview.name}
+		bind:value={recipeDraft.name}
 		label="Rezepttitel"
 		style="min-width: 25rem;"
 		required
@@ -93,7 +94,7 @@
 				segments={[RecipeYieldType.Serving, RecipeYieldType.BakingDish]}
 				let:segment
 				singleSelect
-				bind:selected={recipePreview.recipeYieldType}
+				bind:selected={recipeDraft.recipeYieldType}
 			>
 				<!-- Note: the `segment` property is required! -->
 				<Segment {segment}>
@@ -103,18 +104,18 @@
 			<Textfield
 				variant="outlined"
 				type="number"
-				bind:value={recipePreview.recipeYield}
-				label={recipePreview.recipeYieldType}
+				bind:value={recipeDraft.recipeYield}
+				label={recipeDraft.recipeYieldType}
 				style="max-width: 10rem;"
-				suffix={recipePreview.recipeYieldType === RecipeYieldType.BakingDish ? 'cm' : ''}
+				suffix={recipeDraft.recipeYieldType === RecipeYieldType.BakingDish ? 'cm' : ''}
 				input$emptyValueUndefined
 			/>
 		</div>
-		<div class="recipePreviewTimesContainer">
+		<div class="recipeDraftTimesContainer">
 			<Textfield
 				variant="outlined"
 				type="number"
-				bind:value={recipePreview.prepTime}
+				bind:value={recipeDraft.prepTime}
 				label="Vorbereitungszeit"
 				style="min-width: 3rem;max-width: 10rem;"
 				suffix="min"
@@ -123,7 +124,7 @@
 			<Textfield
 				variant="outlined"
 				type="number"
-				bind:value={recipePreview.cookTime}
+				bind:value={recipeDraft.cookTime}
 				label="Koch-/Backzeit"
 				style="min-width: 3rem;max-width: 10rem;"
 				suffix="min"
@@ -132,7 +133,7 @@
 			<Textfield
 				variant="outlined"
 				type="number"
-				bind:value={recipePreview.restingTime}
+				bind:value={recipeDraft.restingTime}
 				label="Ruhezeit"
 				style="min-width: 3rem;max-width: 10rem;"
 				suffix="min"
@@ -141,7 +142,7 @@
 			<Textfield
 				variant="outlined"
 				type="number"
-				bind:value={recipePreview.totalTime}
+				bind:value={recipeDraft.totalTime}
 				label="Gesamtzeit"
 				style="min-width: 3rem;max-width: 10rem;"
 				suffix="min"
@@ -194,7 +195,7 @@
 		helperLine$style="width: 100%;"
 		textarea
 		label="Kommentar"
-		bind:value={recipePreview.comment}
+		bind:value={recipeDraft.comment}
 		input$emptyValueUndefined
 	/>
 	<Textfield
@@ -203,13 +204,13 @@
 		style="width: 100%;"
 		helperLine$style="width: 100%;"
 		label="Quelle"
-		bind:value={recipePreview.sourceUrl}
+		bind:value={recipeDraft.sourceUrl}
 		input$emptyValueUndefined
 	/>
 </div>
 
 <style lang="scss">
-	.recipePreviewContainer {
+	.recipeDraftContainer {
 		display: flex;
 		flex-direction: column;
 		gap: 1.5rem;
@@ -227,7 +228,7 @@
 				align-items: center;
 			}
 
-			.recipePreviewTimesContainer {
+			.recipeDraftTimesContainer {
 				display: flex;
 				flex-direction: row;
 				gap: 1rem;

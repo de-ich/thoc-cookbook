@@ -1,7 +1,7 @@
 import type { FieldValue } from "firebase/firestore";
 import type { Ingredient } from "parse-ingredient";
 
-export interface RecipePreview {
+export interface RecipeDraft {
     images: (string | File)[];
     ingredients: Ingredient[];
     name: string;
@@ -23,7 +23,7 @@ export enum RecipeYieldType {
     BakingDish = "Backform"
 }
 
-export const getEmptyRecipePreview = (): RecipePreview => {
+export const getEmptyRecipeDraft = (): RecipeDraft => {
     return {
         images: [],
         ingredients: [],
@@ -42,7 +42,7 @@ export const getEmptyRecipePreview = (): RecipePreview => {
     };
 }
 
-export interface Recipe extends RecipePreview {
+export interface Recipe extends RecipeDraft {
     id: string;
     addedBy: string;
     addedTimestamp: FieldValue;

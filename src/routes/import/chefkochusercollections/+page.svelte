@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import type { RecipePreview } from '$lib/database/Recipe';
+	import type { RecipeDraft } from '$lib/database/Recipe';
 	import { addRecipe } from '$lib/firebase/recipe';
 	import { fetchRecipesFromAllUserCollections } from '$lib/importer/chefkoch';
 	import Button, { Label } from '@smui/button';
@@ -9,7 +9,7 @@
 	import { createError } from '../../../stores/errormessagestore';
 
 	let chefkochCookie: string = '';
-	let recipes: RecipePreview[] = [];
+	let recipes: RecipeDraft[] = [];
 
 	let showDialog = false;
 

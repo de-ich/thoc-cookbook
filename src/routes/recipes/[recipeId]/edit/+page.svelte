@@ -18,7 +18,7 @@
 	};
 </script>
 
-<RecipeEdit bind:recipePreview={recipe} />
+<RecipeEdit bind:recipeDraft={recipe} />
 
 <div class="submitButtonContainer">
 	<Button class="submitButton" on:click={updateRecipeInDatabase} variant="unelevated"

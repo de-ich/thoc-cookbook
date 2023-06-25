@@ -7,7 +7,7 @@
 	import List, { Item, Separator, Text } from '@smui/list';
 	import chefkochLogo from '$lib/assets/chefkoch-logo.svg';
 	import ChefkochImportDialog from './ChefkochImportDialog.svelte';
-	import { clearRecipePreview } from '../stores/recipepreviewstore';
+	import { clearRecipeDraft } from '../stores/recipedraftstore';
 	import { goto } from '$app/navigation';
 	import { onDestroy } from 'svelte';
 	import { createError } from '../stores/errormessagestore';
@@ -57,7 +57,7 @@
 					class="material-icons"
 					aria-label="Import"
 					on:click={() => {
-						clearRecipePreview();
+						clearRecipeDraft();
 						goto('/addrecipe');
 					}}>add</IconButton
 				>

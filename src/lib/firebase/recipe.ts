@@ -1,7 +1,7 @@
 
 import { collection, setDoc, doc, serverTimestamp, getDocFromServer, getDoc, getDocs, query, orderBy, where } from "firebase/firestore";
 import { auth, db, httpsCallable } from "./firebase.client";
-import { type Recipe, type RecipePreview, getEmptyRecipePreview } from "$lib/database/Recipe";
+import { type Recipe, type RecipeDraft, getEmptyRecipeDraft } from "$lib/database/Recipe";
 import { getDownloadURL, getStorage, ref, uploadBytes, type StorageReference } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -40,21 +40,21 @@ export const checkRecipeWithSourceIdDoesNotYetExist = async (sourceId: string | 
     return await getDocs(q).then(snapshot => snapshot.docs).then(documents => documents && documents.length > 0);
 }
 
-export const addRecipe = async (recipePreview: RecipePreview | Recipe): Promise<string> => {
+export const addRecipe = async (recipeDraft: RecipeDraft | Recipe): Promise<string> => {
 
     if (!auth.currentUser) {
         throw Error('Unable to get current user id!')
     }
 
-    // either get the existing document (if the provided preview already represents a recipe) or create a new document
-    const docRef = getExistingOrNewRecipeRef((recipePreview as Recipe)?.id || null);
+    // either get the existing document (if the provided draft already represents a recipe) or create a new document
+    const docRef = getExistingOrNewRecipeRef((recipeDraft as Recipe)?.id || null);
     const docId = docRef.id;
 
-    const existingOrEmptyDocoument = await getRecipe(docId, true).then(recipe => recipe).catch(() => getEmptyRecipePreview());
+    const existingOrEmptyDocoument = await getRecipe(docId, true).then(recipe => recipe).catch(() => getEmptyRecipeDraft());
 
     const recipe: Recipe = {
         ...existingOrEmptyDocoument,
-        ...recipePreview,
+        ...recipeDraft,
         id: docId,
         addedTimestamp: serverTimestamp(),
         addedBy: auth.currentUser?.uid,
@@ -64,7 +64,7 @@ export const addRecipe = async (recipePreview: RecipePreview | Recipe): Promise<
     const storage = getStorage();
     const recipeImagesRef = ref(storage, `images/${docId}`);
 
-    for (const image of recipePreview.images) {
+    for (const image of recipeDraft.images) {
         let imageUrl;
         if (existingOrEmptyDocoument.images.includes(image)) {
             imageUrl = image;

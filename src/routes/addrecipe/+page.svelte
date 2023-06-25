@@ -1,34 +1,35 @@
 <script lang="ts">
-	import { recipePreviewStore, clearRecipePreview } from '../../stores/recipepreviewstore';
+	import { recipeDraftStore, clearRecipeDraft } from '../../stores/recipedraftstore';
 	import { onDestroy } from 'svelte';
-	import type { RecipePreview } from '$lib/database/Recipe';
+	import type { RecipeDraft } from '$lib/database/Recipe';
 	import Button from '@smui/button';
 	import { addRecipe } from '$lib/firebase/recipe';
 	import { goto } from '$app/navigation';
 	import RecipeEdit from '../../components/RecipeEdit.svelte';
 	import { createError } from '../../stores/errormessagestore';
 
-	let recipePreview: RecipePreview;
-	const unsubcribe = recipePreviewStore.subscribe((value) => {
-		recipePreview = value;
+	let recipeDraft: RecipeDraft;
+	const unsubcribe = recipeDraftStore.subscribe((value) => {
+		recipeDraft = value;
 	});
 
 	onDestroy(() => {
 		unsubcribe();
-		clearRecipePreview();
+		clearRecipeDraft();
 	});
 
 	const addRecipeToDatabase = () => {
-		addRecipe(recipePreview)
+		addRecipe(recipeDraft)
 			.then((newRecipeId) => goto('/recipes/' + newRecipeId))
 			.catch(createError);
 	};
 </script>
 
-<RecipeEdit bind:recipePreview />
+<RecipeEdit bind:recipeDraft={recipeDraft} />
 
 <div class="submitButtonContainer">
-	<Button class="submitButton" on:click={addRecipeToDatabase} variant="unelevated">Speichern</Button>
+	<Button class="submitButton" on:click={addRecipeToDatabase} variant="unelevated">Speichern</Button
+	>
 </div>
 
 <style lang="scss">

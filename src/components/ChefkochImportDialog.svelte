@@ -4,7 +4,7 @@
 	import Dialog, { Title, Content, Actions } from '@smui/dialog';
 	import Textfield from '@smui/textfield';
 	import { goto } from '$app/navigation';
-	import { recipePreviewStore } from '../stores/recipepreviewstore';
+	import { recipeDraftStore } from '../stores/recipedraftstore';
 	import { createError } from '../stores/errormessagestore';
 
 	export let open: boolean = true;
@@ -15,8 +15,8 @@
 			return;
 		}
 		fetchRecipe(recipeUrl)
-			.then((recipePreview) => {
-				recipePreviewStore.set(recipePreview);
+			.then((recipeDraft) => {
+				recipeDraftStore.set(recipeDraft);
 				goto('/addrecipe');
 			})
 			.catch(createError);

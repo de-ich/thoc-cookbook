@@ -1,6 +1,6 @@
 import { HttpsError, onCall } from "firebase-functions/v2/https";
 import { Ingredient, parseIngredient } from "parse-ingredient";
-import { RecipePreview } from "./database/Recipe";
+import { RecipeDraft } from "./database/Recipe";
 
 const chefkochApiBaseUrl = 'https://api.chefkoch.de/v2/';
 const chefkochApiRecipeBaseUrl = chefkochApiBaseUrl + 'recipes/';
@@ -32,7 +32,7 @@ const internalFetchRecipe = async (recipeId: string, chefkochCookie?: string) =>
     }
 }
 
-const convertToPartialRecipe = (chefkochRecipe: any): RecipePreview => {
+const convertToPartialRecipe = (chefkochRecipe: any): RecipeDraft => {
     const recipe: any = {};
 
     if (!chefkochRecipe.title) {
@@ -97,7 +97,7 @@ export const fetchRecipesFromAllUserCollections = onCall({ maxInstances: 1 }, as
         throw new HttpsError("invalid-argument", 'No chefkoch cookie was passed in the request');
     }
 
-    const fetchedRecipes: RecipePreview[] = [];
+    const fetchedRecipes: RecipeDraft[] = [];
 
     const headers = {
         "Cookie": chefkochCookie
@@ -141,10 +141,10 @@ export const fetchRecipesFromAllUserCollections = onCall({ maxInstances: 1 }, as
                 const recipeId = recipe.recipe.id || recipe.recipe.sourceId;
                 const recipeNote = recipe.note;
 
-                const recipePreview = await internalFetchRecipe(recipeId, chefkochCookie).catch(error => {
+                const recipeDraft = await internalFetchRecipe(recipeId, chefkochCookie).catch(error => {
                     throw Error('An error occurred while trying to import recipe with ID ' + recipeId + ' (' + JSON.stringify(recipe.recipe) + ')');
                 });
-                fetchedRecipes.push({ ...recipePreview, comment: recipeNote })
+                fetchedRecipes.push({ ...recipeDraft, comment: recipeNote })
             }
         }
 
