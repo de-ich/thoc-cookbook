@@ -212,10 +212,8 @@
 		flex-direction: row;
 		align-items: flex-start;
 		column-gap: 2rem;
-	}
 
-	@media (max-width: 800px) {
-		.ingredientsAndInstructionsContainer {
+		@media (max-width: 800px) {
 			flex-direction: column;
 		}
 	}

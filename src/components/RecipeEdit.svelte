@@ -85,7 +85,6 @@
 		type="text"
 		bind:value={recipeDraft.name}
 		label="Rezepttitel"
-		style="min-width: 25rem;"
 		required
 	/>
 	<div class="yieldAndTimesContainer">
@@ -117,7 +116,7 @@
 				type="number"
 				bind:value={recipeDraft.prepTime}
 				label="Vorbereitungszeit"
-				style="min-width: 3rem;max-width: 10rem;"
+				style="min-width: 6rem;max-width: 10rem;"
 				suffix="min"
 				input$emptyValueUndefined
 			/>
@@ -126,7 +125,7 @@
 				type="number"
 				bind:value={recipeDraft.cookTime}
 				label="Koch-/Backzeit"
-				style="min-width: 3rem;max-width: 10rem;"
+				style="min-width: 6rem;max-width: 10rem;"
 				suffix="min"
 				input$emptyValueUndefined
 			/>
@@ -135,7 +134,7 @@
 				type="number"
 				bind:value={recipeDraft.restingTime}
 				label="Ruhezeit"
-				style="min-width: 3rem;max-width: 10rem;"
+				style="min-width: 6rem;max-width: 10rem;"
 				suffix="min"
 				input$emptyValueUndefined
 			/>
@@ -144,7 +143,7 @@
 				type="number"
 				bind:value={recipeDraft.totalTime}
 				label="Gesamtzeit"
-				style="min-width: 3rem;max-width: 10rem;"
+				style="min-width: 6rem;max-width: 10rem;"
 				suffix="min"
 				input$emptyValueUndefined
 			/>
@@ -221,6 +220,10 @@
 			gap: 2rem;
 			align-items: center;
 
+			@media (max-width: 1024px) {
+				flex-direction: column;
+			}
+
 			.yieldContainer {
 				display: flex;
 				flex-direction: row;
@@ -232,7 +235,12 @@
 				display: flex;
 				flex-direction: row;
 				gap: 1rem;
-				margin-left: auto;
+				flex-wrap: wrap;
+				justify-content: center;
+
+				@media (min-width: 1025px) {
+					margin-left: auto;
+				}
 			}
 		}
 
