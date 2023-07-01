@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { RecipePreview } from '$lib/database/Recipe';
+	import type { RecipePreview, RecipePreviews } from '$lib/database/Recipe';
 	import RecipeCard from '../../components/RecipeCard.svelte';
 	import Textfield from '@smui/textfield';
 	import HelperText from '@smui/textfield/helper-text';
@@ -18,7 +18,14 @@
 	let selectedKeywords: string[];
 	let loadingRecipes = true;
 
+	const convertRecipePreviewsDictToRecipePreviewList = (recipePreviews: RecipePreviews) => {
+		return Object.entries(recipePreviews).map((e) => {
+			return { ...e[1], id: e[0] };
+		});
+	};
+
 	getAllRecipePreviews()
+		.then(convertRecipePreviewsDictToRecipePreviewList)
 		.then((recipes) => {
 			allRecipes = recipes;
 			filteredRecipes = [...recipes];

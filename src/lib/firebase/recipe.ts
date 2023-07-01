@@ -1,11 +1,11 @@
 
 import { collection, setDoc, doc, serverTimestamp, getDocFromServer, getDoc, getDocs, query, orderBy, where } from "firebase/firestore";
 import { auth, db, httpsCallable } from "./firebase.client";
-import { type RecipeDetails, type RecipeDraft, getEmptyRecipeDraft, type RecipePreview } from "$lib/database/Recipe";
+import { type RecipeDetails, type RecipeDraft, getEmptyRecipeDraft, type RecipePreview, type RecipePreviews } from "$lib/database/Recipe";
 import { getDownloadURL, getStorage, ref, uploadBytes, type StorageReference } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
 
-const recipePreviewCollectionRef = collection(db, "recipePreviews");
+const aggregatesCollectionRef = collection(db, "aggregates");
 const recipeDetailsCollectionRef = collection(db, "recipeDetails");
 
 export const getExistingOrNewRecipeDetailsRef = (recipeId: string | null) => {
@@ -14,6 +14,10 @@ export const getExistingOrNewRecipeDetailsRef = (recipeId: string | null) => {
     } else {
         return doc(recipeDetailsCollectionRef);
     }
+}
+
+export const getRecipePreviewsRef = () => {
+    return doc(aggregatesCollectionRef, "recipePreviews");
 }
 
 export const getRecipeDetails = async (recipeId: string, fromServer: boolean = false) => {
@@ -31,9 +35,8 @@ export const getRecipeDetails = async (recipeId: string, fromServer: boolean = f
 
 export const getAllRecipePreviews = async () => {
 
-    return getDocs(query(recipePreviewCollectionRef, orderBy('name'))).then((querySnapshot) =>
-        querySnapshot.docs.map((doc) => doc.data() as RecipePreview)
-    );
+    const recipePreviewsRef = getRecipePreviewsRef();
+    return getDoc(recipePreviewsRef).then(document => document.data() as RecipePreviews);
 }
 
 export const checkRecipeWithSourceIdDoesNotYetExist = async (sourceId: string | number): Promise<boolean> => {
