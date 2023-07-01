@@ -121,7 +121,8 @@ export const fetchRecipesFromAllUserCollections = onCall({ maxInstances: 1 }, as
         }).then(getUserCollectionsFromResponse);
         console.log("User Collections: ", userCollections);
 
-        const addedRecipeIds: string[] = [];
+        const recipeIdsToAdd: string[] = [];
+        const addedRecipeIds: (string | number | null)[] = [];
         const fetchRecipePromises: Promise<RecipeDraft | null>[] = [];
 
         for (const collectionId of userCollections) {
@@ -143,21 +144,25 @@ export const fetchRecipesFromAllUserCollections = onCall({ maxInstances: 1 }, as
             for (const recipe of recipes) {
                 const recipeId = recipe.recipe.id || recipe.recipe.sourceId;
 
-                if (addedRecipeIds.includes(recipeId)) {
+                if (recipeIdsToAdd.includes(recipeId)) {
                     console.log(`Skipping recipe with ID ${recipeId} because it was already imported.`);
                     continue;
                 }
 
+                recipeIdsToAdd.push(recipeId);
                 fetchRecipePromises.push(fetchSingleRecipe(recipeId, chefkochCookie, recipe));
             }
         }
 
+        
         await Promise.all(fetchRecipePromises).then((results) => {
             for (const result of results) {
                 if (result != null) {
                     fetchedRecipes.push(result);
+                    addedRecipeIds.push(result.sourceId);
                 }
             }
+            console.log(addedRecipeIds);
         });
 
     } catch (error) {
@@ -166,7 +171,7 @@ export const fetchRecipesFromAllUserCollections = onCall({ maxInstances: 1 }, as
 
     console.log("=== Finishing");
     console.log("Retrieved a total of " + fetchedRecipes.length + " recipes.");
-
+    
     return fetchedRecipes;
 });
 
