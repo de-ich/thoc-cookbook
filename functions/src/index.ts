@@ -14,7 +14,7 @@ import { setGlobalOptions } from "firebase-functions/v2/options";
 // code in theses files may rely on the app being initialized
 initializeApp();
 
-setGlobalOptions({ maxInstances: 2 });
+setGlobalOptions({ maxInstances: 2, region: 'europe-west1' });
 
 import { fetchRecipe, fetchRecipesFromAllUserCollections } from "./chefkoch";
 import { downloadFile } from "./download";
