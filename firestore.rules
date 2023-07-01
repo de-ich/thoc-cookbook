@@ -21,8 +21,8 @@ service cloud.firestore {
       	recipeIsValid(recipeId);
     }
 
-    match /recipePreviews/{recipeId} {
-    	// allow only read because documents are updated via a background function
+    match /aggregates/recipePreviews {
+    	// allow only read because document is updated via a background function
       allow read: if isSignedIn();
     }
   }
