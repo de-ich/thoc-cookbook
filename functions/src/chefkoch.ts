@@ -122,6 +122,7 @@ export const fetchRecipesFromAllUserCollections = onCall({ maxInstances: 1 }, as
         console.log("User Collections: ", userCollections);
 
         const addedRecipeIds: string[] = [];
+        const fetchRecipePromises: Promise<RecipeDraft | null>[] = [];
 
         for (const collectionId of userCollections) {
             const getCollectionNameAndRecipesCountUrl = 'https://api.chefkoch.de/v2/cookbooks/user-' + userId + '/recipes?categoryId=' + collectionId + '&offset=0&limit=0';
@@ -147,15 +148,17 @@ export const fetchRecipesFromAllUserCollections = onCall({ maxInstances: 1 }, as
                     continue;
                 }
 
-                const recipeNote = recipe.note;
-
-                const recipeDraft = await internalFetchRecipe(recipeId, chefkochCookie).catch(error => {
-                    throw Error('An error occurred while trying to import recipe with ID ' + recipeId + ' (' + JSON.stringify(recipe.recipe) + ')');
-                });
-                addedRecipeIds.push(recipeId);
-                fetchedRecipes.push({ ...recipeDraft, comment: recipeNote })
+                fetchRecipePromises.push(fetchSingleRecipe(recipeId, chefkochCookie, recipe));
             }
         }
+
+        await Promise.all(fetchRecipePromises).then((results) => {
+            for (const result of results) {
+                if (result != null) {
+                    fetchedRecipes.push(result);
+                }
+            }
+        });
 
     } catch (error) {
         throw new HttpsError("internal", (error as Error)?.message || 'An error occurred while trying to request information from chefkoch.de!');
@@ -166,3 +169,13 @@ export const fetchRecipesFromAllUserCollections = onCall({ maxInstances: 1 }, as
 
     return fetchedRecipes;
 });
+
+const fetchSingleRecipe = async (recipeId: string, chefkochCookie: string, recipe: any): Promise<RecipeDraft | null> => {
+    return internalFetchRecipe(recipeId, chefkochCookie).then(recipeDraft => {
+        return { ...recipeDraft, comment: recipe.note };
+    }).catch(error => {
+        console.error('An error occurred while trying to import recipe with ID ' + recipeId + ' (' + JSON.stringify(recipe.recipe) + ')');
+        console.error(error);
+        return null;
+    });
+}
