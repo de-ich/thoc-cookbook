@@ -1,13 +1,9 @@
 import type { FieldValue } from "firebase/firestore";
 import type { Ingredient } from "parse-ingredient";
 
-export interface RecipeMetaData {
-    id: string;
-    addedBy: string;
-    addedTimestamp: FieldValue;
-}
+export interface RecipePreviews extends Map<string, RecipePreview> { }
 
-export interface RecipePreview extends RecipeMetaData {
+export interface RecipePreview {
     name: string;
     previewImage: string | null;
     keywords: string[];
@@ -54,5 +50,8 @@ export const getEmptyRecipeDraft = (): RecipeDraft => {
     };
 }
 
-export interface RecipeDetails extends RecipeDraft, RecipeMetaData {
+export interface RecipeDetails extends RecipeDraft {
+    id: string;
+    addedBy: string;
+    addedTimestamp: FieldValue;
 }
