@@ -25,5 +25,10 @@ service cloud.firestore {
     	// allow only read because document is updated via a background function
       allow read: if isSignedIn();
     }
+
+    match /aggregates/keywords {
+    	// allow only read because document is updated via a background function
+      allow read: if isSignedIn();
+    }
   }
 }

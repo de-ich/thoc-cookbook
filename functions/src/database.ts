@@ -1,6 +1,6 @@
 import { FieldValue, getFirestore } from 'firebase-admin/firestore';
 import { onDocumentWritten } from "firebase-functions/v2/firestore";
-import { RecipeDetails, RecipePreview } from "./database/Recipe";
+import { RecipeDetails, RecipePreview, RecipePreviews } from "./database/Recipe";
 
 const db = getFirestore();
 
@@ -34,5 +34,27 @@ export const updateRecipePreview = onDocumentWritten("recipeDetails/{recipeId}",
             [recipeId]: recipePreview
         });
     }
+
+});
+
+export const updateKeywords = onDocumentWritten("aggregates/recipePreviews", (event) => {
+
+    console.log(`Recipe previews changed.`);
+
+    const recipePreviews = event.data?.after?.data() as RecipePreviews;
+
+    if (!recipePreviews) {
+        return;
+
+    }
+
+    const keywordsDocRef = db.doc(`aggregates/keywords`);
+
+    // the list of recipe previews was updated so we update the list of used keywords
+    const newKeywords = [...new Set(Object.values(recipePreviews).flatMap((recipe) => recipe.keywords))];
+    const newKeywordsMap = Object.fromEntries(newKeywords.map(kw => [kw, null]));
+    console.log(`Updating list of used keywords.`);
+
+    keywordsDocRef.set(newKeywordsMap);
 
 });
