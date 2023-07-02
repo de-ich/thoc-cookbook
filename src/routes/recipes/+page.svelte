@@ -8,13 +8,14 @@
 	import IconButton from '@smui/icon-button';
 	import KeywordFilter from '../../components/KeywordFilter.svelte';
 	import Chip, { Set, TrailingAction, Text } from '@smui/chips';
-	import { getAllRecipePreviews } from '$lib/firebase/recipe';
+	import { getAllKeywords, getAllRecipePreviews } from '$lib/firebase/recipe';
 	import { createError } from '../../stores/errormessagestore';
 
 	let allRecipes: RecipePreview[] = [];
 	let filteredRecipes: RecipePreview[] = [];
 	let fuse: Fuse<RecipePreview>;
 	let searchText: string | undefined;
+	let keywords: string[] = [];
 	let selectedKeywords: string[];
 	let loadingRecipes = true;
 
@@ -36,6 +37,8 @@
 		})
 		.catch((error) => createError('Unable to retrieve recipes: ' + error.message || ''))
 		.finally(() => (loadingRecipes = false));
+
+	getAllKeywords().then(kw => keywords = [...kw]);
 
 	const startSearchOnEnter = (keyboardEvent: Event) => {
 		const keyCode = (keyboardEvent as KeyboardEvent)?.keyCode;
@@ -70,7 +73,7 @@
 	<div class="searchAndFilterArea">
 		<div class="keywordFilter">
 			<KeywordFilter
-				availableKeywords={allRecipes.flatMap((recipe) => recipe.keywords)}
+				availableKeywords={keywords}
 				bind:selectedKeywords
 			/>
 		</div>

@@ -4,6 +4,7 @@ import { auth, db, httpsCallable } from "./firebase.client";
 import { type RecipeDetails, type RecipeDraft, getEmptyRecipeDraft, type RecipePreview, type RecipePreviews } from "$lib/database/Recipe";
 import { getDownloadURL, getStorage, ref, uploadBytes, type StorageReference } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
+import type { DocumentData } from "firebase-admin/firestore";
 
 const aggregatesCollectionRef = collection(db, "aggregates");
 const recipeDetailsCollectionRef = collection(db, "recipeDetails");
@@ -18,6 +19,10 @@ export const getExistingOrNewRecipeDetailsRef = (recipeId: string | null) => {
 
 export const getRecipePreviewsRef = () => {
     return doc(aggregatesCollectionRef, "recipePreviews");
+}
+
+export const getKeywordsRef = () => {
+    return doc(aggregatesCollectionRef, "keywords");
 }
 
 export const getRecipeDetails = async (recipeId: string, fromServer: boolean = false) => {
@@ -37,6 +42,12 @@ export const getAllRecipePreviews = async () => {
 
     const recipePreviewsRef = getRecipePreviewsRef();
     return getDoc(recipePreviewsRef).then(document => document.data() as RecipePreviews);
+}
+
+export const getAllKeywords = async () => {
+
+    const keywordsRef = getKeywordsRef();
+    return getDoc(keywordsRef).then(document => document.data() as Map<string, any>).then(d => Object.keys(d));
 }
 
 export const checkRecipeWithSourceIdDoesNotYetExist = async (sourceId: string | number): Promise<boolean> => {
