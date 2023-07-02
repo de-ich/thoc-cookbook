@@ -19,6 +19,19 @@
 	let selectedKeywords: string[];
 	let loadingRecipes = true;
 
+	export const snapshot: import('./$types').Snapshot<any> = {
+		capture: () => {
+			return {
+				searchText: searchText,
+				selectedKeywords: selectedKeywords
+			};
+		},
+		restore: (snapshot: any) => {
+			searchText = snapshot.searchText;
+			selectedKeywords = snapshot.selectedKeywords;
+		}
+	};
+
 	const convertRecipePreviewsDictToRecipePreviewList = (recipePreviews: RecipePreviews) => {
 		return Object.entries(recipePreviews).map((e) => {
 			return { ...e[1], id: e[0] };
@@ -38,7 +51,7 @@
 		.catch((error) => createError('Unable to retrieve recipes: ' + error.message || ''))
 		.finally(() => (loadingRecipes = false));
 
-	getAllKeywords().then(kw => keywords = [...kw]);
+	getAllKeywords().then((kw) => (keywords = [...kw]));
 
 	const startSearchOnEnter = (keyboardEvent: Event) => {
 		const keyCode = (keyboardEvent as KeyboardEvent)?.keyCode;
@@ -65,6 +78,7 @@
 
 	$: {
 		startSearch();
+		loadingRecipes = loadingRecipes;
 		selectedKeywords = selectedKeywords;
 	}
 </script>
@@ -72,10 +86,7 @@
 <div class="recipeList">
 	<div class="searchAndFilterArea">
 		<div class="keywordFilter">
-			<KeywordFilter
-				availableKeywords={keywords}
-				bind:selectedKeywords
-			/>
+			<KeywordFilter availableKeywords={keywords} bind:selectedKeywords />
 		</div>
 		<div class="searchField">
 			<Textfield
