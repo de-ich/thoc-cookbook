@@ -1,4 +1,5 @@
 import { getRecipeDetails } from '$lib/firebase/recipe';
+import { error } from '@sveltejs/kit';
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ params }) {
@@ -8,8 +9,8 @@ export async function load({ params }) {
         return {
             recipe: recipe
         };
-    }).catch((error) => {
-        throw error(404, error.message || 'Not found');
+    }).catch((e) => {
+        throw error(404, e.message || 'Not found');
     });
 
 }
