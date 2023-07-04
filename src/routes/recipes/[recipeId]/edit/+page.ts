@@ -1,3 +1,4 @@
-import {load as importedLoad} from '../+page';
-
-export const load = importedLoad;
+/** @type {import('./$types').PageLoad} */
+export async function load({ parent }) {
+    return await parent();
+}

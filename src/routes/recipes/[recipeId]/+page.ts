@@ -4,7 +4,7 @@ import { error } from '@sveltejs/kit';
 /** @type {import('./$types').PageLoad} */
 export async function load({ params }) {
 
-    const recipeId = params['recipeId'];
+    const recipeId = params.recipeId;
     return getRecipeDetails(recipeId).then(recipe => {
         return {
             recipe: recipe
