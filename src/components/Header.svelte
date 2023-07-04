@@ -9,13 +9,9 @@
 	import ChefkochImportDialog from './ChefkochImportDialog.svelte';
 	import { clearRecipeDraft } from '../stores/recipedraftstore';
 	import { goto } from '$app/navigation';
-	import { onDestroy } from 'svelte';
 	import { createError } from '../stores/errormessagestore';
 
-	let user: Nullable<string> = null;
-	const unsubscribeAuthStore = authStore.subscribe((curr) => {
-		user = curr?.currentUser?.displayName || curr?.currentUser?.email;
-	});
+	let user: Nullable<string> = $authStore.currentUser?.displayName || $authStore.currentUser?.email;
 
 	async function logout() {
 		try {
@@ -28,10 +24,6 @@
 	let userMenu: Menu;
 	let importMenu: Menu;
 	let showChefkochImportDialog = false;
-
-	onDestroy(() => {
-		unsubscribeAuthStore();
-	});
 </script>
 
 <TopAppBar id="app-bar" variant="static" color="primary">
