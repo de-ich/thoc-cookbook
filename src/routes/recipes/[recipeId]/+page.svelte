@@ -11,6 +11,7 @@
 	import Button, { Label } from '@smui/button';
 	import { createError } from '../../../stores/errormessagestore';
 	import { deleteRecipe } from '$lib/firebase/recipe';
+	import { PUBLIC_IMAGEKIT_STORAGE_URL } from '$env/static/public';
 
 	/** @type {import('./$types').PageData} */
 	export let data: any;
@@ -143,7 +144,7 @@
 
 {#if (recipe.images || []).length > 0 && typeof recipe.images[0] === 'string'}
 	<div class="imagesContainer">
-		<img src={recipe.images[0]} alt="recipeImage" />
+		<img src={PUBLIC_IMAGEKIT_STORAGE_URL + recipe.images[0]} alt="recipeImage" />
 	</div>
 {/if}
 

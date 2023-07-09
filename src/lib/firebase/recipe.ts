@@ -4,6 +4,7 @@ import { collection, setDoc, doc, serverTimestamp, getDocFromServer, getDoc, get
 import { type RecipeDetails, type RecipeDraft, getEmptyRecipeDraft, type RecipePreviews } from "$lib/database/Recipe";
 import { getDownloadURL, getStorage, ref, uploadBytes, type StorageReference } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
+import { PUBLIC_FIREBASE_STORAGE_URL } from '$env/static/public';
 
 const aggregatesCollectionRef = collection(db, "aggregates");
 const recipeDetailsCollectionRef = collection(db, "recipeDetails");
@@ -172,7 +173,9 @@ const uploadImageToStorage = async (image: Blob, imageName: string, folderRef: S
     const recipeImageRef = ref(folderRef, imageName);
     return uploadBytes(recipeImageRef, image).then((snapshot) => {
         console.log('Uploaded a blob or file!', snapshot);
-        return getDownloadURL(recipeImageRef)
+        return getDownloadURL(recipeImageRef).then(downloadUrl => {
+            return downloadUrl.replace(PUBLIC_FIREBASE_STORAGE_URL, '')
+        });
     });
 };
 
