@@ -14,8 +14,7 @@ service cloud.firestore {
     }
 
     match /recipeDetails/{recipeId} {
-    	// currently, deleting documents is not allowed
-      allow read: if isSignedIn();
+      allow read, delete: if isSignedIn();
       allow create, update: if 
       	isSignedIn() && 
       	recipeIsValid(recipeId);

@@ -1,6 +1,6 @@
 
 import { auth, db, httpsCallable } from "./firebase.client";
-import { collection, setDoc, doc, serverTimestamp, getDocFromServer, getDoc, getDocs, query, orderBy, where } from "firebase/firestore";
+import { collection, setDoc, doc, serverTimestamp, getDocFromServer, getDoc, getDocs, query, orderBy, where, deleteDoc } from "firebase/firestore";
 import { type RecipeDetails, type RecipeDraft, getEmptyRecipeDraft, type RecipePreviews } from "$lib/database/Recipe";
 import { getDownloadURL, getStorage, ref, uploadBytes, type StorageReference } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
@@ -10,10 +10,14 @@ const recipeDetailsCollectionRef = collection(db, "recipeDetails");
 
 export const getExistingOrNewRecipeDetailsRef = (recipeId: string | null) => {
     if (recipeId != null) {
-        return doc(recipeDetailsCollectionRef, recipeId);
+        return getExistingRecipeDetailsRef(recipeId);
     } else {
         return doc(recipeDetailsCollectionRef);
     }
+}
+
+export const getExistingRecipeDetailsRef = (recipeId: string) => {
+    return doc(recipeDetailsCollectionRef, recipeId);
 }
 
 export const getRecipePreviewsRef = () => {
@@ -98,6 +102,21 @@ export const addRecipe = async (recipeDraft: RecipeDraft | RecipeDetails): Promi
         throw Error("Error adding document: ", error);
     });
 
+}
+
+export const deleteRecipe = async (recipeId: string) => {
+
+    if (!auth.currentUser) {
+        throw Error('Unable to get current user id!')
+    }
+
+    const docRef = getExistingRecipeDetailsRef(recipeId);
+
+    return deleteDoc(docRef).then(() => {
+        console.log("Document deleted with ID: ", recipeId);
+    }).catch((error) => {
+        throw Error("Error deleting document: ", error.message);
+    });
 }
 
 const moveImageToStorage = async (recipeImage: (string | File), folderRef: StorageReference) => {

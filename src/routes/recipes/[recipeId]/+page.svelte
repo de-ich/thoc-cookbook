@@ -7,6 +7,10 @@
 	import formatQuantity from 'format-quantity';
 	import type { Ingredient } from 'parse-ingredient';
 	import Chip, { Set, Text as ChipText } from '@smui/chips';
+	import Dialog, { Actions, Content, Title } from '@smui/dialog';
+	import Button, { Label } from '@smui/button';
+	import { createError } from '../../../stores/errormessagestore';
+	import { deleteRecipe } from '$lib/firebase/recipe';
 
 	/** @type {import('./$types').PageData} */
 	export let data: any;
@@ -111,6 +115,14 @@
 			return ('' + Math.round(parsedFormattedQuantity * 10) / 10).replace('.', ',');
 		}
 	};
+
+	let showConfirmDeleteDialog = false;
+
+	const deleteRecipeFromDatabase = () => {
+		deleteRecipe(recipe.id)
+			.then(() => goto('/recipes/'))
+			.catch(createError);
+	};
 </script>
 
 <div class="headingContainer">
@@ -120,6 +132,12 @@
 		aria-label="Edit"
 		on:click={() => goto(`/recipes/${recipe.id}/edit`)}
 		>edit
+	</IconButton>
+	<IconButton
+		class="material-icons"
+		aria-label="Delete"
+		on:click={() => (showConfirmDeleteDialog = true)}
+		>delete
 	</IconButton>
 </div>
 
@@ -184,6 +202,25 @@
 		{/if}
 	</div>
 </div>
+
+<Dialog
+	bind:open={showConfirmDeleteDialog}
+	aria-labelledby="simple-title"
+	aria-describedby="simple-content"
+>
+	<Title id="simple-title">Rezept löschen</Title>
+	<Content id="simple-content">
+		Rezept {recipe.name} wirklich löschen?
+	</Content>
+	<Actions>
+		<Button>
+			<Label>Abbrechen</Label>
+		</Button>
+		<Button on:click={() => deleteRecipeFromDatabase()}>
+			<Label>Löschen</Label>
+		</Button>
+	</Actions>
+</Dialog>
 
 <style lang="scss">
 	.headingContainer {
