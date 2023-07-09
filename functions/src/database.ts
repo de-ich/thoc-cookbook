@@ -1,8 +1,10 @@
 import { FieldValue, getFirestore } from 'firebase-admin/firestore';
-import { onDocumentWritten } from "firebase-functions/v2/firestore";
+import { getStorage } from 'firebase-admin/storage';
+import { onDocumentWritten, onDocumentDeleted } from "firebase-functions/v2/firestore";
 import { RecipeDetails, RecipePreview, RecipePreviews } from "./database/Recipe";
 
 const db = getFirestore();
+const storage = getStorage();
 
 export const updateRecipePreview = onDocumentWritten("recipeDetails/{recipeId}", (event) => {
 
@@ -57,4 +59,19 @@ export const updateKeywords = onDocumentWritten("aggregates/recipePreviews", (ev
 
     keywordsDocRef.set(newKeywordsMap);
 
+});
+
+export const deleteRecipeImages = onDocumentDeleted("recipeDetails/{recipeId}", (event) => {
+
+    const bucket = storage.bucket();
+    const recipeId = event.params.recipeId;
+
+    // the recipe was deleted so we delete the associated images
+    console.log(`Deleting images for recipe with id ${recipeId}.`);
+
+    bucket.deleteFiles({ prefix: `images/${recipeId}` }).then(() => {
+        console.log('Images deleted');
+    }).catch(error => {
+        console.error(error);
+    })
 });

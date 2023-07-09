@@ -18,7 +18,7 @@ setGlobalOptions({ maxInstances: 2, region: 'europe-west1' });
 
 import { fetchRecipe, fetchRecipesFromAllUserCollections } from "./chefkoch";
 import { downloadFile } from "./download";
-import { updateRecipePreview, updateKeywords } from "./database";
+import { updateRecipePreview, updateKeywords, deleteRecipeImages } from "./database";
 
-export { fetchRecipe, fetchRecipesFromAllUserCollections, downloadFile, updateRecipePreview, updateKeywords };
+export { fetchRecipe, fetchRecipesFromAllUserCollections, downloadFile, updateRecipePreview, updateKeywords, deleteRecipeImages };
 
