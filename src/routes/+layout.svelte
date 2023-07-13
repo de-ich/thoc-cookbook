@@ -47,5 +47,6 @@
 		margin-left: 2rem;
 		margin-right: 2rem;
 		margin-top: 1rem;
+		margin-bottom: 2rem;
 	}
 </style>
