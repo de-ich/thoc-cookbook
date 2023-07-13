@@ -144,7 +144,7 @@
 
 {#if (recipe.images || []).length > 0 && typeof recipe.images[0] === 'string'}
 	<div class="imagesContainer">
-		<img src={PUBLIC_IMAGEKIT_STORAGE_URL + recipe.images[0]} alt="recipeImage" />
+		<img src={PUBLIC_IMAGEKIT_STORAGE_URL + 'tr:h-200/' + recipe.images[0]} alt="recipeImage" />
 	</div>
 {/if}
 
@@ -228,6 +228,10 @@
 		display: flex;
 		flex-direction: row;
 		align-items: center;
+
+		h4 {
+			margin-right: 1rem;
+		}
 	}
 
 	img {
