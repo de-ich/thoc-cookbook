@@ -7,10 +7,17 @@
 	import { Label } from '@smui/common';
 	import { RecipeYieldType } from '$lib/database/Recipe';
 	import { onMount } from 'svelte';
+	import KeywordSpecifier from './KeywordSpecifier.svelte';
+	import { getAllKeywords } from '$lib/firebase/recipe';
+	import KeywordChips from './KeywordChips.svelte';
 
 	// either pass in an existing Recipe/RecipeDraft (when editing a recipe) or use an
 	// empty draft (when creating a new recipe)
 	export let recipeDraft: RecipeDraft = getEmptyRecipeDraft();
+
+	let availableKeywords: string[] = [];
+
+	getAllKeywords().then(keywords => availableKeywords = keywords);
 
 	onMount(() => {
 		// make sure all fields are properly initialized
@@ -43,14 +50,6 @@
 
 	$: {
 		recipeDraft.ingredients = parseIngredient(ingredients);
-	}
-
-	let keywords = recipeDraft.keywords.join(', ');
-	$: {
-		recipeDraft.keywords = keywords
-			.split(',')
-			.map((keyword) => keyword.trim())
-			.filter((keyword) => keyword);
 	}
 
 	let recipeImageUrls = recipeDraft.images.filter((image) => typeof image === 'string').join('\n');
@@ -181,14 +180,10 @@
 		bind:files={recipeImageFiles}
 		input$emptyValueUndefined
 	/>
-	<Textfield
-		variant="outlined"
-		style="width: 100%"
-		helperLine$style="width: 100%;"
-		type="text"
-		label="Labels/Kategorien (Komma-getrennt)"
-		bind:value={keywords}
-	/>
+	<div class="keywordContainer">
+		<KeywordSpecifier availableKeywords={availableKeywords} bind:selectedKeywords={recipeDraft.keywords} />
+		<KeywordChips bind:selectedKeywords={recipeDraft.keywords} />
+	</div>
 	<Textfield
 		style="width: 100%;"
 		helperLine$style="width: 100%;"
@@ -241,6 +236,15 @@
 				@media (min-width: 1025px) {
 					margin-left: auto;
 				}
+			}
+		}
+
+		.keywordContainer {
+			display: flex;
+			flex-direction: row;
+
+			@media (max-width: 1024px) {
+				flex-direction: column;
 			}
 		}
 

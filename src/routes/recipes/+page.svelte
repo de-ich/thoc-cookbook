@@ -7,7 +7,7 @@
 	import Fuse from 'fuse.js';
 	import IconButton from '@smui/icon-button';
 	import KeywordFilter from '../../components/KeywordFilter.svelte';
-	import Chip, { Set, TrailingAction, Text } from '@smui/chips';
+	import KeywordChips from '../../components/KeywordChips.svelte';
 	import { getAllKeywords, getAllRecipePreviews } from '$lib/firebase/recipe';
 	import { createError } from '../../stores/errormessagestore';
 
@@ -118,12 +118,7 @@
 		</div>
 		{#if (selectedKeywords || []).length > 0}
 			<div class="keywordChips">
-				<Set style="display: inline-block;" bind:chips={selectedKeywords} let:chip>
-					<Chip {chip}>
-						<Text tabindex={0}>{chip}</Text>
-						<TrailingAction icon$class="material-icons">cancel</TrailingAction>
-					</Chip>
-				</Set>
+				<KeywordChips bind:selectedKeywords={selectedKeywords} />
 			</div>
 		{/if}
 	</div>
