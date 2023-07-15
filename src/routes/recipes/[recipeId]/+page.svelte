@@ -130,13 +130,19 @@
 	<h4>{recipe.name}</h4>
 	<IconButton
 		class="material-icons"
-		aria-label="Edit"
+		aria-label="copy recipe URL to clipboard"
+		on:click={() => navigator.clipboard.writeText(window.location.href)}
+		>content_copy
+	</IconButton>
+	<IconButton
+		class="material-icons"
+		aria-label="edit recipe"
 		on:click={() => goto(`/recipes/${recipe.id}/edit`)}
 		>edit
 	</IconButton>
 	<IconButton
 		class="material-icons"
-		aria-label="Delete"
+		aria-label="delete recipe"
 		on:click={() => (showConfirmDeleteDialog = true)}
 		>delete
 	</IconButton>
