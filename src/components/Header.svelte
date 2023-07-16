@@ -6,7 +6,7 @@
 	import type { Nullable } from 'vitest';
 	import List, { Item, Separator, Text } from '@smui/list';
 	import chefkochLogo from '$lib/assets/chefkoch-logo.svg';
-	import ChefkochImportDialog from './ChefkochImportDialog.svelte';
+	import ChefkochImportDialog from './dialogs/ChefkochImportDialog.svelte';
 	import { clearRecipeDraft } from '../stores/recipedraftstore';
 	import { goto } from '$app/navigation';
 	import { createError } from '../stores/errormessagestore';

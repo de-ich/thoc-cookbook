@@ -1,17 +1,14 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import type { RecipeDetails } from '$lib/database/Recipe';
-	import { RecipeYieldType } from '$lib/database/Recipe';
 	import IconButton from '@smui/icon-button';
-	import List, { Item, Text } from '@smui/list';
 	import Chip, { Set, Text as ChipText } from '@smui/chips';
-	import Dialog, { Actions, Content, Title } from '@smui/dialog';
-	import Button, { Label } from '@smui/button';
 	import { createError } from '../../../stores/errormessagestore';
 	import { deleteRecipe } from '$lib/firebase/recipe';
 	import { PUBLIC_IMAGEKIT_STORAGE_URL } from '$env/static/public';
 	import IngredientsList from '../../../components/IngredientsList.svelte';
 	import InstructionsList from '../../../components/InstructionsList.svelte';
+	import ConfirmDeleteRecipeDialog from '../../../components/dialogs/ConfirmDeleteRecipeDialog.svelte';
 
 	/** @type {import('./$types').PageData} */
 	export let data: any;
@@ -94,24 +91,7 @@
 	</div>
 </div>
 
-<Dialog
-	bind:open={showConfirmDeleteDialog}
-	aria-labelledby="simple-title"
-	aria-describedby="simple-content"
->
-	<Title id="simple-title">Rezept löschen</Title>
-	<Content id="simple-content">
-		Rezept {recipe.name} wirklich löschen?
-	</Content>
-	<Actions>
-		<Button>
-			<Label>Abbrechen</Label>
-		</Button>
-		<Button on:click={() => deleteRecipeFromDatabase()}>
-			<Label>Löschen</Label>
-		</Button>
-	</Actions>
-</Dialog>
+<ConfirmDeleteRecipeDialog recipeName={recipe.name} bind:showConfirmDeleteDialog on:delete-recipe={deleteRecipeFromDatabase} />
 
 <style lang="scss">
 	.headingContainer {

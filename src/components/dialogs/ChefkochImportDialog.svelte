@@ -4,8 +4,8 @@
 	import Dialog, { Title, Content, Actions } from '@smui/dialog';
 	import Textfield from '@smui/textfield';
 	import { goto } from '$app/navigation';
-	import { recipeDraftStore } from '../stores/recipedraftstore';
-	import { createError } from '../stores/errormessagestore';
+	import { recipeDraftStore } from '../../stores/recipedraftstore';
+	import { createError } from '../../stores/errormessagestore';
 
 	export let open: boolean = true;
 	let recipeUrl: string | null = null;
