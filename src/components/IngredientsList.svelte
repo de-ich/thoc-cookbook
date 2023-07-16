@@ -4,8 +4,10 @@
 	import type { Ingredient } from 'parse-ingredient';
 	import formatQuantity from 'format-quantity';
 	import List, { Item } from '@smui/list';
+	import Checkbox from '@smui/checkbox';
 
 	export let recipe: RecipeDetails;
+	export let allowCheckItems = false;
 
 	const DEFAULT_SERVINGS = 1;
 	const DEFAULT_BAKING_DISH_SIZE = 26;
@@ -105,40 +107,72 @@
 			)
 		};
 	};
+
+	const handleSelection = (event: CustomEvent, i: number) => {
+		const checked = (event.target as HTMLInputElement)?.checked;
+		const ingredientItem = document.querySelector('#ingredient-' + i);
+
+		if (!ingredientItem) {
+			return;
+		}
+
+		if (checked) {
+			ingredientItem.classList.add('disabled');
+		} else {
+			ingredientItem.classList.remove('disabled');
+		}
+	};
 </script>
 
-{#if recipe.recipeYield}
-	<h5>
-		Zutaten für
-		<IconButton class="material-icons" on:click={decreaseYield} size="button">remove</IconButton>
-		{recipe.recipeYieldType === RecipeYieldType.BakingDish
-			? getQuantityDisplayValue(currentYield) + 'er'
-			: getQuantityDisplayValue(currentYield)}
-		<IconButton class="material-icons" on:click={increaseYield} size="button">add</IconButton>
-		{recipe.recipeYieldType === RecipeYieldType.BakingDish ? 'Backform' : 'Portionen'}
-	</h5>
-{:else}
-	<h5>Zutaten</h5>
-{/if}
-<List nonInteractive>
-	{#each ingredientsForCurrentYield as ingredient}
-		<Item>
-			{getIngredientString(ingredient)}
-		</Item>
-	{/each}
-</List>
+<div class="ingredientsList">
+	{#if recipe.recipeYield}
+		<h5>
+			Zutaten für
+			<IconButton class="material-icons" on:click={decreaseYield} size="button">remove</IconButton>
+			{recipe.recipeYieldType === RecipeYieldType.BakingDish
+				? getQuantityDisplayValue(currentYield) + 'er'
+				: getQuantityDisplayValue(currentYield)}
+			<IconButton class="material-icons" on:click={increaseYield} size="button">add</IconButton>
+			{recipe.recipeYieldType === RecipeYieldType.BakingDish ? 'Backform' : 'Portionen'}
+		</h5>
+	{:else}
+		<h5>Zutaten</h5>
+	{/if}
+	<List nonInteractive>
+		{#each ingredientsForCurrentYield as ingredient, i}
+			<Item>
+				{#if allowCheckItems}
+					<Checkbox on:click={(event) => handleSelection(event, i)} />
+				{/if}
+				<span id={'ingredient-' + i}>
+					{getIngredientString(ingredient)}
+				</span>
+			</Item>
+		{/each}
+	</List>
+</div>
 
 <style lang="scss">
-    h5 {
-        margin-bottom: 0.5rem;
-    }
+	.ingredientsList {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
 
-    :global(.mdc-deprecated-list) {
-		padding-top: 0;
+		:global(.disabled) {
+			color: var(--mdc-theme-text-secondary-on-background);
+		}
+
+		:global(.mdc-deprecated-list) {
+			padding-top: 0;
+		}
+
+		:global(.mdc-deprecated-list-item) {
+			padding-left: 0;
+			height: 2em;
+		}
 	}
 
-	:global(.mdc-deprecated-list-item) {
-		padding-left: 0;
-		height: 2em;
+	h5 {
+		margin-bottom: 0.5rem;
 	}
 </style>

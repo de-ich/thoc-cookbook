@@ -37,6 +37,12 @@
 	</IconButton>
 	<IconButton
 		class="material-icons"
+		aria-label="open cooking view"
+		on:click={() => goto(`/recipes/${recipe.id}/focus`)}
+		>pageview
+	</IconButton>
+	<IconButton
+		class="material-icons"
 		aria-label="edit recipe"
 		on:click={() => goto(`/recipes/${recipe.id}/edit`)}
 		>edit
