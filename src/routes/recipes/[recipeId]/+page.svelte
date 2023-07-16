@@ -106,7 +106,7 @@
 	}
 
 	img {
-		max-height: 10rem;
+		height: 10rem;
 		border-radius: 0.5rem;
 	}
 

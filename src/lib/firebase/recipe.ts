@@ -1,6 +1,6 @@
 
 import { auth, db, httpsCallable } from "./firebase.client";
-import { collection, setDoc, doc, serverTimestamp, getDocFromServer, getDoc, getDocs, query, orderBy, where, deleteDoc } from "firebase/firestore";
+import { collection, setDoc, doc, serverTimestamp, getDocFromServer, getDoc, getDocs, query, where, deleteDoc } from "firebase/firestore";
 import { type RecipeDetails, type RecipeDraft, getEmptyRecipeDraft, type RecipePreviews } from "$lib/database/Recipe";
 import { getDownloadURL, getStorage, ref, uploadBytes, type StorageReference } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
