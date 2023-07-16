@@ -2,7 +2,7 @@
 	import type { RecipeDetails } from '$lib/database/Recipe';
 	import Button from '@smui/button';
 	import { updateRecipe } from '$lib/firebase/recipe';
-	import { goto } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import RecipeEdit from '../../../../components/RecipeEdit.svelte';
 	import { createError } from '../../../../stores/errormessagestore';
 
@@ -11,10 +11,9 @@
 
 	let recipe: RecipeDetails = data.recipe;
 
-	const updateRecipeInDatabase = () => {
-		updateRecipe(recipe)
-			.then((newRecipeId) => goto('/recipes/' + newRecipeId))
-			.catch(createError);
+	const updateRecipeInDatabase = async () => {
+		const newRecipeId = await updateRecipe(recipe).catch(createError);
+		invalidateAll().then(() => goto('/recipes/' + newRecipeId));
 	};
 </script>
 
