@@ -29,30 +29,32 @@
 
 <div class="headingContainer">
 	<h4>{recipe.name}</h4>
-	<IconButton
-		class="material-icons"
-		aria-label="copy recipe URL to clipboard"
-		on:click={() => navigator.clipboard.writeText(window.location.href)}
-		>content_copy
-	</IconButton>
-	<IconButton
-		class="material-icons"
-		aria-label="open cooking view"
-		on:click={() => goto(`/recipes/${recipe.id}/focus`)}
-		>pageview
-	</IconButton>
-	<IconButton
-		class="material-icons"
-		aria-label="edit recipe"
-		on:click={() => goto(`/recipes/${recipe.id}/edit`)}
-		>edit
-	</IconButton>
-	<IconButton
-		class="material-icons"
-		aria-label="delete recipe"
-		on:click={() => (showConfirmDeleteDialog = true)}
-		>delete
-	</IconButton>
+	<div class="headingButtons">
+		<IconButton
+			class="material-icons"
+			aria-label="copy recipe URL to clipboard"
+			on:click={() => navigator.clipboard.writeText(window.location.href)}
+			>content_copy
+		</IconButton>
+		<IconButton
+			class="material-icons"
+			aria-label="open cooking view"
+			on:click={() => goto(`/recipes/${recipe.id}/focus`)}
+			>pageview
+		</IconButton>
+		<IconButton
+			class="material-icons"
+			aria-label="edit recipe"
+			on:click={() => goto(`/recipes/${recipe.id}/edit`)}
+			>edit
+		</IconButton>
+		<IconButton
+			class="material-icons"
+			aria-label="delete recipe"
+			on:click={() => (showConfirmDeleteDialog = true)}
+			>delete
+		</IconButton>
+	</div>
 </div>
 
 {#if (recipe.images || []).length > 0 && typeof recipe.images[0] === 'string'}
@@ -116,6 +118,7 @@
 		display: flex;
 		flex-direction: row;
 		align-items: center;
+		flex-wrap: wrap;
 
 		h4 {
 			margin-right: 1rem;
