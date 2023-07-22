@@ -103,6 +103,15 @@
 	</div>
 {/if}
 
+{#if (recipe.sourceUrl) }
+<div class="sourceContainer">
+	<Icon class="material-icons">launch</Icon>
+	<span>Quelle:</span>
+	<a href={recipe.sourceUrl}>{recipe.sourceUrl}</a>
+</div>
+	
+{/if}
+
 <div class="ingredientsAndInstructionsContainer">
 	<div class="ingredientsContainer">
 		<IngredientsList {recipe} />
@@ -168,6 +177,30 @@
 
 		span:first-of-type {
 			font-weight: 500;
+		}
+	}
+
+	.sourceContainer {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: nowrap;
+		overflow: hidden;
+		justify-items: center;
+		column-gap: .5rem;
+		margin-top: 2rem;
+
+		span:first-of-type {
+			font-weight: 500;
+		}
+
+		a {
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			
+			&:hover	{
+				color: var(--mdc-theme-primary)
+			}
 		}
 	}
 
