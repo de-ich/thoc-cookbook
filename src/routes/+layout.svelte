@@ -44,8 +44,11 @@
 
 <style lang="scss">
 	.mainContainer {
-		margin-left: 2rem;
-		margin-right: 2rem;
+		max-width: 70rem;
+		padding-left: 2rem;
+		padding-right: 2rem;
+		margin-left: auto;
+		margin-right: auto;
 		margin-top: 1rem;
 		margin-bottom: 2rem;
 	}
