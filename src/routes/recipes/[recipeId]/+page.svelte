@@ -91,7 +91,11 @@
 	</div>
 </div>
 
-<ConfirmDeleteRecipeDialog recipeName={recipe.name} bind:showConfirmDeleteDialog on:delete-recipe={deleteRecipeFromDatabase} />
+<ConfirmDeleteRecipeDialog
+	recipeName={recipe.name}
+	bind:showConfirmDeleteDialog
+	on:delete-recipe={deleteRecipeFromDatabase}
+/>
 
 <style lang="scss">
 	.headingContainer {
@@ -119,6 +123,7 @@
 		flex-direction: row;
 		align-items: flex-start;
 		column-gap: 2rem;
+		row-gap: 2rem;
 		margin-top: 2rem;
 
 		@media (max-width: 800px) {
@@ -127,8 +132,7 @@
 	}
 
 	.ingredientsContainer {
-		width: 25rem;
-		min-width: 25rem;
+		max-width: 25rem;
 	}
 
 	.instructionsContainer {

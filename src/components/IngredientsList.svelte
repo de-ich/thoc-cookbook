@@ -138,41 +138,37 @@
 	{:else}
 		<h5>Zutaten</h5>
 	{/if}
-	<List nonInteractive>
-		{#each ingredientsForCurrentYield as ingredient, i}
-			<Item>
-				{#if allowCheckItems}
-					<Checkbox on:click={(event) => handleSelection(event, i)} />
-				{/if}
-				<span id={'ingredient-' + i}>
-					{getIngredientString(ingredient)}
-				</span>
-			</Item>
-		{/each}
-	</List>
+	
+	{#each ingredientsForCurrentYield as ingredient, i}
+	<div class="ingredientContainer">
+		{#if allowCheckItems}
+			<Checkbox on:click={(event) => handleSelection(event, i)} />
+		{/if}
+		<span id={'ingredient-' + i}>
+			{getIngredientString(ingredient)}
+		</span>
+	</div>
+	{/each}
 </div>
 
 <style lang="scss">
 	.ingredientsList {
-		width: 100%;
 		display: flex;
 		flex-direction: column;
 
 		:global(.disabled) {
 			color: var(--mdc-theme-text-secondary-on-background);
 		}
-
-		:global(.mdc-deprecated-list) {
-			padding-top: 0;
-		}
-
-		:global(.mdc-deprecated-list-item) {
-			padding-left: 0;
-			height: 2em;
-		}
 	}
 
 	h5 {
 		margin-bottom: 0.5rem;
+	}
+
+	.ingredientContainer {
+		margin-bottom: 0.5rem;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
 	}
 </style>

@@ -37,7 +37,6 @@
 
 <style lang="scss">
 	.instructionsList {
-		width: 100%;
 		display: flex;
 		flex-direction: column;
 

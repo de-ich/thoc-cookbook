@@ -41,6 +41,7 @@
 		flex-direction: row;
 		align-items: flex-start;
 		column-gap: 2rem;
+		row-gap: 2rem;
 		margin-top: 2rem;
 
 		@media (max-width: 800px) {
@@ -49,8 +50,7 @@
 	}
 
 	.ingredientsContainer {
-		width: 25rem;
-		min-width: 25rem;
+		max-width: 25rem;
 	}
 
 	.instructionsContainer {
