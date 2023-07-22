@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import type { RecipeDetails } from '$lib/database/Recipe';
-	import IconButton from '@smui/icon-button';
+	import IconButton, { Icon } from '@smui/icon-button';
 	import Chip, { Set, Text as ChipText } from '@smui/chips';
 	import { createError } from '../../../stores/errormessagestore';
 	import { deleteRecipe } from '$lib/firebase/recipe';
@@ -70,6 +70,39 @@
 	</div>
 {/if}
 
+{#if recipe.prepTime || recipe.cookTime || recipe.restingTime || recipe.totalTime}
+	<div class="recipeTimesContainer">
+		{#if recipe.prepTime}
+			<div class="recipeTimeContainer">
+				<Icon class="material-icons">schedule</Icon>
+				<span>Vorbereitungszeit:</span>
+				<span>{recipe.prepTime}min</span>
+			</div>
+		{/if}
+		{#if recipe.cookTime}
+			<div class="recipeTimeContainer">
+				<Icon class="material-icons">schedule</Icon>
+				<span>Koch-/Backzeit:</span>
+				<span>{recipe.cookTime}min</span>
+			</div>
+		{/if}
+		{#if recipe.restingTime}
+			<div class="recipeTimeContainer">
+				<Icon class="material-icons">schedule</Icon>
+				<span>Ruhezeit:</span>
+				<span>{recipe.restingTime}min</span>
+			</div>
+		{/if}
+		{#if recipe.totalTime}
+			<div class="recipeTimeContainer">
+				<Icon class="material-icons">schedule</Icon>
+				<span>Gesamtzeit:</span>
+				<span>{recipe.totalTime}min</span>
+			</div>
+		{/if}
+	</div>
+{/if}
+
 <div class="ingredientsAndInstructionsContainer">
 	<div class="ingredientsContainer">
 		<IngredientsList {recipe} />
@@ -116,6 +149,26 @@
 
 	.imagesContainer {
 		margin-top: 1rem;
+	}
+
+	.recipeTimesContainer {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		column-gap: 2rem;
+		row-gap: .3rem;
+		margin-top: 2rem;
+	}
+
+	.recipeTimeContainer {
+		display: flex;
+		flex-direction: row;
+		justify-items: center;
+		column-gap: .5rem;
+
+		span:first-of-type {
+			font-weight: 500;
+		}
 	}
 
 	.ingredientsAndInstructionsContainer {
