@@ -41,9 +41,22 @@
 	getAllRecipePreviews()
 		.then(convertRecipePreviewsDictToRecipePreviewList)
 		.then((recipes) => {
-			allRecipes = recipes;
-			filteredRecipes = [...recipes];
-			fuse = new Fuse(recipes, {
+			return recipes.sort((recipe1: RecipePreview, recipe2: RecipePreview) => {
+				let name1 = recipe1.name.toLowerCase();
+				let name2 = recipe2.name.toLowerCase();
+				if (name1 < name2) {
+					return -1;
+				}
+				if (name1 > name2) {
+					return 1;
+				}
+				return 0;
+			});
+		})
+		.then((sortedRecipes) => {
+			allRecipes = sortedRecipes;
+			filteredRecipes = [...sortedRecipes];
+			fuse = new Fuse(sortedRecipes, {
 				keys: ['name'],
 				threshold: 0.2
 			});
