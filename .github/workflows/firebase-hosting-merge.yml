@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - run: echo ${{ vars.PUBLIC_FIREBASE_APIKEY }}
       - run: env
       - run: npm ci && npm run sync && npm run prepare && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
