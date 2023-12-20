@@ -14,7 +14,8 @@
 		"format": "prettier --plugin-search-dir . --write .",
 		"prepare": "npm run smui-theme-light",
 		"smui-theme-light": "smui-theme compile static/smui.css -i src/theme",
-		"start-emulators": "firebase emulators:start"
+		"start-emulators": "firebase emulators:start",
+		"sync": "svelte-kit sync"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.36.0",
