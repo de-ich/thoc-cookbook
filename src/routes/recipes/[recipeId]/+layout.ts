@@ -16,7 +16,7 @@ export async function load({ params }) {
             recipe: recipe
         };
     }).catch((e) => {
-        throw error(404, e.message || 'Not found');
+        error(404, e.message || 'Not found');
     });
 
     return recipeDetails;
