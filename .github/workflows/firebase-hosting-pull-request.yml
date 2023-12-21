@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: npm ci && npm run sync && npm run prepare && npm run build
+      - run: npm ci
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
@@ -17,13 +17,13 @@ jobs:
           projectId: thoc-cookbook
         env:
           FIREBASE_CLI_EXPERIMENTS: webframeworks,
-          PUBLIC_FIREBASE_APIKEY : ${{vars.PUBLIC_FIREBASE_APIKEY}},
+          PUBLIC_FIREBASE_APIKEY : ${{secrets.PUBLIC_FIREBASE_APIKEY}},
           PUBLIC_FIREBASE_AUTHDOMAIN : ${{vars.PUBLIC_FIREBASE_AUTHDOMAIN}},
           PUBLIC_FIREBASE_PROJECTID : ${{vars.PUBLIC_FIREBASE_PROJECTID}},
           PUBLIC_FIREBASE_STORAGEBUCKET : ${{vars.PUBLIC_FIREBASE_STORAGEBUCKET}},
-          PUBLIC_FIREBASE_MESSAGINGSENDERID : ${{vars.PUBLIC_FIREBASE_MESSAGINGSENDERID}},
-          PUBLIC_FIREBASE_APPID : ${{vars.PUBLIC_FIREBASE_APPID}},
+          PUBLIC_FIREBASE_MESSAGINGSENDERID : ${{secrets.PUBLIC_FIREBASE_MESSAGINGSENDERID}},
+          PUBLIC_FIREBASE_APPID : ${{secrets.PUBLIC_FIREBASE_APPID}},
           PUBLIC_FIREBASE_FUNCTIONSBASEURL : ${{vars.PUBLIC_FIREBASE_FUNCTIONSBASEURL}},
           PUBLIC_FIREBASE_STORAGE_URL : ${{vars.PUBLIC_FIREBASE_STORAGE_URL}},
-          PUBLIC_IMAGEKIT_ID : ${{vars.PUBLIC_IMAGEKIT_ID}},
+          PUBLIC_IMAGEKIT_ID : ${{secrets.PUBLIC_IMAGEKIT_ID}},
           PUBLIC_IMAGEKIT_STORAGE_URL : ${{vars.PUBLIC_IMAGEKIT_STORAGE_URL}}
