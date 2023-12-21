@@ -17,7 +17,7 @@
   "dependencies": {
     "firebase-admin": "^11.11.1",
     "firebase-functions": "^4.5.0",
-    "parse-ingredient": "^0.6.0"
+    "parse-ingredient": "^1.1.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.15.0",
