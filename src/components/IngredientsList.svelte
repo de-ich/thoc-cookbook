@@ -5,6 +5,9 @@
 	import formatQuantity from 'format-quantity';
 	import List, { Item } from '@smui/list';
 	import Checkbox from '@smui/checkbox';
+	import Dialog, { Actions, Content, Title } from '@smui/dialog';
+	import Textfield from '@smui/textfield';
+	import Button, { Label } from '@smui/button';
 
 	export let recipe: RecipeDetails;
 	export let allowCheckItems = false;
@@ -122,6 +125,20 @@
 			ingredientItem.classList.remove('disabled');
 		}
 	};
+
+	let showCustomQuantityDialog = false;
+
+	const handleCustomQuantityButtonKeyUp = (event: KeyboardEvent) => {
+		if (event.key === "Enter") {
+			openCustomQuantityDialog();
+		}
+	}
+
+	const openCustomQuantityDialog = () => {
+		showCustomQuantityDialog = true
+	}
+
+	$: newYield = currentYield;
 </script>
 
 <div class="ingredientsList">
@@ -129,9 +146,9 @@
 		<h5>
 			Zutaten für
 			<IconButton class="material-icons" on:click={decreaseYield} size="button">remove</IconButton>
-			{recipe.recipeYieldType === RecipeYieldType.BakingDish
+			<span class="customQuantityButton" aria-label="Custom Quantity" role="button" tabindex="0" on:click={openCustomQuantityDialog} on:keyup={handleCustomQuantityButtonKeyUp}>{recipe.recipeYieldType === RecipeYieldType.BakingDish
 				? getQuantityDisplayValue(currentYield) + 'er'
-				: getQuantityDisplayValue(currentYield)}
+				: getQuantityDisplayValue(currentYield)}</span>
 			<IconButton class="material-icons" on:click={increaseYield} size="button">add</IconButton>
 			{recipe.recipeYieldType === RecipeYieldType.BakingDish ? 'Backform' : 'Portionen'}
 		</h5>
@@ -150,6 +167,21 @@
 	</div>
 	{/each}
 </div>
+
+<Dialog bind:open={showCustomQuantityDialog} aria-label="Anzahl Portionen" aria-describedby="simple-content">
+	<Content id="simple-content">
+		<Textfield type="number" bind:value={newYield} label="Portionen" style="min-width: 25em;" />
+	</Content>
+	<Actions>
+		<Button>
+			<Label>Abbrechen</Label>
+		</Button>
+		<Button on:click={() => currentYield = newYield} disabled={newYield === 0}>
+			<Label>OK</Label>
+		</Button>
+	</Actions>
+</Dialog>
+
 
 <style lang="scss">
 	.ingredientsList {
@@ -170,5 +202,9 @@
 		display: flex;
 		flex-direction: row;
 		align-items: center;
+	}
+
+	.customQuantityButton {
+		cursor: pointer;
 	}
 </style>
