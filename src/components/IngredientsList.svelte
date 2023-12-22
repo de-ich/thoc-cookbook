@@ -176,7 +176,7 @@
 		<Button>
 			<Label>Abbrechen</Label>
 		</Button>
-		<Button on:click={() => currentYield = newYield} disabled={newYield === 0}>
+		<Button on:click={() => currentYield = newYield} disabled={Number.isNaN(newYield) || newYield <= 0}>
 			<Label>OK</Label>
 		</Button>
 	</Actions>
