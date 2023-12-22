@@ -14,6 +14,7 @@
 						src={PUBLIC_IMAGEKIT_STORAGE_URL + 'tr:h-80/' + recipe.previewImage}
 						alt="recipePreviewImage"
 						loading="lazy"
+						draggable="false"
 					/>
 				{/if}
 			</div>
@@ -37,10 +38,16 @@
 		flex-direction: row;
 		gap: 1rem;
 		align-items: center;
+		overflow: hidden;
 
 		&:hover {
 			color: var(--mdc-theme-primary);
 			background-color: var(--mdc-theme-secondary);
+
+			img {
+				transform: scale(1.1);
+				
+			}
 		}
 
 		.recipeImageContainer {
@@ -55,6 +62,8 @@
 				width: 8.89rem;
 				object-fit: cover;
 				border-radius: 0.5rem;
+				transition-property: transform;
+				transition-duration: .7s;
 			}
 		}
 
