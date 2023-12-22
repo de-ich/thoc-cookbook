@@ -170,7 +170,7 @@
 
 <Dialog bind:open={showCustomQuantityDialog} aria-label="Anzahl Portionen" aria-describedby="simple-content">
 	<Content id="simple-content">
-		<Textfield type="number" bind:value={newYield} label="Portionen" style="min-width: 25em;" />
+		<Textfield type="number" bind:value={newYield} label="Portionen" />
 	</Content>
 	<Actions>
 		<Button>
