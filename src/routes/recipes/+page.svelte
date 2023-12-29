@@ -2,22 +2,24 @@
 	import type { RecipePreview, RecipePreviews } from '$lib/database/Recipe';
 	import RecipeCard from '../../components/RecipeCard.svelte';
 	import Textfield from '@smui/textfield';
-	import HelperText from '@smui/textfield/helper-text';
 	import Icon from '@smui/textfield/icon';
-	import Fuse from 'fuse.js';
 	import IconButton from '@smui/icon-button';
 	import KeywordFilter from '../../components/KeywordFilter.svelte';
 	import KeywordChips from '../../components/KeywordChips.svelte';
 	import { getAllKeywords, getAllRecipePreviews } from '$lib/firebase/recipe';
 	import { createError } from '../../stores/errormessagestore';
+	import algoliasearch from 'algoliasearch/lite';
+	import { PUBLIC_ALGOLIA_APPID, PUBLIC_ALGOLIA_APIKEY } from '$env/static/public';
 
 	let allRecipes: RecipePreview[] = [];
 	let filteredRecipes: RecipePreview[] = [];
-	let fuse: Fuse<RecipePreview>;
 	let searchText: string | undefined;
 	let keywords: string[] = [];
 	let selectedKeywords: string[];
 	let loadingRecipes = true;
+
+	const searchClient = algoliasearch(PUBLIC_ALGOLIA_APPID, PUBLIC_ALGOLIA_APIKEY);
+	const searchIndex = searchClient.initIndex('recipeDetails');
 
 	export const snapshot: import('./$types').Snapshot<any> = {
 		capture: () => {
@@ -56,38 +58,44 @@
 		.then((sortedRecipes) => {
 			allRecipes = sortedRecipes;
 			filteredRecipes = [...sortedRecipes];
-			fuse = new Fuse(sortedRecipes, {
-				keys: ['name'],
-				threshold: 0.2
-			});
 		})
 		.catch((error) => createError('Unable to retrieve recipes: ' + error.message || ''))
 		.finally(() => (loadingRecipes = false));
 
 	getAllKeywords().then((kw) => (keywords = [...kw]));
 
-	const startSearchOnEnter = (keyboardEvent: Event) => {
-		const keyCode = (keyboardEvent as KeyboardEvent)?.keyCode;
-		if (keyCode === 13) {
-			startSearch();
-		}
+	const startSearch = async () => {
+		let keywordFilteredRecipes = filterRecipesByKeywords(allRecipes);
+		filteredRecipes = await createSearchFunction(searchText)(keywordFilteredRecipes);
 	};
 
-	const startSearch = () => {
-		let recipes = [...allRecipes];
-		if (searchText) {
-			const searchResult = fuse?.search(searchText);
-			recipes = searchResult?.map((result) => result.item) || [];
+	const createSearchFunction = (searchText: string | undefined) => {
+		if (searchText && searchText.length > 3) {
+			return async (recipes: RecipePreview[]) => {
+				return await searchIndex.search(searchText).then(({ hits }) => {
+					return recipes.filter(recipe => hits.some((hit) => hit.objectID === recipe.id));
+				})
+				.catch(err => {
+					console.log(err);
+					return [];
+				});
+			}
+		} else {
+			return (recipes: RecipePreview[]) => {
+				return [...recipes];
+			}
 		}
+	}
 
+	const filterRecipesByKeywords = (recipes: RecipePreview[]) => {
 		if (selectedKeywords && selectedKeywords.length > 0) {
-			recipes = recipes.filter((recipe) =>
+			return recipes.filter((recipe) =>
 				selectedKeywords.every((k) => recipe.keywords.includes(k))
 			);
 		}
 
-		filteredRecipes = recipes.filter((recipes) => recipes.keywords);
-	};
+		return [...recipes];
+	}
 
 	$: {
 		startSearch();
@@ -108,7 +116,7 @@
 				bind:value={searchText}
 				label="Rezept suchen..."
 				input$emptyValueUndefined
-				on:keydown={startSearchOnEnter}
+				on:keyup={startSearch}
 				on:blur={startSearch}
 			>
 				<Icon class="material-icons" slot="leadingIcon">search</Icon>
@@ -126,7 +134,6 @@
 						startSearch();
 					}}>clear</IconButton
 				>
-				<HelperText slot="helper">Suche starten mit Enter</HelperText>
 			</Textfield>
 		</div>
 		{#if (selectedKeywords || []).length > 0}

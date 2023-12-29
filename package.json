@@ -54,12 +54,12 @@
 		"@smui/segmented-button": "^7.0.0-beta.14",
 		"@smui/textfield": "^7.0.0-beta.14",
 		"@smui/top-app-bar": "^7.0.0-beta.14",
+		"algoliasearch": "^4.22.0",
 		"eslint-plugin-svelte": "^2.32.2",
 		"firebase": "^9.23.0",
 		"firebase-admin": "^11.10.0",
 		"firebase-functions": "^4.4.1",
 		"format-quantity": "^2.1.0",
-		"fuse.js": "^6.6.2",
 		"parse-ingredient": "^1.1.0",
 		"uuid": "^9.0.0"
 	}
