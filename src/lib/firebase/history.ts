@@ -1,5 +1,6 @@
 import { collection } from "firebase/firestore";
-import { db, httpsCallable } from "./firebase.client";
+import { db } from "./firebase.client";
+import { httpsCallable } from '$lib/firebase/firebase.client';
 
 const aggregatesCollectionRef = collection(db, "aggregates");
 
