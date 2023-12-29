@@ -9,6 +9,7 @@
 	import IngredientsList from '../../../components/IngredientsList.svelte';
 	import InstructionsList from '../../../components/InstructionsList.svelte';
 	import ConfirmDeleteRecipeDialog from '../../../components/dialogs/ConfirmDeleteRecipeDialog.svelte';
+	import { addEntryToHistory } from '$lib/firebase/history';
 
 	/** @type {import('./$types').PageData} */
 	export let data: any;
@@ -22,6 +23,8 @@
 			.then(() => goto('/recipes/'))
 			.catch(createError);
 	};
+
+	addEntryToHistory(recipe.id);
 </script>
 
 <div class="headingContainer">
