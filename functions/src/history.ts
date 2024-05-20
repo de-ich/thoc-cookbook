@@ -1,5 +1,5 @@
 import { onCall } from "firebase-functions/v2/https";
-import { FieldValue, getFirestore } from 'firebase-admin/firestore';
+import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 
 const db = getFirestore();
 
@@ -8,7 +8,7 @@ interface History {
 }
 
 interface HistoryEntry {
-    timestamp: FieldValue;
+    timestamp: Timestamp;
     recipeId: string;
 }
 
@@ -22,7 +22,7 @@ export const pushToHistory = onCall({ maxInstances: 1 }, async (request) => {
         then(snapshot => snapshot.data() as History).
         then(history => {
             var newEntries = history.entries.filter(entry => entry.recipeId !== recipeId);
-            newEntries.unshift({"recipeId": recipeId, "timestamp": FieldValue.serverTimestamp()});
+            newEntries.unshift({"recipeId": recipeId, "timestamp": Timestamp.now()});
             return newEntries.slice(0, 10);
         }).
         then(newEntries => {
