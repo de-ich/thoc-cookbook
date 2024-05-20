@@ -28,18 +28,15 @@ firebaseapp = initializeApp(firebaseConfig);
 
 export const auth = getAuth(firebaseapp);
 export const db = getFirestore(firebaseapp);
-export const functions = getFunctions(firebaseapp);
+export const functions = getFunctions(firebaseapp, "europe-west1");
 
 const firebaseFunctionsBaseURL = PUBLIC_FIREBASE_FUNCTIONSBASEURL;
 
 export const httpsCallable = (name: string) => {
-    console.log(`firebaseFunctionsBaseURL is '${firebaseFunctionsBaseURL}'...`)
     if (firebaseFunctionsBaseURL) {
-        console.log("... using custom https callable");
         // use a custom URL to invoke the function, e.g. for local development
         return httpsCallableFromURL(functions, firebaseFunctionsBaseURL + name);
     } else {
-        console.log("... using firebase https callable");
         return firebaseHttpsCallable(functions, name);
     }
 }
