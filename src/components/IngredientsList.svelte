@@ -2,8 +2,7 @@
 	import { RecipeYieldType, type RecipeDetails } from '$lib/database/Recipe';
 	import IconButton from '@smui/icon-button';
 	import type { Ingredient } from 'parse-ingredient';
-	import formatQuantity from 'format-quantity';
-	import List, { Item } from '@smui/list';
+	import { formatQuantity } from 'format-quantity';
 	import Checkbox from '@smui/checkbox';
 	import Dialog, { Actions, Content, Title } from '@smui/dialog';
 	import Textfield from '@smui/textfield';
