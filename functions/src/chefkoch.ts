@@ -34,7 +34,7 @@ const internalFetchRecipe = async (recipeId: string, chefkochCookie?: string) =>
 
 const convertToPartialRecipe = (chefkochRecipe: any): RecipeDraft => {
     const recipe: any = {};
-
+    
     if (!chefkochRecipe.title) {
         throw new Error('Unable to parse recipe name from chefkoch recipe!');
     }
@@ -46,14 +46,14 @@ const convertToPartialRecipe = (chefkochRecipe: any): RecipeDraft => {
     recipe.cookTime = chefkochRecipe.cookingTime;
     recipe.totalTime = chefkochRecipe.totalTime;
     recipe.recipeYield = chefkochRecipe.servings;
-
+    
     const ingredients: Ingredient[] = []
-
+    
     for (const ingredientGroup of chefkochRecipe.ingredientGroups || []) {
         for (const chefkochIngredient of ingredientGroup.ingredients) {
             let ingredientString;
             try {
-                ingredientString = [chefkochIngredient.amount || '', chefkochIngredient.unit || '', chefkochIngredient.name].join(' ');
+                ingredientString = [chefkochIngredient.amount || '', chefkochIngredient.unit || '', chefkochIngredient.name].join(' ') + (chefkochIngredient.usageInfo || '');
                 const ingredient = parseIngredient(ingredientString);
                 ingredients.push(...ingredient);
             } catch (err) {
