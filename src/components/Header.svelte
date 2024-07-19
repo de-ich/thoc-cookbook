@@ -3,7 +3,6 @@
 	import TopAppBar, { Row, Section, Title } from '@smui/top-app-bar';
 	import IconButton from '@smui/icon-button';
 	import Menu from '@smui/menu';
-	import type { Nullable } from 'vitest';
 	import List, { Item, Separator, Text } from '@smui/list';
 	import chefkochLogo from '$lib/assets/chefkoch-logo.svg';
 	import ChefkochImportDialog from './dialogs/ChefkochImportDialog.svelte';
@@ -11,7 +10,7 @@
 	import { goto } from '$app/navigation';
 	import { createError } from '../stores/errormessagestore';
 
-	let user: Nullable<string> = $authStore.currentUser?.displayName || $authStore.currentUser?.email;
+	let user: string | null | undefined = $authStore.currentUser?.displayName || $authStore.currentUser?.email;
 
 	async function logout() {
 		try {

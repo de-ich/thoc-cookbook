@@ -1,12 +1,10 @@
 import { writable } from 'svelte/store';
 import { auth } from '../lib/firebase/firebase.client';
-import { signOut, signInWithEmailAndPassword, type User, type UserCredential } from 'firebase/auth';
-import type { Nullable } from 'vitest';
-import { createError } from './errormessagestore';
+import { signOut, signInWithEmailAndPassword, type User } from 'firebase/auth';
 
 export interface AuthStore {
     isLoading: boolean,
-    currentUser: Nullable<User>
+    currentUser: User | null
 }
 
 export const authStore = writable<AuthStore>();
