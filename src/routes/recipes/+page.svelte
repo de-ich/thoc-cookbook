@@ -8,6 +8,8 @@
 	import Textfield from '@smui/textfield';
 	import Icon from '@smui/textfield/icon';
 	import IconButton from '@smui/icon-button';
+	import Menu, { SelectionGroupIcon } from '@smui/menu';
+	import List, { Item, Separator, Text } from '@smui/list';
 	import KeywordFilter from '../../components/KeywordFilter.svelte';
 	import KeywordChips from '../../components/KeywordChips.svelte';
 	import { getAllKeywords, getAllRecipePreviews } from '$lib/firebase/recipe';
@@ -27,6 +29,7 @@
 	let selectedKeywords: string[];
 	let loadingRecipes = true;
 	let sortMethod: SortMethod = SortMethod.ALPHABETICALLY_UP;
+	let sortMenu: Menu;
 
 	const searchClient = algoliasearch(PUBLIC_ALGOLIA_APPID, PUBLIC_ALGOLIA_APIKEY);
 	const searchIndex = searchClient.initIndex('recipeDetails');
@@ -52,10 +55,9 @@
 
 	getAllRecipePreviews()
 		.then(convertToListOfRecipePreviewsWithId)
-		.then((recipePreviews) => sortRecipes(recipePreviews, sortMethod))
-		.then((sortedRecipes) => {
-			allRecipes = sortedRecipes;
-			filteredRecipes = [...sortedRecipes];
+		.then((recipes) => {
+			allRecipes = recipes;
+			filteredRecipes = [...recipes];
 		})
 		.catch((error) => createError('Unable to retrieve recipes: ' + error.message || ''))
 		.finally(() => (loadingRecipes = false));
@@ -133,6 +135,8 @@
 		loadingRecipes = loadingRecipes;
 		selectedKeywords = selectedKeywords;
 	}
+
+	$: sortedFilteredRecipes = sortRecipes(filteredRecipes, sortMethod);
 </script>
 
 <div class="recipeList">
@@ -178,8 +182,37 @@
 			<h6>Rezepte werden geladen...</h6>
 		</div>
 	{:else}
-		<h6>{filteredRecipes.length} Rezepte gefunden</h6>
-		{#each filteredRecipes as recipe}
+		<div class="sortArea">
+			<h6>{filteredRecipes.length} Rezepte gefunden</h6>
+			<Menu bind:this={sortMenu} anchorCorner="BOTTOM_LEFT">
+				<List>
+					<Item on:SMUI:action={() => (sortMethod = SortMethod.ALPHABETICALLY_UP)}>
+						<SelectionGroupIcon>
+							{#if sortMethod === SortMethod.ALPHABETICALLY_UP}
+								<i class="material-icons">check</i>
+							{/if}
+						</SelectionGroupIcon>
+						<Text>Alphabetisch (aufsteigend)</Text>
+					</Item>
+					<Item on:SMUI:action={() => (sortMethod = SortMethod.ALPHABETICALLY_DOWN)}>
+						<SelectionGroupIcon
+							>{#if sortMethod === SortMethod.ALPHABETICALLY_DOWN}
+								<i class="material-icons">check</i>
+							{/if}
+						</SelectionGroupIcon>
+						<Text>Alphabetisch (absteigend)</Text>
+					</Item>
+				</List>
+			</Menu>
+			<IconButton
+				class="material-icons"
+				slot="trailingIcon"
+				on:click={() => {
+					sortMenu.setOpen(true);
+				}}>sort</IconButton
+			>
+		</div>
+		{#each sortedFilteredRecipes as recipe}
 			<RecipeCard {recipe} />
 		{/each}
 	{/if}
@@ -225,6 +258,12 @@
 					order: 2;
 				}
 			}
+		}
+
+		.sortArea {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
 		}
 
 		:global(.searchField) {
