@@ -13,12 +13,11 @@
 	let text = '';
 
 	const handleSelection = async (event: CustomEvent<string>) => {
-		
 		// Don't actually select the item.
 		event.preventDefault();
 
 		await addKeyword(event.detail);
-	}
+	};
 
 	const addKeyword = async (keyword: string) => {
 		if ((keyword || '').length > 0 && !selectedKeywords.includes(keyword)) {
@@ -33,7 +32,7 @@
 		// make sure the selection menu stays open after adding the element
 		await tick();
 		selector.focus();
-	}
+	};
 </script>
 
 <div class="autocompleteContainer">

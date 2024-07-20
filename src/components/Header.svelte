@@ -10,7 +10,8 @@
 	import { goto } from '$app/navigation';
 	import { createError } from '../stores/errormessagestore';
 
-	let user: string | null | undefined = $authStore.currentUser?.displayName || $authStore.currentUser?.email;
+	let user: string | null | undefined =
+		$authStore.currentUser?.displayName || $authStore.currentUser?.email;
 
 	async function logout() {
 		try {

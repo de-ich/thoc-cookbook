@@ -7,32 +7,37 @@ const chefkochRecipeUrlRegex = new RegExp('https://www.chefkoch.de/rezepte/([0-9
 const fetchRecipeCallable = httpsCallable('fetchRecipe');
 
 export const fetchRecipe = async (recipeIdOrUrl: string): Promise<RecipeDraft> => {
+	let recipeId = null;
 
-    let recipeId = null;
+	if (parseInt(recipeIdOrUrl)) {
+		recipeId = recipeIdOrUrl;
+	} else {
+		const match = recipeIdOrUrl.match(chefkochRecipeUrlRegex);
 
-    if (parseInt(recipeIdOrUrl)) {
-        recipeId = recipeIdOrUrl;
-    } else {
-        const match = recipeIdOrUrl.match(chefkochRecipeUrlRegex);
+		if (!match) {
+			throw new Error('Unable to parse recipe ID!');
+		}
 
-        if (!match) {
-            throw new Error('Unable to parse recipe ID!');
-        }
+		recipeId = match[1];
+	}
 
-        recipeId = match[1];
-    }
+	const alreadyExists = await checkRecipeWithSourceIdDoesNotYetExist(recipeId);
 
-    const alreadyExists = await checkRecipeWithSourceIdDoesNotYetExist(recipeId);
+	if (alreadyExists) {
+		throw new Error(`Chefkoch recipe with id ${recipeId} already exists in the database!`);
+	}
 
-    if (alreadyExists) {
-        throw new Error(`Chefkoch recipe with id ${recipeId} already exists in the database!`);
-    }
+	return fetchRecipeCallable({ recipeId: recipeId }).then((result) => result.data as RecipeDraft);
+};
 
-    return fetchRecipeCallable({ recipeId: recipeId }).then(result => result.data as RecipeDraft);
-}
+const fetchRecipesFromAllUserCollectionsCallable = httpsCallable(
+	'fetchRecipesFromAllUserCollections'
+);
 
-const fetchRecipesFromAllUserCollectionsCallable = httpsCallable('fetchRecipesFromAllUserCollections');
-
-export const fetchRecipesFromAllUserCollections = async (chefkochCookie: string): Promise<RecipeDraft[]> => {
-    return fetchRecipesFromAllUserCollectionsCallable({ chefkochCookie: chefkochCookie }).then(result => result.data as RecipeDraft[]);
-}
+export const fetchRecipesFromAllUserCollections = async (
+	chefkochCookie: string
+): Promise<RecipeDraft[]> => {
+	return fetchRecipesFromAllUserCollectionsCallable({ chefkochCookie: chefkochCookie }).then(
+		(result) => result.data as RecipeDraft[]
+	);
+};

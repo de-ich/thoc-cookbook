@@ -1,12 +1,12 @@
 <script lang="ts">
-    import Dialog, { Actions, Content, Title } from '@smui/dialog';
-    import Button, { Label } from '@smui/button';
-    import { createEventDispatcher } from 'svelte';
+	import Dialog, { Actions, Content, Title } from '@smui/dialog';
+	import Button, { Label } from '@smui/button';
+	import { createEventDispatcher } from 'svelte';
 
-    export let showConfirmDeleteDialog = false;
-    export let recipeName: string;
+	export let showConfirmDeleteDialog = false;
+	export let recipeName: string;
 
-    const dispatch = createEventDispatcher();
+	const dispatch = createEventDispatcher();
 </script>
 
 <Dialog

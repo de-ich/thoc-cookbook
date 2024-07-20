@@ -9,7 +9,7 @@
 	<a href={'/recipes/' + recipe.id}>
 		<div class="recipeCard">
 			<div class="recipeImageContainer">
-				{#if (recipe.previewImage)}
+				{#if recipe.previewImage}
 					<img
 						src={PUBLIC_IMAGEKIT_STORAGE_URL + 'tr:h-80/' + recipe.previewImage}
 						alt="recipePreviewImage"
@@ -46,7 +46,6 @@
 
 			img {
 				transform: scale(1.1);
-				
 			}
 		}
 
@@ -63,7 +62,7 @@
 				object-fit: cover;
 				border-radius: 0.5rem;
 				transition-property: transform;
-				transition-duration: .7s;
+				transition-duration: 0.7s;
 			}
 		}
 

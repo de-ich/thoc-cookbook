@@ -4,20 +4,21 @@ import { error } from '@sveltejs/kit';
 
 /** @type {import('./$types').PageLoad} */
 export async function load({ params }) {
+	if (!browser) {
+		return {
+			recipe: undefined
+		};
+	}
+	const recipeId = params.recipeId;
+	const recipeDetails = getRecipeDetails(recipeId)
+		.then((recipe) => {
+			return {
+				recipe: recipe
+			};
+		})
+		.catch((e) => {
+			error(404, e.message || 'Not found');
+		});
 
-    if (!browser) {
-        return {
-            recipe: undefined
-        }
-    }
-    const recipeId = params.recipeId;
-    const recipeDetails = getRecipeDetails(recipeId).then(recipe => {
-        return {
-            recipe: recipe
-        };
-    }).catch((e) => {
-        error(404, e.message || 'Not found');
-    });
-
-    return recipeDetails;
+	return recipeDetails;
 }

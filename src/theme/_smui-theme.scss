@@ -2,33 +2,34 @@
 
 @use '@material/theme/color-palette';
 
-
 // Svelte Colors!
-@use '@material/theme/index' as theme with ($primary: #e1a6ad,
-  $secondary: #676778,
-  $surface: #fff,
-  $background: #fff,
-  $error: color-palette.$red-900);
+@use '@material/theme/index' as theme with (
+	$primary: #e1a6ad,
+	$secondary: #676778,
+	$surface: #fff,
+	$background: #fff,
+	$error: color-palette.$red-900
+);
 
 @use '@material/theme/styles';
 @use './Typography';
 
 html,
 body {
-  background-color: theme.$surface;
-  color: theme.$on-surface;
+	background-color: theme.$surface;
+	color: theme.$on-surface;
 
-  width: 100%;
-  height: 100%;
-  margin: 0px;
-  padding: 0px;
-  overflow-x: hidden;
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+	overflow-x: hidden;
 }
 
 a:link,
 a:visited,
 a:hover,
 a:active {
-  text-decoration: none;
-  color: inherit;
+	text-decoration: none;
+	color: inherit;
 }

@@ -25,7 +25,7 @@
 	};
 </script>
 
-<RecipeEdit bind:recipeDraft={recipeDraft} />
+<RecipeEdit bind:recipeDraft />
 
 <div class="submitButtonContainer">
 	<Button class="submitButton" on:click={addRecipeToDatabase} variant="unelevated">Speichern</Button

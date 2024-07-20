@@ -128,14 +128,14 @@
 	let showCustomQuantityDialog = false;
 
 	const handleCustomQuantityButtonKeyUp = (event: KeyboardEvent) => {
-		if (event.key === "Enter") {
+		if (event.key === 'Enter') {
 			openCustomQuantityDialog();
 		}
-	}
+	};
 
 	const openCustomQuantityDialog = () => {
-		showCustomQuantityDialog = true
-	}
+		showCustomQuantityDialog = true;
+	};
 
 	$: newYield = currentYield;
 </script>
@@ -145,29 +145,41 @@
 		<h5>
 			Zutaten für
 			<IconButton class="material-icons" on:click={decreaseYield} size="button">remove</IconButton>
-			<span class="customQuantityButton" aria-label="Custom Quantity" role="button" tabindex="0" on:click={openCustomQuantityDialog} on:keyup={handleCustomQuantityButtonKeyUp}>{recipe.recipeYieldType === RecipeYieldType.BakingDish
-				? getQuantityDisplayValue(currentYield) + 'er'
-				: getQuantityDisplayValue(currentYield)}</span>
+			<span
+				class="customQuantityButton"
+				aria-label="Custom Quantity"
+				role="button"
+				tabindex="0"
+				on:click={openCustomQuantityDialog}
+				on:keyup={handleCustomQuantityButtonKeyUp}
+				>{recipe.recipeYieldType === RecipeYieldType.BakingDish
+					? getQuantityDisplayValue(currentYield) + 'er'
+					: getQuantityDisplayValue(currentYield)}</span
+			>
 			<IconButton class="material-icons" on:click={increaseYield} size="button">add</IconButton>
 			{recipe.recipeYieldType === RecipeYieldType.BakingDish ? 'Backform' : 'Portionen'}
 		</h5>
 	{:else}
 		<h5>Zutaten</h5>
 	{/if}
-	
+
 	{#each ingredientsForCurrentYield as ingredient, i}
-	<div class="ingredientContainer">
-		{#if allowCheckItems}
-			<Checkbox on:click={(event) => handleSelection(event, i)} />
-		{/if}
-		<span id={'ingredient-' + i}>
-			{getIngredientString(ingredient)}
-		</span>
-	</div>
+		<div class="ingredientContainer">
+			{#if allowCheckItems}
+				<Checkbox on:click={(event) => handleSelection(event, i)} />
+			{/if}
+			<span id={'ingredient-' + i}>
+				{getIngredientString(ingredient)}
+			</span>
+		</div>
 	{/each}
 </div>
 
-<Dialog bind:open={showCustomQuantityDialog} aria-label="Anzahl Portionen" aria-describedby="simple-content">
+<Dialog
+	bind:open={showCustomQuantityDialog}
+	aria-label="Anzahl Portionen"
+	aria-describedby="simple-content"
+>
 	<Content id="simple-content">
 		<Textfield type="number" bind:value={newYield} label="Portionen" />
 	</Content>
@@ -175,12 +187,14 @@
 		<Button>
 			<Label>Abbrechen</Label>
 		</Button>
-		<Button on:click={() => currentYield = newYield} disabled={Number.isNaN(newYield) || newYield <= 0}>
+		<Button
+			on:click={() => (currentYield = newYield)}
+			disabled={Number.isNaN(newYield) || newYield <= 0}
+		>
 			<Label>OK</Label>
 		</Button>
 	</Actions>
 </Dialog>
-
 
 <style lang="scss">
 	.ingredientsList {

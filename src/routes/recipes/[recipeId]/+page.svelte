@@ -106,13 +106,12 @@
 	</div>
 {/if}
 
-{#if (recipe.sourceUrl) }
-<div class="sourceContainer">
-	<Icon class="material-icons">launch</Icon>
-	<span>Quelle:</span>
-	<a href={recipe.sourceUrl}>{recipe.sourceUrl}</a>
-</div>
-	
+{#if recipe.sourceUrl}
+	<div class="sourceContainer">
+		<Icon class="material-icons">launch</Icon>
+		<span>Quelle:</span>
+		<a href={recipe.sourceUrl}>{recipe.sourceUrl}</a>
+	</div>
 {/if}
 
 <div class="ingredientsAndInstructionsContainer">
@@ -168,7 +167,7 @@
 		flex-direction: row;
 		flex-wrap: wrap;
 		column-gap: 2rem;
-		row-gap: .3rem;
+		row-gap: 0.3rem;
 		margin-top: 2rem;
 	}
 
@@ -176,7 +175,7 @@
 		display: flex;
 		flex-direction: row;
 		justify-items: center;
-		column-gap: .5rem;
+		column-gap: 0.5rem;
 
 		span:first-of-type {
 			font-weight: 500;
@@ -189,7 +188,7 @@
 		flex-wrap: nowrap;
 		overflow: hidden;
 		justify-items: center;
-		column-gap: .5rem;
+		column-gap: 0.5rem;
 		margin-top: 2rem;
 
 		span:first-of-type {
@@ -200,9 +199,9 @@
 			white-space: nowrap;
 			text-overflow: ellipsis;
 			overflow: hidden;
-			
-			&:hover	{
-				color: var(--mdc-theme-primary)
+
+			&:hover {
+				color: var(--mdc-theme-primary);
 			}
 		}
 	}

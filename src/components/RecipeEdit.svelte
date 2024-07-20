@@ -17,7 +17,7 @@
 
 	let availableKeywords: string[] = [];
 
-	getAllKeywords().then(keywords => availableKeywords = keywords);
+	getAllKeywords().then((keywords) => (availableKeywords = keywords));
 
 	onMount(() => {
 		// make sure all fields are properly initialized
@@ -181,7 +181,7 @@
 		input$emptyValueUndefined
 	/>
 	<div class="keywordContainer">
-		<KeywordSpecifier availableKeywords={availableKeywords} bind:selectedKeywords={recipeDraft.keywords} />
+		<KeywordSpecifier {availableKeywords} bind:selectedKeywords={recipeDraft.keywords} />
 		<KeywordChips bind:selectedKeywords={recipeDraft.keywords} />
 	</div>
 	<Textfield
