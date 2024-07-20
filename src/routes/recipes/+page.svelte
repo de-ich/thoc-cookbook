@@ -2,7 +2,7 @@
 	import type {
 		RecipePreviews,
 		RecipePreviewWithId,
-		RecipeSortFunction
+		RecipeCompareFunction
 	} from '$lib/database/Recipe';
 	import RecipeCard from '../../components/RecipeCard.svelte';
 	import Textfield from '@smui/textfield';
@@ -16,16 +16,20 @@
 	import { createError } from '../../stores/errormessagestore';
 	import algoliasearch from 'algoliasearch/lite';
 	import { PUBLIC_ALGOLIA_APPID, PUBLIC_ALGOLIA_APIKEY } from '$env/static/public';
+	import { getHistory, type HistoryEntry } from '$lib/firebase/history';
 
 	enum SortMethod {
 		ALPHABETICALLY_UP,
-		ALPHABETICALLY_DOWN
+		ALPHABETICALLY_DOWN,
+		LAST_ACCESS_TIME_UP,
+		LAST_ACCESS_TIME_DOWN
 	}
 
 	let allRecipes: RecipePreviewWithId[] = [];
 	let filteredRecipes: RecipePreviewWithId[] = [];
 	let searchText: string | undefined;
 	let keywords: string[] = [];
+	let historyEntries: HistoryEntry[] = [];
 	let selectedKeywords: string[];
 	let loadingRecipes = true;
 	let sortMethod: SortMethod = SortMethod.ALPHABETICALLY_UP;
@@ -63,6 +67,7 @@
 		.finally(() => (loadingRecipes = false));
 
 	getAllKeywords().then((kw) => (keywords = [...kw]));
+	getHistory().then((h) => (historyEntries = h.entries));
 
 	const startSearch = async () => {
 		let keywordFilteredRecipes = filterRecipesByKeywords(allRecipes);
@@ -98,36 +103,53 @@
 	};
 
 	const sortRecipes = (recipes: RecipePreviewWithId[], sortMethod: SortMethod) => {
-		let sortFunction: RecipeSortFunction;
+		let compareFunction: RecipeCompareFunction;
 
 		if (sortMethod === SortMethod.ALPHABETICALLY_DOWN) {
-			sortFunction = (recipe1, recipe2) => {
-				let name1 = recipe1.name.toLowerCase();
-				let name2 = recipe2.name.toLowerCase();
-				if (name1 > name2) {
-					return -1;
-				}
-				if (name1 < name2) {
-					return 1;
-				}
-				return 0;
-			};
+			compareFunction = (recipe1, recipe2) => compareRecipesAlphabetically(recipe1, recipe2) * -1;
+		} else if (sortMethod === SortMethod.LAST_ACCESS_TIME_UP) {
+			compareFunction = (recipe1, recipe2) =>
+				compareRecipesByAccessTime(recipe1, recipe2, historyEntries);
+		} else if (sortMethod === SortMethod.LAST_ACCESS_TIME_DOWN) {
+			compareFunction = (recipe1, recipe2) =>
+				compareRecipesByAccessTime(recipe1, recipe2, historyEntries) * -1;
 		} else {
 			// use 'alphabetically up' as default
-			sortFunction = (recipe1, recipe2) => {
-				let name1 = recipe1.name.toLowerCase();
-				let name2 = recipe2.name.toLowerCase();
-				if (name1 < name2) {
-					return -1;
-				}
-				if (name1 > name2) {
-					return 1;
-				}
-				return 0;
-			};
+			compareFunction = compareRecipesAlphabetically;
 		}
 
-		return recipes.sort(sortFunction);
+		return recipes.sort(compareFunction);
+	};
+
+	const compareRecipesAlphabetically = (
+		recipe1: RecipePreviewWithId,
+		recipe2: RecipePreviewWithId
+	) => {
+		let name1 = recipe1.name.toLowerCase();
+		let name2 = recipe2.name.toLowerCase();
+		if (name1 > name2) {
+			return 1;
+		}
+		if (name1 < name2) {
+			return -1;
+		}
+		return 0;
+	};
+
+	const compareRecipesByAccessTime = (
+		recipe1: RecipePreviewWithId,
+		recipe2: RecipePreviewWithId,
+		historyEntries: HistoryEntry[]
+	) => {
+		let time1 = historyEntries.find((e) => e.recipeId == recipe1.id)?.timestamp || 0;
+		let time2 = historyEntries.find((e) => e.recipeId == recipe2.id)?.timestamp || 0;
+		if (time1 > time2) {
+			return 1;
+		}
+		if (time2 < time1) {
+			return -1;
+		}
+		return 0;
 	};
 
 	$: {
@@ -137,6 +159,9 @@
 	}
 
 	$: sortedFilteredRecipes = sortRecipes(filteredRecipes, sortMethod);
+	$: {
+		console.log(historyEntries);
+	}
 </script>
 
 <div class="recipeList">
@@ -201,6 +226,22 @@
 							{/if}
 						</SelectionGroupIcon>
 						<Text>Alphabetisch (absteigend)</Text>
+					</Item>
+					<Item on:SMUI:action={() => (sortMethod = SortMethod.LAST_ACCESS_TIME_UP)}>
+						<SelectionGroupIcon>
+							{#if sortMethod === SortMethod.LAST_ACCESS_TIME_UP}
+								<i class="material-icons">check</i>
+							{/if}
+						</SelectionGroupIcon>
+						<Text>Zuletzt angeschaut (aufsteigend)</Text>
+					</Item>
+					<Item on:SMUI:action={() => (sortMethod = SortMethod.LAST_ACCESS_TIME_DOWN)}>
+						<SelectionGroupIcon>
+							{#if sortMethod === SortMethod.LAST_ACCESS_TIME_DOWN}
+								<i class="material-icons">check</i>
+							{/if}
+						</SelectionGroupIcon>
+						<Text>Zuletzt angeschaut (absteigend)</Text>
 					</Item>
 				</List>
 			</Menu>

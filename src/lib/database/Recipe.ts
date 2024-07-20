@@ -60,7 +60,7 @@ export interface RecipeDetails extends RecipeDraft {
 	addedTimestamp: FieldValue;
 }
 
-export type RecipeSortFunction = (
+export type RecipeCompareFunction = (
 	recipe1: RecipePreviewWithId,
 	recipe2: RecipePreviewWithId
 ) => number;
