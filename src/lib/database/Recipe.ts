@@ -9,6 +9,10 @@ export interface RecipePreview {
     keywords: string[];
 }
 
+export interface RecipePreviewWithId extends RecipePreview {
+    id: string
+}
+
 export interface RecipeDraft {
     images: (string | File)[];
     ingredients: Ingredient[];
@@ -55,3 +59,5 @@ export interface RecipeDetails extends RecipeDraft {
     addedBy: string;
     addedTimestamp: FieldValue;
 }
+
+export type RecipeSortFunction = (recipe1: RecipePreviewWithId, recipe2: RecipePreviewWithId) => number;
