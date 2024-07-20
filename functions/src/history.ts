@@ -36,7 +36,7 @@ export const pushToHistory = onCall({ maxInstances: 1 }, async (request) => {
 
 	var newEntries = history.entries.filter((entry) => entry.recipeId !== recipeId);
 	newEntries.unshift({ recipeId: recipeId, timestamp: Timestamp.now() });
-	history.entries = newEntries;
+	history.entries = [...newEntries];
 
 	await historyDocRef.set(history);
 });
