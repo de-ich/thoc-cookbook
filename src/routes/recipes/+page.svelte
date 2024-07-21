@@ -32,7 +32,7 @@
 	let historyEntries: HistoryEntry[] = [];
 	let selectedKeywords: string[];
 	let loadingRecipes = true;
-	let sortMethod: SortMethod = SortMethod.ALPHABETICALLY_UP;
+	let sortMethod: SortMethod = SortMethod.LAST_ACCESS_TIME_DOWN;
 	let sortMenu: Menu;
 
 	const searchClient = algoliasearch(PUBLIC_ALGOLIA_APPID, PUBLIC_ALGOLIA_APIKEY);
