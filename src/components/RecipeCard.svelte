@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { PUBLIC_IMAGEKIT_STORAGE_URL } from '$env/static/public';
-	import type { RecipePreview } from '$lib/database/Recipe';
+	import type { RecipePreviewWithId } from '$lib/database/Recipe';
 
-	export let recipe: RecipePreview;
+	export let recipe: RecipePreviewWithId;
 </script>
 
 <div class="recipeCardContainer">
