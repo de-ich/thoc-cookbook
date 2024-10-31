@@ -6,7 +6,6 @@
 	import List, { Item, Text } from '@smui/list';
 	import Chip, { Set, Text as ChipText } from '@smui/chips';
 	import Dialog, { Actions, Content, Title } from '@smui/dialog';
-	import Button, { Label } from '@smui/button';
 	import { createError } from '../../../../stores/errormessagestore';
 	import { deleteRecipe } from '$lib/firebase/recipe';
 	import { PUBLIC_IMAGEKIT_STORAGE_URL } from '$env/static/public';

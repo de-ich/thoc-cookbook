@@ -23,7 +23,6 @@
 	"type": "module",
 	"dependencies": {
 		"@smui-extra/autocomplete": "^7.0.0",
-		"@smui/button": "^7.0.0",
 		"@smui/checkbox": "^7.0.0",
 		"@smui/chips": "^7.0.0",
 		"@smui/common": "^7.0.0",
@@ -51,6 +50,7 @@
 		"@typescript-eslint/eslint-plugin": "^8.0.0-alpha.46",
 		"@typescript-eslint/parser": "^8.0.0-alpha.46",
 		"autoprefixer": "^10.4.20",
+		"bits-ui": "^0.21.16",
 		"clsx": "^2.1.1",
 		"eslint": "^9.7.0",
 		"eslint-config-prettier": "^9.1.0",

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fetchRecipe } from '$lib/importer/chefkoch';
-	import Button, { Label } from '@smui/button';
+	import { Button } from "$lib/components/ui/button";	
 	import Dialog, { Title, Content, Actions } from '@smui/dialog';
 	import Textfield from '@smui/textfield';
 	import { goto } from '$app/navigation';
@@ -29,11 +29,9 @@
 		<Textfield type="url" bind:value={recipeUrl} label="Rezept-URL" style="min-width: 25em;" />
 	</Content>
 	<Actions>
-		<Button>
-			<Label>Abbrechen</Label>
-		</Button>
+		<Button on:click={() => open = false}>Abbrechen</Button>
 		<Button on:click={() => importRecipe()} disabled={recipeUrl == null}>
-			<Label>Vorschau</Label>
+			Vorschau
 		</Button>
 	</Actions>
 </Dialog>

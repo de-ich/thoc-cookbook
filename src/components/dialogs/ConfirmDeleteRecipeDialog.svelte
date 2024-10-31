@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Dialog, { Actions, Content, Title } from '@smui/dialog';
-	import Button, { Label } from '@smui/button';
+	import { Button } from "$lib/components/ui/button";	
 	import { createEventDispatcher } from 'svelte';
 
 	export let showConfirmDeleteDialog = false;
@@ -19,11 +19,7 @@
 		Rezept {recipeName} wirklich löschen?
 	</Content>
 	<Actions>
-		<Button>
-			<Label>Abbrechen</Label>
-		</Button>
-		<Button on:click={() => dispatch('delete-recipe')}>
-			<Label>Löschen</Label>
-		</Button>
+		<Button on:click={() => showConfirmDeleteDialog = false}>Abbrechen</Button>
+		<Button on:click={() => dispatch('delete-recipe')}>Löschen</Button>
 	</Actions>
 </Dialog>

@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { Button } from "$lib/components/ui/button";	
 	import type { RecipeDraft } from '$lib/database/Recipe';
 	import { addRecipe } from '$lib/firebase/recipe';
 	import { fetchRecipesFromAllUserCollections } from '$lib/importer/chefkoch';
-	import Button, { Label } from '@smui/button';
 	import Dialog, { Actions, Content, Title } from '@smui/dialog';
 	import Textfield from '@smui/textfield';
 	import { createError } from '../../../stores/errormessagestore';
@@ -57,7 +57,7 @@
 	required
 />
 
-<Button class="submitButton" on:click={fetchRecipes} variant="unelevated">Importieren</Button>
+<Button class="submitButton" on:click={fetchRecipes}>Importieren</Button>
 
 <Textfield
 	style="width: 100%;min-height: 20rem;"
@@ -73,12 +73,8 @@
 		{recipes.length} Rezepte gefunden! Importieren?
 	</Content>
 	<Actions>
-		<Button>
-			<Label>Abbrechen</Label>
-		</Button>
-		<Button on:click={importRecipes}>
-			<Label>Importieren</Label>
-		</Button>
+		<Button on:click={() => showDialog = false}>Abbrechen</Button>
+		<Button on:click={importRecipes}>Importieren</Button>
 	</Actions>
 </Dialog>
 
@@ -92,8 +88,6 @@
 		{addedRecipes} Rezepte importiert!
 	</Content>
 	<Actions>
-		<Button on:click={() => goto('/recipes')}>
-			<Label>Ok</Label>
-		</Button>
+		<Button on:click={() => goto('/recipes')}>Ok</Button>
 	</Actions>
 </Dialog>

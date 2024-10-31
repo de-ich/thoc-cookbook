@@ -2,7 +2,7 @@
 	import { recipeDraftStore, clearRecipeDraft } from '../../stores/recipedraftstore';
 	import { onDestroy } from 'svelte';
 	import type { RecipeDraft } from '$lib/database/Recipe';
-	import Button from '@smui/button';
+	import { Button } from "$lib/components/ui/button";	
 	import { addRecipe } from '$lib/firebase/recipe';
 	import { goto } from '$app/navigation';
 	import RecipeEdit from '../../components/RecipeEdit.svelte';
@@ -28,8 +28,7 @@
 <RecipeEdit bind:recipeDraft />
 
 <div class="submitButtonContainer">
-	<Button class="submitButton" on:click={addRecipeToDatabase} variant="unelevated">Speichern</Button
-	>
+	<Button class="submitButton" on:click={addRecipeToDatabase}>Speichern</Button>
 </div>
 
 <style lang="scss">

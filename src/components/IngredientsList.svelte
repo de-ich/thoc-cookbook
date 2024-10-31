@@ -6,7 +6,7 @@
 	import Checkbox from '@smui/checkbox';
 	import Dialog, { Actions, Content, Title } from '@smui/dialog';
 	import Textfield from '@smui/textfield';
-	import Button, { Label } from '@smui/button';
+	import { Button } from "$lib/components/ui/button";	
 
 	export let recipe: RecipeDetails;
 	export let allowCheckItems = false;
@@ -184,15 +184,11 @@
 		<Textfield type="number" bind:value={newYield} label="Portionen" />
 	</Content>
 	<Actions>
-		<Button>
-			<Label>Abbrechen</Label>
-		</Button>
+		<Button on:click={() => showCustomQuantityDialog = false}>Abbrechen</Button>
 		<Button
 			on:click={() => (currentYield = newYield)}
 			disabled={Number.isNaN(newYield) || newYield <= 0}
-		>
-			<Label>OK</Label>
-		</Button>
+		>OK</Button>
 	</Actions>
 </Dialog>
 

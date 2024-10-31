@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Button, { Label } from '@smui/button';
+	import { Button } from "$lib/components/ui/button";	
 	import Dialog, { Title, Content, Actions } from '@smui/dialog';
 	import { confirmError, errorMessageStore } from '../stores/errormessagestore';
 	import { onDestroy } from 'svelte';
@@ -26,8 +26,6 @@
 		{errorMessage}
 	</Content>
 	<Actions>
-		<Button>
-			<Label>OK</Label>
-		</Button>
+		<Button on:click={() => showErrorDialog = false}>OK</Button>
 	</Actions>
 </Dialog>

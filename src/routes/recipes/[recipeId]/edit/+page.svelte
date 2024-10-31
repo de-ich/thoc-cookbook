@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { RecipeDetails } from '$lib/database/Recipe';
-	import Button from '@smui/button';
+	import { Button } from "$lib/components/ui/button";	
 	import { updateRecipe } from '$lib/firebase/recipe';
 	import { goto, invalidateAll } from '$app/navigation';
 	import RecipeEdit from '../../../../components/RecipeEdit.svelte';
@@ -20,9 +20,7 @@
 <RecipeEdit bind:recipeDraft={recipe} />
 
 <div class="submitButtonContainer">
-	<Button class="submitButton" on:click={updateRecipeInDatabase} variant="unelevated"
-		>Speichern</Button
-	>
+	<Button class="submitButton" on:click={updateRecipeInDatabase}>Speichern</Button>
 </div>
 
 <style lang="scss">

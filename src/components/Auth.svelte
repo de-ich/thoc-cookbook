@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { authHandlers, authStore } from '../stores/authstore';
-	import Button from '@smui/button';
+	import { Button } from "$lib/components/ui/button";	
 	import Textfield from '@smui/textfield';
 	import { createError } from '../stores/errormessagestore';
 
@@ -29,7 +29,7 @@
 	<div class="loginForm">
 		<Textfield bind:value={email} label="Email" required type="email" />
 		<Textfield bind:value={password} label="Password" required type="password" />
-		<Button class="submitButton" on:click={handleSubmit} variant="unelevated">Submit</Button>
+		<Button class="submitButton" on:click={handleSubmit}>Submit</Button>
 	</div>
 </div>
 
