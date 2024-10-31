@@ -1,7 +1,10 @@
 <script lang="ts">
 	import { authHandlers, authStore } from '../stores/authstore';
 	import TopAppBar, { Row, Section, Title } from '@smui/top-app-bar';
-	import IconButton from '@smui/icon-button';
+	import { Button } from "$lib/components/ui/button";	
+	import Plus from "lucide-svelte/icons/plus";
+	import Import from "lucide-svelte/icons/import";
+	import User from "lucide-svelte/icons/user";
 	import Menu from '@smui/menu';
 	import List, { Item, Separator, Text } from '@smui/list';
 	import chefkochLogo from '$lib/assets/chefkoch-logo.svg';
@@ -45,23 +48,18 @@
 						</Item>
 					</List>
 				</Menu>
-				<IconButton
-					class="material-icons"
-					aria-label="Import"
-					on:click={() => {
-						clearRecipeDraft();
-						goto('/addrecipe');
-					}}>add</IconButton
-				>
-				<IconButton
-					class="material-icons"
-					aria-label="Import"
-					on:click={() => importMenu.setOpen(true)}>input</IconButton
-				>
-
-				<IconButton class="material-icons" aria-label="User" on:click={() => userMenu.setOpen(true)}
-					>person</IconButton
-				>
+				<Button variant="ghost" size="icon" on:click={() => {
+					clearRecipeDraft();
+					goto('/addrecipe');
+				}}>
+					<Plus class="h-4 w-4" />
+				</Button>
+				<Button variant="ghost" size="icon" on:click={() => importMenu.setOpen(true)}>
+					<Import class="h-4 w-4" />
+				</Button>
+				<Button variant="ghost" size="icon" on:click={() => userMenu.setOpen(true)}>
+					<User class="h-4 w-4" />
+				</Button>
 			</div>
 			<div id="anchor-right">
 				<Menu bind:this={userMenu} anchorCorner="BOTTOM_LEFT">
