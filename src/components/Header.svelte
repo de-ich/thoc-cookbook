@@ -5,8 +5,8 @@
 	import Plus from "lucide-svelte/icons/plus";
 	import Import from "lucide-svelte/icons/import";
 	import User from "lucide-svelte/icons/user";
-	import Menu from '@smui/menu';
-	import List, { Item, Separator, Text } from '@smui/list';
+	import Logout from "lucide-svelte/icons/log-out";
+	import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
 	import chefkochLogo from '$lib/assets/chefkoch-logo.svg';
 	import ChefkochImportDialog from './dialogs/ChefkochImportDialog.svelte';
 	import { clearRecipeDraft } from '../stores/recipedraftstore';
@@ -24,8 +24,6 @@
 		}
 	}
 
-	let userMenu: Menu;
-	let importMenu: Menu;
 	let showChefkochImportDialog = false;
 </script>
 
@@ -36,43 +34,40 @@
 		</Section>
 		<Section align="end" toolbar>
 			<div>
-				<Menu bind:this={importMenu} anchorCorner="BOTTOM_LEFT">
-					<List>
-						<Item disabled>
-							<Text>Rezept importieren</Text>
-						</Item>
-						<Separator />
-						<Item on:SMUI:action={() => (showChefkochImportDialog = true)}>
-							<img class="chefkoch-icon mdc-button__icon" src={chefkochLogo} alt="chefkoch-logo" />
-							<Text>chefkoch.de</Text>
-						</Item>
-					</List>
-				</Menu>
 				<Button variant="ghost" size="icon" on:click={() => {
 					clearRecipeDraft();
 					goto('/addrecipe');
 				}}>
 					<Plus class="h-4 w-4" />
 				</Button>
-				<Button variant="ghost" size="icon" on:click={() => importMenu.setOpen(true)}>
-					<Import class="h-4 w-4" />
-				</Button>
-				<Button variant="ghost" size="icon" on:click={() => userMenu.setOpen(true)}>
-					<User class="h-4 w-4" />
-				</Button>
-			</div>
-			<div id="anchor-right">
-				<Menu bind:this={userMenu} anchorCorner="BOTTOM_LEFT">
-					<List>
-						<Item disabled>
-							<Text>{user}</Text>
-						</Item>
-						<Separator />
-						<Item on:SMUI:action={logout}>
-							<Text>Logout</Text>
-						</Item>
-					</List>
-				</Menu>
+
+				<DropdownMenu.Root>
+  					<DropdownMenu.Trigger asChild let:builder>
+    					<Button variant="ghost" size="icon" builders={[builder]}><Import class="h-4 w-4" /></Button>
+  					</DropdownMenu.Trigger>
+					<DropdownMenu.Content class="w-56">
+						<DropdownMenu.Label>Rezept importieren</DropdownMenu.Label>
+						<DropdownMenu.Separator />
+						<DropdownMenu.Item on:click={() => (showChefkochImportDialog = true)}>
+							<img class="mr-2 h-4 w-4" src={chefkochLogo} alt="chefkoch-logo" />
+							<span>chefkoch.de</span>
+						</DropdownMenu.Item>
+					</DropdownMenu.Content>
+				</DropdownMenu.Root>
+				
+				<DropdownMenu.Root>
+  					<DropdownMenu.Trigger asChild let:builder>
+    					<Button variant="ghost" size="icon" builders={[builder]}><User class="h-4 w-4" /></Button>
+  					</DropdownMenu.Trigger>
+					<DropdownMenu.Content class="w-56">
+						<DropdownMenu.Label>{user}</DropdownMenu.Label>
+						<DropdownMenu.Separator />
+						<DropdownMenu.Item on:click={logout}>
+							<Logout class="mr-2 h-4 w-4" />
+							<span>Logout</span>
+						</DropdownMenu.Item>
+					</DropdownMenu.Content>
+				</DropdownMenu.Root>
 			</div>
 		</Section>
 	</Row>
