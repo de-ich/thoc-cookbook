@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { authHandlers, authStore } from '../stores/authstore';
 	import TopAppBar, { Row, Section, Title } from '@smui/top-app-bar';
-	import { Button } from "$lib/components/ui/button";	
-	import Plus from "lucide-svelte/icons/plus";
-	import Import from "lucide-svelte/icons/import";
-	import User from "lucide-svelte/icons/user";
-	import Logout from "lucide-svelte/icons/log-out";
-	import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
+	import { IconButton } from '$lib/components/ui/icon-button';
+	import Plus from 'lucide-svelte/icons/plus';
+	import Import from 'lucide-svelte/icons/import';
+	import User from 'lucide-svelte/icons/user';
+	import Logout from 'lucide-svelte/icons/log-out';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import chefkochLogo from '$lib/assets/chefkoch-logo.svg';
 	import ChefkochImportDialog from './dialogs/ChefkochImportDialog.svelte';
 	import { clearRecipeDraft } from '../stores/recipedraftstore';
@@ -34,17 +34,21 @@
 		</Section>
 		<Section align="end" toolbar>
 			<div>
-				<Button variant="ghost" size="icon" on:click={() => {
-					clearRecipeDraft();
-					goto('/addrecipe');
-				}}>
+				<IconButton
+					on:click={() => {
+						clearRecipeDraft();
+						goto('/addrecipe');
+					}}
+				>
 					<Plus class="h-4 w-4" />
-				</Button>
+				</IconButton>
 
 				<DropdownMenu.Root>
-  					<DropdownMenu.Trigger asChild let:builder>
-    					<Button variant="ghost" size="icon" builders={[builder]}><Import class="h-4 w-4" /></Button>
-  					</DropdownMenu.Trigger>
+					<DropdownMenu.Trigger asChild let:builder>
+						<IconButton builders={[builder]}
+							><Import class="h-4 w-4" />
+						</IconButton>
+					</DropdownMenu.Trigger>
 					<DropdownMenu.Content class="w-56">
 						<DropdownMenu.Label>Rezept importieren</DropdownMenu.Label>
 						<DropdownMenu.Separator />
@@ -54,11 +58,13 @@
 						</DropdownMenu.Item>
 					</DropdownMenu.Content>
 				</DropdownMenu.Root>
-				
+
 				<DropdownMenu.Root>
-  					<DropdownMenu.Trigger asChild let:builder>
-    					<Button variant="ghost" size="icon" builders={[builder]}><User class="h-4 w-4" /></Button>
-  					</DropdownMenu.Trigger>
+					<DropdownMenu.Trigger asChild let:builder>
+						<IconButton builders={[builder]}
+							><User class="h-4 w-4" />
+						</IconButton>
+					</DropdownMenu.Trigger>
 					<DropdownMenu.Content class="w-56">
 						<DropdownMenu.Label>{user}</DropdownMenu.Label>
 						<DropdownMenu.Separator />
