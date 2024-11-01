@@ -1,7 +1,13 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import type { RecipeDetails } from '$lib/database/Recipe';
-	import IconButton, { Icon } from '@smui/icon-button';
+	import { IconButton } from '$lib/components/ui/icon-button';
+	import Copy from 'lucide-svelte/icons/copy';
+	import ChefHat from 'lucide-svelte/icons/chef-hat';
+	import Pencil from 'lucide-svelte/icons/pencil';
+	import Trash2 from 'lucide-svelte/icons/trash-2';
+	import Clock from 'lucide-svelte/icons/clock';
+	import ExternalLink from 'lucide-svelte/icons/external-link';
 	import Chip, { Set, Text as ChipText } from '@smui/chips';
 	import { createError } from '../../../stores/errormessagestore';
 	import { deleteRecipe } from '$lib/firebase/recipe';
@@ -30,29 +36,17 @@
 <div class="headingContainer">
 	<h4>{recipe.name}</h4>
 	<div class="headingButtons">
-		<IconButton
-			class="material-icons"
-			aria-label="copy recipe URL to clipboard"
-			on:click={() => navigator.clipboard.writeText(window.location.href)}
-			>content_copy
+		<IconButton on:click={() => navigator.clipboard.writeText(window.location.href)} >
+			<Copy class="w-4 h-4" />
 		</IconButton>
-		<IconButton
-			class="material-icons"
-			aria-label="open cooking view"
-			on:click={() => goto(`/recipes/${recipe.id}/focus`)}
-			>pageview
+		<IconButton on:click={() => goto(`/recipes/${recipe.id}/focus`)}>
+			<ChefHat class="w-4 h-4" />
 		</IconButton>
-		<IconButton
-			class="material-icons"
-			aria-label="edit recipe"
-			on:click={() => goto(`/recipes/${recipe.id}/edit`)}
-			>edit
+		<IconButton on:click={() => goto(`/recipes/${recipe.id}/edit`)}>
+			<Pencil class="w-4 h-4" />
 		</IconButton>
-		<IconButton
-			class="material-icons"
-			aria-label="delete recipe"
-			on:click={() => (showConfirmDeleteDialog = true)}
-			>delete
+		<IconButton on:click={() => (showConfirmDeleteDialog = true)}>
+			<Trash2 class="w-4 h-4" />
 		</IconButton>
 	</div>
 </div>
@@ -77,28 +71,28 @@
 	<div class="recipeTimesContainer">
 		{#if recipe.prepTime}
 			<div class="recipeTimeContainer">
-				<Icon class="material-icons">schedule</Icon>
+				<Clock class="w-4 h-4" />
 				<span>Vorbereitungszeit:</span>
 				<span>{recipe.prepTime}min</span>
 			</div>
 		{/if}
 		{#if recipe.cookTime}
 			<div class="recipeTimeContainer">
-				<Icon class="material-icons">schedule</Icon>
+				<Clock class="w-4 h-4" />
 				<span>Koch-/Backzeit:</span>
 				<span>{recipe.cookTime}min</span>
 			</div>
 		{/if}
 		{#if recipe.restingTime}
 			<div class="recipeTimeContainer">
-				<Icon class="material-icons">schedule</Icon>
+				<Clock class="w-4 h-4" />
 				<span>Ruhezeit:</span>
 				<span>{recipe.restingTime}min</span>
 			</div>
 		{/if}
 		{#if recipe.totalTime}
 			<div class="recipeTimeContainer">
-				<Icon class="material-icons">schedule</Icon>
+				<Clock class="w-4 h-4" />
 				<span>Gesamtzeit:</span>
 				<span>{recipe.totalTime}min</span>
 			</div>
@@ -108,7 +102,7 @@
 
 {#if recipe.sourceUrl}
 	<div class="sourceContainer">
-		<Icon class="material-icons">launch</Icon>
+		<ExternalLink class="w-4 h-4" />
 		<span>Quelle:</span>
 		<a href={recipe.sourceUrl}>{recipe.sourceUrl}</a>
 	</div>
