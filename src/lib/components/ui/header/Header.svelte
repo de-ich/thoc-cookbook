@@ -11,11 +11,11 @@
 	
 	import chefkochLogo from '$lib/assets/chefkoch-logo.svg';
 
-	import { authHandlers, authStore } from '../stores/authstore';
-	import { clearRecipeDraft } from '../stores/recipedraftstore';
-	import { createError } from '../stores/errormessagestore';
+	import { authHandlers, authStore } from '../../../../stores/authstore';
+	import { clearRecipeDraft } from '../../../../stores/recipedraftstore';
+	import { createError } from '../../../../stores/errormessagestore';
 	
-	import ChefkochImportDialog from './dialogs/ChefkochImportDialog.svelte';
+	import ChefkochImportDialog from '../../../../components/dialogs/ChefkochImportDialog.svelte';
 	
 	import { goto } from '$app/navigation';
 

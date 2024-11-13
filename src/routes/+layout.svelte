@@ -4,7 +4,7 @@
 	import { auth } from '../lib/firebase/firebase.client';
 	import { authStore } from '../stores/authstore';
 	import { browser } from '$app/environment';
-	import Header from '../components/Header.svelte';
+	import Header from '$lib/components/ui/header';
 	import Loading from '../components/Loading.svelte';
 	import { LOGIN_PAGE_ROUTE } from './routes';
 	import ErrorDialog from '../components/ErrorDialog.svelte';
