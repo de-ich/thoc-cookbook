@@ -1,17 +1,23 @@
 <script lang="ts">
-	import { authHandlers, authStore } from '../stores/authstore';
-	import TopAppBar, { Row, Section, Title } from '@smui/top-app-bar';
+	import Button from '$lib/components/ui/button/button.svelte';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import { IconButton } from '$lib/components/ui/icon-button';
+	import TopAppBar2 from '$lib/components/ui/top-app-bar';
+
 	import Plus from 'lucide-svelte/icons/plus';
 	import Import from 'lucide-svelte/icons/import';
 	import User from 'lucide-svelte/icons/user';
 	import Logout from 'lucide-svelte/icons/log-out';
-	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
+	
 	import chefkochLogo from '$lib/assets/chefkoch-logo.svg';
-	import ChefkochImportDialog from './dialogs/ChefkochImportDialog.svelte';
+
+	import { authHandlers, authStore } from '../stores/authstore';
 	import { clearRecipeDraft } from '../stores/recipedraftstore';
-	import { goto } from '$app/navigation';
 	import { createError } from '../stores/errormessagestore';
+	
+	import ChefkochImportDialog from './dialogs/ChefkochImportDialog.svelte';
+	
+	import { goto } from '$app/navigation';
 
 	let user: string | null | undefined =
 		$authStore.currentUser?.displayName || $authStore.currentUser?.email;
@@ -27,13 +33,9 @@
 	let showChefkochImportDialog = false;
 </script>
 
-<TopAppBar id="app-bar" variant="static" color="primary">
-	<Row>
-		<Section>
-			<Title on:click={() => goto('/')}>THOC Cookbook</Title>
-		</Section>
-		<Section align="end" toolbar>
-			<div>
+<TopAppBar2>
+		<Button variant="ghost" on:click={() => goto('/')} class="hover:bg-inherit text-xl">THOC Cookbook</Button>
+		<div class="ml-auto">
 				<IconButton
 					on:click={() => {
 						clearRecipeDraft();
@@ -45,9 +47,7 @@
 
 				<DropdownMenu.Root>
 					<DropdownMenu.Trigger asChild let:builder>
-						<IconButton builders={[builder]}
-							><Import class="h-4 w-4" />
-						</IconButton>
+						<IconButton builders={[builder]}><Import class="h-4 w-4" /></IconButton>
 					</DropdownMenu.Trigger>
 					<DropdownMenu.Content class="w-56">
 						<DropdownMenu.Label>Rezept importieren</DropdownMenu.Label>
@@ -61,9 +61,7 @@
 
 				<DropdownMenu.Root>
 					<DropdownMenu.Trigger asChild let:builder>
-						<IconButton builders={[builder]}
-							><User class="h-4 w-4" />
-						</IconButton>
+						<IconButton builders={[builder]}><User class="h-4 w-4" /></IconButton>
 					</DropdownMenu.Trigger>
 					<DropdownMenu.Content class="w-56">
 						<DropdownMenu.Label>{user}</DropdownMenu.Label>
@@ -75,9 +73,7 @@
 					</DropdownMenu.Content>
 				</DropdownMenu.Root>
 			</div>
-		</Section>
-	</Row>
-</TopAppBar>
+</TopAppBar2>
 
 <ChefkochImportDialog bind:open={showChefkochImportDialog} />
 
