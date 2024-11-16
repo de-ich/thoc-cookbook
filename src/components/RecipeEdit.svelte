@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Textfield from '@smui/textfield';
 	import { getEmptyRecipeDraft, type RecipeDraft } from '$lib/database/Recipe';
 	import { parseIngredient } from '$lib/ingredient-parser';
 	import { formatQuantity } from 'format-quantity';
@@ -10,6 +9,8 @@
 	import KeywordSpecifier from './KeywordSpecifier.svelte';
 	import { getAllKeywords } from '$lib/firebase/recipe';
 	import KeywordChips from './KeywordChips.svelte';
+	import Input from '$lib/components/ui/input/input.svelte';
+	import { Textarea } from '$lib/components/ui/textarea';
 
 	// either pass in an existing Recipe/RecipeDraft (when editing a recipe) or use an
 	// empty draft (when creating a new recipe)
@@ -78,13 +79,12 @@
 </script>
 
 <div class="recipeDraftContainer">
-	<Textfield
-		id="recipeTitle"
-		variant="outlined"
-		type="text"
-		bind:value={recipeDraft.name}
+	<Input
+		inputId="recipeTitle"
 		label="Rezepttitel"
+		placeholder="Rezepttitel"
 		required
+		bind:value={recipeDraft.name}
 	/>
 	<div class="yieldAndTimesContainer">
 		<div class="yieldContainer">
@@ -99,107 +99,93 @@
 					<Label>{segment}</Label>
 				</Segment>
 			</SegmentedButton>
-			<Textfield
-				variant="outlined"
+			<Input
+				inputId="recipeYield"
 				type="number"
 				bind:value={recipeDraft.recipeYield}
 				label={recipeDraft.recipeYieldType}
-				style="max-width: 10rem;"
 				suffix={recipeDraft.recipeYieldType === RecipeYieldType.BakingDish ? 'cm' : ''}
-				input$emptyValueUndefined
+				class="max-w-40"
 			/>
 		</div>
 		<div class="recipeDraftTimesContainer">
-			<Textfield
-				variant="outlined"
+			<Input
+				inputId="recipePrepTime"
 				type="number"
 				bind:value={recipeDraft.prepTime}
 				label="Vorbereitungszeit"
-				style="min-width: 6rem;max-width: 10rem;"
 				suffix="min"
-				input$emptyValueUndefined
+				class="max-w-40"
 			/>
-			<Textfield
-				variant="outlined"
+			<Input
+				inputId="recipeCookTime"
 				type="number"
 				bind:value={recipeDraft.cookTime}
 				label="Koch-/Backzeit"
-				style="min-width: 6rem;max-width: 10rem;"
 				suffix="min"
-				input$emptyValueUndefined
+				class="max-w-40"
 			/>
-			<Textfield
-				variant="outlined"
+			<Input
+				inputId="recipeRestingTime"
 				type="number"
 				bind:value={recipeDraft.restingTime}
 				label="Ruhezeit"
-				style="min-width: 6rem;max-width: 10rem;"
 				suffix="min"
-				input$emptyValueUndefined
+				class="max-w-40"
 			/>
-			<Textfield
-				variant="outlined"
+			<Input
+				inputId="recipeTotalTime"
 				type="number"
 				bind:value={recipeDraft.totalTime}
 				label="Gesamtzeit"
-				style="min-width: 6rem;max-width: 10rem;"
 				suffix="min"
-				input$emptyValueUndefined
+				class="max-w-40"
 			/>
 		</div>
 	</div>
-	<Textfield
-		style="width: 100%;min-height: 10rem;"
-		helperLine$style="width: 100%;"
-		textarea
+	<Textarea
+		inputId="recipeIngredients"
+		required
 		label="Zutaten"
-		required
 		bind:value={ingredients}
+		class="min-h-60 h-60"
 	/>
-	<Textfield
-		style="width: 100%;min-height: 10rem;"
-		helperLine$style="width: 100%;"
-		textarea
-		label="Zubereitung"
+	<Textarea
+		inputId="recipeInstructions"
 		required
+		label="Zubereitung"
 		bind:value={instructions}
+		class="min-h-60 h-60"
 	/>
-	<Textfield
-		variant="outlined"
-		type="text"
-		style="width: 100%;"
-		helperLine$style="width: 100%;"
-		label="Rezeptbild (URL)"
+	<Input
+		inputId="recipeUrl"
+		type="url"
 		bind:value={recipeImageUrls}
-		input$emptyValueUndefined
+		label="Rezeptbild (URL)"
+		placeholder="Rezeptbild (URL)"
 	/>
-	<Textfield
-		variant="outlined"
+	<Input
+		inputId="recipeFile"
 		type="file"
-		label="Rezeptbild (Datei)"
 		bind:files={recipeImageFiles}
-		input$emptyValueUndefined
+		label="Rezeptbild (Datei)"
+		placeholder="Rezeptbild (Datei)"
 	/>
 	<div class="keywordContainer">
 		<KeywordSpecifier {availableKeywords} bind:selectedKeywords={recipeDraft.keywords} />
 		<KeywordChips bind:selectedKeywords={recipeDraft.keywords} />
 	</div>
-	<Textfield
-		style="width: 100%;"
-		helperLine$style="width: 100%;"
-		textarea
+	<Textarea
+		inputId="recipeComment"
 		label="Kommentar"
 		bind:value={recipeDraft.comment}
-		input$emptyValueUndefined
 	/>
-	<Textfield
-		variant="outlined"
-		type="text"
-		style="width: 100%;"
-		helperLine$style="width: 100%;"
-		label="Quelle"
+	<Input
+		inputId="recipeSourceUrl"
+		type="url"
 		bind:value={recipeDraft.sourceUrl}
-		input$emptyValueUndefined
+		label="Quelle"
+		placeholder="Quelle"
 	/>
 </div>
 
