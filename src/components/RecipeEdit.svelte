@@ -7,7 +7,7 @@
 	import { onMount } from 'svelte';
 	import KeywordSpecifier from './KeywordSpecifier.svelte';
 	import { getAllKeywords } from '$lib/firebase/recipe';
-	import KeywordChips from './KeywordChips.svelte';
+	import KeywordChips from '$lib/components/ui/keyword-chips';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import { Textarea } from '$lib/components/ui/textarea';
 

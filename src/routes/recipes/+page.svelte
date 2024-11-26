@@ -11,7 +11,7 @@
 	import Menu, { SelectionGroupIcon } from '@smui/menu';
 	import List, { Item, Separator, Text } from '@smui/list';
 	import KeywordFilter from '../../components/KeywordFilter.svelte';
-	import KeywordChips from '../../components/KeywordChips.svelte';
+	import KeywordChips from '$lib/components/ui/keyword-chips';
 	import { getAllKeywords, getAllRecipePreviews } from '$lib/firebase/recipe';
 	import { createError } from '../../stores/errormessagestore';
 	import algoliasearch from 'algoliasearch/lite';
