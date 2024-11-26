@@ -5,7 +5,7 @@
 	import * as ToggleGroup from "$lib/components/ui/toggle-group/index.js";
 	import { RecipeYieldType } from '$lib/database/Recipe';
 	import { onMount } from 'svelte';
-	import KeywordSpecifier from './KeywordSpecifier.svelte';
+	import KeywordSpecifier from '$lib/components/ui/keyword-specifier';
 	import { getAllKeywords } from '$lib/firebase/recipe';
 	import KeywordChips from '$lib/components/ui/keyword-chips';
 	import Input from '$lib/components/ui/input/input.svelte';
