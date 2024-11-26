@@ -2,8 +2,7 @@
 	import { getEmptyRecipeDraft, type RecipeDraft } from '$lib/database/Recipe';
 	import { parseIngredient } from '$lib/ingredient-parser';
 	import { formatQuantity } from 'format-quantity';
-	import SegmentedButton, { Segment } from '@smui/segmented-button';
-	import { Label } from '@smui/common';
+	import * as ToggleGroup from "$lib/components/ui/toggle-group/index.js";
 	import { RecipeYieldType } from '$lib/database/Recipe';
 	import { onMount } from 'svelte';
 	import KeywordSpecifier from './KeywordSpecifier.svelte';
@@ -88,17 +87,10 @@
 	/>
 	<div class="yieldAndTimesContainer">
 		<div class="yieldContainer">
-			<SegmentedButton
-				segments={[RecipeYieldType.Serving, RecipeYieldType.BakingDish]}
-				let:segment
-				singleSelect
-				bind:selected={recipeDraft.recipeYieldType}
-			>
-				<!-- Note: the `segment` property is required! -->
-				<Segment {segment}>
-					<Label>{segment}</Label>
-				</Segment>
-			</SegmentedButton>
+			<ToggleGroup.Root type="single" variant="outline" bind:value={recipeDraft.recipeYieldType} class="flex-col items-stretch">
+				<ToggleGroup.Item value={RecipeYieldType.Serving}>Portionen</ToggleGroup.Item>
+				<ToggleGroup.Item value={RecipeYieldType.BakingDish}>Backform</ToggleGroup.Item>
+			</ToggleGroup.Root>
 			<Input
 				inputId="recipeYield"
 				type="number"
