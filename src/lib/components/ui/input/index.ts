@@ -6,6 +6,7 @@ type Props = HTMLInputAttributes & {
 	inputClass?: string;
 	label?: string;
 	required?: boolean;
+	showClearIcon? : boolean;
 	suffix?: string;
 	files?: FileList;
 };
