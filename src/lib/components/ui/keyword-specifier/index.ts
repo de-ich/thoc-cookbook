@@ -2,8 +2,9 @@ import Root from './KeywordSpecifier.svelte';
 import type { HTMLBaseAttributes } from 'svelte/elements';
 
 type KeywordSpecifierProps = HTMLBaseAttributes & {
+	label: string;
 	availableKeywords: string[];
-	selectedKeywords?: string[];
+	selectedKeywords: string[];
 };
 
 export {

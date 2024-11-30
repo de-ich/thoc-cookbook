@@ -2,7 +2,7 @@
 	import { getEmptyRecipeDraft, type RecipeDraft } from '$lib/database/Recipe';
 	import { parseIngredient } from '$lib/ingredient-parser';
 	import { formatQuantity } from 'format-quantity';
-	import * as ToggleGroup from "$lib/components/ui/toggle-group/index.js";
+	import * as ToggleGroup from '$lib/components/ui/toggle-group/index.js';
 	import { RecipeYieldType } from '$lib/database/Recipe';
 	import { onMount } from 'svelte';
 	import KeywordSpecifier from '$lib/components/ui/keyword-specifier';
@@ -87,7 +87,12 @@
 	/>
 	<div class="yieldAndTimesContainer">
 		<div class="yieldContainer">
-			<ToggleGroup.Root type="single" variant="outline" bind:value={recipeDraft.recipeYieldType} class="flex-col items-stretch">
+			<ToggleGroup.Root
+				type="single"
+				variant="outline"
+				bind:value={recipeDraft.recipeYieldType}
+				class="flex-col items-stretch"
+			>
 				<ToggleGroup.Item value={RecipeYieldType.Serving}>Portionen</ToggleGroup.Item>
 				<ToggleGroup.Item value={RecipeYieldType.BakingDish}>Backform</ToggleGroup.Item>
 			</ToggleGroup.Root>
@@ -140,14 +145,14 @@
 		required
 		label="Zutaten"
 		bind:value={ingredients}
-		class="min-h-60 h-60"
+		class="h-60 min-h-60"
 	/>
 	<Textarea
 		inputId="recipeInstructions"
 		required
 		label="Zubereitung"
 		bind:value={instructions}
-		class="min-h-60 h-60"
+		class="h-60 min-h-60"
 	/>
 	<Input
 		inputId="recipeUrl"
@@ -164,14 +169,14 @@
 		placeholder="Rezeptbild (Datei)"
 	/>
 	<div class="keywordContainer">
-		<KeywordSpecifier {availableKeywords} bind:selectedKeywords={recipeDraft.keywords} />
+		<KeywordSpecifier
+			label="Label hinzufügen..."
+			{availableKeywords}
+			bind:selectedKeywords={recipeDraft.keywords}
+		/>
 		<KeywordChips bind:selectedKeywords={recipeDraft.keywords} />
 	</div>
-	<Textarea
-		inputId="recipeComment"
-		label="Kommentar"
-		bind:value={recipeDraft.comment}
-	/>
+	<Textarea inputId="recipeComment" label="Kommentar" bind:value={recipeDraft.comment} />
 	<Input
 		inputId="recipeSourceUrl"
 		type="url"

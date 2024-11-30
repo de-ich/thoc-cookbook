@@ -8,7 +8,7 @@
 	import IconButton from '@smui/icon-button';
 	import Menu, { SelectionGroupIcon } from '@smui/menu';
 	import List, { Item, Separator, Text } from '@smui/list';
-	import KeywordFilter from '$lib/components/ui/keyword-filter';
+	import KeywordSpecifier from '$lib/components/ui/keyword-specifier';
 	import KeywordChips from '$lib/components/ui/keyword-chips';
 	import { getAllKeywords, getAllRecipePreviews } from '$lib/firebase/recipe';
 	import { createError } from '../../stores/errormessagestore';
@@ -16,7 +16,7 @@
 	import { PUBLIC_ALGOLIA_APPID, PUBLIC_ALGOLIA_APIKEY } from '$env/static/public';
 	import { getHistory, type HistoryEntry } from '$lib/firebase/history';
 	import { Input } from '$lib/components/ui/input';
-	import Search from "lucide-svelte/icons/search";
+	import Search from 'lucide-svelte/icons/search';
 
 	enum SortMethod {
 		ALPHABETICALLY,
@@ -34,7 +34,7 @@
 	let searchText: string | undefined;
 	let keywords: string[] = [];
 	let historyEntries: HistoryEntry[] = [];
-	let selectedKeywords: string[];
+	let selectedKeywords: string[] = [];
 	let loadingRecipes = true;
 	let sortMethod: SortMethod = SortMethod.LAST_ACCESS_TIME;
 	let sortOrder: SortOrder = SortOrder.DOWN;
@@ -107,8 +107,12 @@
 		return [...recipes];
 	};
 
-	const sortRecipes = (recipes: RecipePreviewWithId[], historyEntries: HistoryEntry[], sortMethod: SortMethod , sortOrder: SortOrder) => {
-		
+	const sortRecipes = (
+		recipes: RecipePreviewWithId[],
+		historyEntries: HistoryEntry[],
+		sortMethod: SortMethod,
+		sortOrder: SortOrder
+	) => {
 		let compareFunction: RecipeCompareFunction = compareRecipesAlphabetically; // default
 
 		if (sortMethod === SortMethod.LAST_ACCESS_TIME) {
@@ -169,23 +173,28 @@
 </script>
 
 <div class="recipeList">
-	<div class="flex flex-col md:flex-row gap-x-4 gap-y-2 flex-wrap">
+	<div class="flex flex-col flex-wrap gap-x-4 gap-y-2 md:flex-row">
 		<Input
 			inputId="recipeSearch"
 			label="Rezept suchen..."
 			showClearIcon
 			bind:value={searchText}
-			class="basis-3/5 flex-grow flex-shrink-0 order-1 md:order-2"
-			>
-			<Search slot="icon"	class="h-4 w-4" />
+			class="order-1 flex-shrink-0 flex-grow basis-3/5 md:order-2"
+		>
+			<Search slot="icon" class="h-4 w-4" />
 		</Input>
-		<KeywordFilter availableKeywords={keywords} bind:selectedKeywords class="basis-1/5 order-2 md:order-1"/>
+		<KeywordSpecifier
+			label="Nach Label filtern..."
+			availableKeywords={keywords}
+			bind:selectedKeywords
+			class="order-2 basis-1/5 md:order-1 h-auto"
+		/>
 		{#if (selectedKeywords || []).length > 0}
-			<KeywordChips bind:selectedKeywords class="basis-full order-3"/>
+			<KeywordChips bind:selectedKeywords class="order-3 basis-full" />
 		{/if}
 	</div>
 	{#if loadingRecipes}
-		<div class="loadingContainer">
+		<div class="mt-20 flex flex-col justify-center">
 			<h6>Rezepte werden geladen...</h6>
 		</div>
 	{:else}
@@ -193,7 +202,11 @@
 			<h6>{filteredRecipes.length} Rezepte gefunden</h6>
 			<Menu bind:this={sortMenu} anchorCorner="BOTTOM_LEFT">
 				<List>
-					<Item on:SMUI:action={() => (sortMethod = SortMethod.ALPHABETICALLY, sortOrder = SortOrder.UP)}>
+					<Item
+						on:SMUI:action={() => (
+							(sortMethod = SortMethod.ALPHABETICALLY), (sortOrder = SortOrder.UP)
+						)}
+					>
 						<SelectionGroupIcon>
 							{#if sortMethod === SortMethod.ALPHABETICALLY && sortOrder === SortOrder.UP}
 								<i class="material-icons">check</i>
@@ -201,7 +214,11 @@
 						</SelectionGroupIcon>
 						<Text>Alphabetisch (aufsteigend)</Text>
 					</Item>
-					<Item on:SMUI:action={() => (sortMethod = SortMethod.ALPHABETICALLY, sortOrder = SortOrder.DOWN)}>
+					<Item
+						on:SMUI:action={() => (
+							(sortMethod = SortMethod.ALPHABETICALLY), (sortOrder = SortOrder.DOWN)
+						)}
+					>
 						<SelectionGroupIcon>
 							{#if sortMethod === SortMethod.ALPHABETICALLY && sortOrder === SortOrder.DOWN}
 								<i class="material-icons">check</i>
@@ -209,7 +226,11 @@
 						</SelectionGroupIcon>
 						<Text>Alphabetisch (absteigend)</Text>
 					</Item>
-					<Item on:SMUI:action={() => (sortMethod = SortMethod.LAST_ACCESS_TIME, sortOrder = SortOrder.UP)}>
+					<Item
+						on:SMUI:action={() => (
+							(sortMethod = SortMethod.LAST_ACCESS_TIME), (sortOrder = SortOrder.UP)
+						)}
+					>
 						<SelectionGroupIcon>
 							{#if sortMethod === SortMethod.LAST_ACCESS_TIME && sortOrder === SortOrder.UP}
 								<i class="material-icons">check</i>
@@ -217,7 +238,11 @@
 						</SelectionGroupIcon>
 						<Text>Zuletzt angeschaut (aufsteigend)</Text>
 					</Item>
-					<Item on:SMUI:action={() => (sortMethod = SortMethod.LAST_ACCESS_TIME, sortOrder = SortOrder.DOWN)}>
+					<Item
+						on:SMUI:action={() => (
+							(sortMethod = SortMethod.LAST_ACCESS_TIME), (sortOrder = SortOrder.DOWN)
+						)}
+					>
 						<SelectionGroupIcon>
 							{#if sortMethod === SortMethod.LAST_ACCESS_TIME && sortOrder === SortOrder.DOWN}
 								<i class="material-icons">check</i>
@@ -253,12 +278,5 @@
 			flex-direction: row;
 			align-items: center;
 		}
-	}
-
-	.loadingContainer {
-		display: flex;
-		direction: column;
-		justify-content: center;
-		margin-top: 5rem;
 	}
 </style>
