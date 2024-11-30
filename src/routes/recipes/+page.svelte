@@ -5,9 +5,6 @@
 		RecipeCompareFunction
 	} from '$lib/database/Recipe';
 	import RecipeCard from '../../components/RecipeCard.svelte';
-	import IconButton from '@smui/icon-button';
-	import Menu, { SelectionGroupIcon } from '@smui/menu';
-	import List, { Item, Separator, Text } from '@smui/list';
 	import KeywordSpecifier from '$lib/components/ui/keyword-specifier';
 	import KeywordChips from '$lib/components/ui/keyword-chips';
 	import { getAllKeywords, getAllRecipePreviews } from '$lib/firebase/recipe';
@@ -16,17 +13,8 @@
 	import { PUBLIC_ALGOLIA_APPID, PUBLIC_ALGOLIA_APIKEY } from '$env/static/public';
 	import { getHistory, type HistoryEntry } from '$lib/firebase/history';
 	import { Input } from '$lib/components/ui/input';
-	import Search from 'lucide-svelte/icons/search';
-
-	enum SortMethod {
-		ALPHABETICALLY,
-		LAST_ACCESS_TIME
-	}
-
-	enum SortOrder {
-		UP,
-		DOWN
-	}
+	import { Search } from 'lucide-svelte/icons';
+	import { SortButton, SortMethod, SortOrder } from '$lib/components/ui/sort-button';
 
 	let allRecipes: RecipePreviewWithId[] = [];
 	let filteredRecipes: RecipePreviewWithId[] = [];
@@ -38,7 +26,6 @@
 	let loadingRecipes = true;
 	let sortMethod: SortMethod = SortMethod.LAST_ACCESS_TIME;
 	let sortOrder: SortOrder = SortOrder.DOWN;
-	let sortMenu: Menu;
 
 	const searchClient = algoliasearch(PUBLIC_ALGOLIA_APPID, PUBLIC_ALGOLIA_APIKEY);
 	const searchIndex = searchClient.initIndex('recipeDetails');
@@ -172,7 +159,7 @@
 	}
 </script>
 
-<div class="recipeList">
+<div class="flex w-full flex-col gap-4">
 	<div class="flex flex-col flex-wrap gap-x-4 gap-y-2 md:flex-row">
 		<Input
 			inputId="recipeSearch"
@@ -187,7 +174,7 @@
 			label="Nach Label filtern..."
 			availableKeywords={keywords}
 			bind:selectedKeywords
-			class="order-2 basis-1/5 md:order-1 h-auto"
+			class="order-2 h-auto basis-1/5 md:order-1"
 		/>
 		{#if (selectedKeywords || []).length > 0}
 			<KeywordChips bind:selectedKeywords class="order-3 basis-full" />
@@ -198,85 +185,15 @@
 			<h6>Rezepte werden geladen...</h6>
 		</div>
 	{:else}
-		<div class="sortArea">
+		<div class="flex flex-row items-center gap-2">
 			<h6>{filteredRecipes.length} Rezepte gefunden</h6>
-			<Menu bind:this={sortMenu} anchorCorner="BOTTOM_LEFT">
-				<List>
-					<Item
-						on:SMUI:action={() => (
-							(sortMethod = SortMethod.ALPHABETICALLY), (sortOrder = SortOrder.UP)
-						)}
-					>
-						<SelectionGroupIcon>
-							{#if sortMethod === SortMethod.ALPHABETICALLY && sortOrder === SortOrder.UP}
-								<i class="material-icons">check</i>
-							{/if}
-						</SelectionGroupIcon>
-						<Text>Alphabetisch (aufsteigend)</Text>
-					</Item>
-					<Item
-						on:SMUI:action={() => (
-							(sortMethod = SortMethod.ALPHABETICALLY), (sortOrder = SortOrder.DOWN)
-						)}
-					>
-						<SelectionGroupIcon>
-							{#if sortMethod === SortMethod.ALPHABETICALLY && sortOrder === SortOrder.DOWN}
-								<i class="material-icons">check</i>
-							{/if}
-						</SelectionGroupIcon>
-						<Text>Alphabetisch (absteigend)</Text>
-					</Item>
-					<Item
-						on:SMUI:action={() => (
-							(sortMethod = SortMethod.LAST_ACCESS_TIME), (sortOrder = SortOrder.UP)
-						)}
-					>
-						<SelectionGroupIcon>
-							{#if sortMethod === SortMethod.LAST_ACCESS_TIME && sortOrder === SortOrder.UP}
-								<i class="material-icons">check</i>
-							{/if}
-						</SelectionGroupIcon>
-						<Text>Zuletzt angeschaut (aufsteigend)</Text>
-					</Item>
-					<Item
-						on:SMUI:action={() => (
-							(sortMethod = SortMethod.LAST_ACCESS_TIME), (sortOrder = SortOrder.DOWN)
-						)}
-					>
-						<SelectionGroupIcon>
-							{#if sortMethod === SortMethod.LAST_ACCESS_TIME && sortOrder === SortOrder.DOWN}
-								<i class="material-icons">check</i>
-							{/if}
-						</SelectionGroupIcon>
-						<Text>Zuletzt angeschaut (absteigend)</Text>
-					</Item>
-				</List>
-			</Menu>
-			<IconButton
-				class="material-icons"
-				slot="trailingIcon"
-				on:click={() => {
-					sortMenu.setOpen(true);
-				}}>sort</IconButton
-			>
+			<SortButton
+				bind:currentSortMethod={sortMethod}
+				bind:currentSortOrder={sortOrder}
+			/>
 		</div>
 		{#each sortedFilteredRecipes as recipe}
 			<RecipeCard {recipe} />
 		{/each}
 	{/if}
 </div>
-
-<style lang="scss">
-	.recipeList {
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-
-		.sortArea {
-			display: flex;
-			flex-direction: row;
-			align-items: center;
-		}
-	}
-</style>
