@@ -5,8 +5,6 @@
 		RecipeCompareFunction
 	} from '$lib/database/Recipe';
 	import RecipeCard from '../../components/RecipeCard.svelte';
-	import Textfield from '@smui/textfield';
-	import Icon from '@smui/textfield/icon';
 	import IconButton from '@smui/icon-button';
 	import Menu, { SelectionGroupIcon } from '@smui/menu';
 	import List, { Item, Separator, Text } from '@smui/list';
@@ -17,6 +15,8 @@
 	import algoliasearch from 'algoliasearch/lite';
 	import { PUBLIC_ALGOLIA_APPID, PUBLIC_ALGOLIA_APIKEY } from '$env/static/public';
 	import { getHistory, type HistoryEntry } from '$lib/firebase/history';
+	import { Input } from '$lib/components/ui/input';
+	import Search from "lucide-svelte/icons/search";
 
 	enum SortMethod {
 		ALPHABETICALLY,
@@ -157,6 +157,7 @@
 	};
 
 	$: {
+		searchText = searchText;
 		startSearch();
 		loadingRecipes = loadingRecipes;
 		selectedKeywords = selectedKeywords;
@@ -168,41 +169,19 @@
 </script>
 
 <div class="recipeList">
-	<div class="searchAndFilterArea">
-		<div class="keywordFilter">
-			<KeywordFilter availableKeywords={keywords} bind:selectedKeywords />
-		</div>
-		<div class="searchField">
-			<Textfield
-				class="searchField"
-				variant="outlined"
-				bind:value={searchText}
-				label="Rezept suchen..."
-				input$emptyValueUndefined
-				on:keyup={startSearch}
-				on:blur={startSearch}
+	<div class="flex flex-col md:flex-row gap-x-4 gap-y-2 flex-wrap">
+		<Input
+			inputId="recipeSearch"
+			label="Rezept suchen..."
+			showClearIcon
+			bind:value={searchText}
+			class="basis-3/5 flex-grow flex-shrink-0 order-1 md:order-2"
 			>
-				<Icon class="material-icons" slot="leadingIcon">search</Icon>
-				<IconButton
-					class="material-icons"
-					slot="trailingIcon"
-					on:click={() => {
-						searchText = undefined;
-						document
-							.querySelector('.searchField label')
-							?.classList.remove('mdc-text-field--focused');
-						document
-							.querySelector('.searchField label>div')
-							?.classList.remove('mdc-notched-outline--notched');
-						startSearch();
-					}}>clear</IconButton
-				>
-			</Textfield>
-		</div>
+			<Search slot="icon"	class="h-4 w-4" />
+		</Input>
+		<KeywordFilter availableKeywords={keywords} bind:selectedKeywords class="basis-1/5 order-2 md:order-1"/>
 		{#if (selectedKeywords || []).length > 0}
-			<div class="keywordChips">
-				<KeywordChips bind:selectedKeywords />
-			</div>
+			<KeywordChips bind:selectedKeywords class="basis-full order-3"/>
 		{/if}
 	</div>
 	{#if loadingRecipes}
@@ -269,49 +248,10 @@
 		flex-direction: column;
 		gap: 1rem;
 
-		.searchAndFilterArea {
-			display: flex;
-			flex-direction: row;
-			flex-wrap: wrap;
-			column-gap: 1rem;
-
-			@media (max-width: 800px) {
-				flex-direction: column;
-			}
-
-			.searchField {
-				flex-grow: 1;
-				flex-shrink: 0;
-
-				:global(label) {
-					width: 100%;
-				}
-			}
-
-			.keywordFilter {
-				flex-basis: 20%;
-
-				@media (max-width: 800px) {
-					order: 1;
-				}
-			}
-
-			.keywordChips {
-				flex-basis: 100%;
-				@media (max-width: 800px) {
-					order: 2;
-				}
-			}
-		}
-
 		.sortArea {
 			display: flex;
 			flex-direction: row;
 			align-items: center;
-		}
-
-		:global(.searchField) {
-			flex-grow: 1;
 		}
 	}
 

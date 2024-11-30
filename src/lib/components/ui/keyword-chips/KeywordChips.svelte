@@ -22,7 +22,7 @@
 	}
 </script>
 
-<div class={cn("flex items-center gap-2 m-2", className)}>
+<div class={cn("flex items-center gap-2", className)}>
 	{#each selectedKeywords as selectedKeyword}
 		<Badge variant="secondary" class="whitespace-nowrap">
 			{selectedKeyword}
