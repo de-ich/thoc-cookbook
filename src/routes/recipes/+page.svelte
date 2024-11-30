@@ -10,7 +10,7 @@
 	import IconButton from '@smui/icon-button';
 	import Menu, { SelectionGroupIcon } from '@smui/menu';
 	import List, { Item, Separator, Text } from '@smui/list';
-	import KeywordFilter from '../../components/KeywordFilter.svelte';
+	import KeywordFilter from '$lib/components/ui/keyword-filter';
 	import KeywordChips from '$lib/components/ui/keyword-chips';
 	import { getAllKeywords, getAllRecipePreviews } from '$lib/firebase/recipe';
 	import { createError } from '../../stores/errormessagestore';
