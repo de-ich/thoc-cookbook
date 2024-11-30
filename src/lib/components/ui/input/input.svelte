@@ -27,7 +27,7 @@
 	export let files: $$Props['files'] = undefined;
 
 	let inputBaseClassName =
-		'peer placeholder:text-muted-foreground flex h-10 leading-10 w-full file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50';
+		'peer placeholder:text-muted-foreground flex flex-grow h-10 leading-10 w-full file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50';
 
 	$: labelValue = required ? `${label}*` : label;
 

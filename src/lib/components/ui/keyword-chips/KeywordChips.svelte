@@ -3,6 +3,14 @@
 	import CircleX from 'lucide-svelte/icons/circle-x';
 	import { IconButton } from '$lib/components/ui/icon-button';
 
+	import type { KeywordChipsProps } from './index.js';
+	import { cn } from '$lib/utils.js';
+
+	type $$Props = KeywordChipsProps;
+
+	let className: $$Props['class'] = undefined;
+	export {className as class};
+
 	export let selectedKeywords: string[] = [];
 
 	$: removeKeyword = (keyword: string) => {
@@ -14,7 +22,7 @@
 	}
 </script>
 
-<div class="flex items-center gap-2 m-2">
+<div class={cn("flex items-center gap-2 m-2", className)}>
 	{#each selectedKeywords as selectedKeyword}
 		<Badge variant="secondary" class="whitespace-nowrap">
 			{selectedKeyword}

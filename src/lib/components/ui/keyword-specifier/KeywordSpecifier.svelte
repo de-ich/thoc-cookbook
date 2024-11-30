@@ -3,6 +3,14 @@
 	import * as Popover from '$lib/components/ui/popover';
 	import * as Command from '$lib/components/ui/command';
 
+  	import type { KeywordSpecifierProps } from './index.js';
+	import { cn } from '$lib/utils.js';
+
+	type $$Props = KeywordSpecifierProps;
+
+	let className: $$Props['class'] = undefined;
+	export { className as class };
+
 	export let availableKeywords: string[];
 	export let selectedKeywords: string[] = [];
 
@@ -26,7 +34,7 @@
       variant="outline"
       role="combobox"
       aria-expanded={open}
-      class="w-[200px] justify-between"
+      class={cn("w-[200px] justify-between", className)}
     >
       Label hinzufügen...
     </Button>
