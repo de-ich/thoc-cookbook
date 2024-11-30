@@ -4,7 +4,7 @@
 		RecipePreviewWithId,
 		RecipeCompareFunction
 	} from '$lib/database/Recipe';
-	import RecipeCard from '../../components/RecipeCard.svelte';
+	import RecipeCard from '$lib/components/ui/recipe-card';
 	import KeywordSpecifier from '$lib/components/ui/keyword-specifier';
 	import KeywordChips from '$lib/components/ui/keyword-chips';
 	import { getAllKeywords, getAllRecipePreviews } from '$lib/firebase/recipe';
@@ -187,10 +187,7 @@
 	{:else}
 		<div class="flex flex-row items-center gap-2">
 			<h6>{filteredRecipes.length} Rezepte gefunden</h6>
-			<SortButton
-				bind:currentSortMethod={sortMethod}
-				bind:currentSortOrder={sortOrder}
-			/>
+			<SortButton bind:currentSortMethod={sortMethod} bind:currentSortOrder={sortOrder} />
 		</div>
 		{#each sortedFilteredRecipes as recipe}
 			<RecipeCard {recipe} />
