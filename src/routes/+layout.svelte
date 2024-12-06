@@ -36,21 +36,9 @@
 {#if !$authStore || $authStore.isLoading}
 	<Loading />
 {:else}
-	<div class="mainContainer">
+	<div class="max-w-6xl px-8 mx-auto mt-4 mb-8">
 		<slot />
 	</div>
 {/if}
 
 <ErrorDialog />
-
-<style lang="scss">
-	.mainContainer {
-		max-width: 70rem;
-		padding-left: 2rem;
-		padding-right: 2rem;
-		margin-left: auto;
-		margin-right: auto;
-		margin-top: 1rem;
-		margin-bottom: 2rem;
-	}
-</style>
