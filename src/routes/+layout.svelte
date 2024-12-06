@@ -5,7 +5,7 @@
 	import { authStore } from '../stores/authstore';
 	import { browser } from '$app/environment';
 	import Header from '$lib/components/ui/header';
-	import Loading from '../components/Loading.svelte';
+	import Loading from '$lib/components/ui/loading';
 	import { LOGIN_PAGE_ROUTE } from './routes';
 	import ErrorDialog from '$lib/components/ui/error-dialog';
 
