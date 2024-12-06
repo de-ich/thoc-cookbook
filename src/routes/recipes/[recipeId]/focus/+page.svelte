@@ -10,7 +10,7 @@
 	import { deleteRecipe } from '$lib/firebase/recipe';
 	import { PUBLIC_IMAGEKIT_STORAGE_URL } from '$env/static/public';
 	import IngredientsList from '$lib/components/ui/ingredients-list';
-	import InstructionsList from '../../../../components/InstructionsList.svelte';
+	import InstructionsList from '$lib/components/ui/instructions-list';
 
 	/** @type {import('./$types').PageData} */
 	export let data: any;

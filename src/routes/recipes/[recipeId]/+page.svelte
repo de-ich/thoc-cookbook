@@ -13,7 +13,7 @@
 	import { deleteRecipe } from '$lib/firebase/recipe';
 	import { PUBLIC_IMAGEKIT_STORAGE_URL } from '$env/static/public';
 	import IngredientsList from '../../../lib/components/ui/ingredients-list/IngredientsList.svelte';
-	import InstructionsList from '../../../components/InstructionsList.svelte';
+	import InstructionsList from '../../../lib/components/ui/instructions-list/InstructionsList.svelte';
 	import ConfirmDeleteRecipeDialog from '../../../components/dialogs/ConfirmDeleteRecipeDialog.svelte';
 	import { addEntryToHistory } from '$lib/firebase/history';
 
