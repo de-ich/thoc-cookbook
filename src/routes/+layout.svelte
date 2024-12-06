@@ -7,7 +7,7 @@
 	import Header from '$lib/components/ui/header';
 	import Loading from '../components/Loading.svelte';
 	import { LOGIN_PAGE_ROUTE } from './routes';
-	import ErrorDialog from '../components/ErrorDialog.svelte';
+	import ErrorDialog from '$lib/components/ui/error-dialog';
 
 	onMount(() => {
 		const unsubscribe = auth.onAuthStateChanged((user) => {
