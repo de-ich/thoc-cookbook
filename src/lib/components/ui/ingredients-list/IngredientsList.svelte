@@ -1,12 +1,14 @@
 <script lang="ts">
 	import { RecipeYieldType, type RecipeDetails } from '$lib/database/Recipe';
-	import IconButton from '@smui/icon-button';
+	import { IconButton } from '$lib/components/ui/icon-button';
 	import type { Ingredient } from 'parse-ingredient';
 	import { formatQuantity } from 'format-quantity';
-	import Checkbox from '@smui/checkbox';
-	import Dialog, { Actions, Content, Title } from '@smui/dialog';
-	import Textfield from '@smui/textfield';
-	import { Button } from "$lib/components/ui/button";	
+	import { Checkbox } from '$lib/components/ui/checkbox';
+	import * as Dialog from '$lib/components/ui/dialog/index.js';
+	import { Button } from '$lib/components/ui/button';
+	import { Input } from '$lib/components/ui/input';
+	import Plus from 'lucide-svelte/icons/plus';
+	import Minus from 'lucide-svelte/icons/minus';
 
 	export let recipe: RecipeDetails;
 	export let allowCheckItems = false;
@@ -110,21 +112,6 @@
 		};
 	};
 
-	const handleSelection = (event: CustomEvent, i: number) => {
-		const checked = (event.target as HTMLInputElement)?.checked;
-		const ingredientItem = document.querySelector('#ingredient-' + i);
-
-		if (!ingredientItem) {
-			return;
-		}
-
-		if (checked) {
-			ingredientItem.classList.add('disabled');
-		} else {
-			ingredientItem.classList.remove('disabled');
-		}
-	};
-
 	let showCustomQuantityDialog = false;
 
 	const handleCustomQuantityButtonKeyUp = (event: KeyboardEvent) => {
@@ -140,80 +127,61 @@
 	$: newYield = currentYield;
 </script>
 
-<div class="ingredientsList">
+<div class="flex flex-col">
 	{#if recipe.recipeYield}
-		<h5>
+		<h5 class="mb-2">
 			Zutaten für
-			<IconButton class="material-icons" on:click={decreaseYield} size="button">remove</IconButton>
-			<span
-				class="customQuantityButton"
-				aria-label="Custom Quantity"
-				role="button"
-				tabindex="0"
-				on:click={openCustomQuantityDialog}
-				on:keyup={handleCustomQuantityButtonKeyUp}
-				>{recipe.recipeYieldType === RecipeYieldType.BakingDish
+			<IconButton on:click={decreaseYield}>
+				<Minus class="h-3 w-3" />
+			</IconButton>
+			<Button variant="ghost" class="px-0.5" on:click={openCustomQuantityDialog}
+				on:keyup={handleCustomQuantityButtonKeyUp}>{recipe.recipeYieldType === RecipeYieldType.BakingDish
 					? getQuantityDisplayValue(currentYield) + 'er'
-					: getQuantityDisplayValue(currentYield)}</span
-			>
-			<IconButton class="material-icons" on:click={increaseYield} size="button">add</IconButton>
+					: getQuantityDisplayValue(currentYield)}</Button>
+			<IconButton on:click={increaseYield}>
+				<Plus class="h-3 w-3" />
+			</IconButton>
 			{recipe.recipeYieldType === RecipeYieldType.BakingDish ? 'Backform' : 'Portionen'}
 		</h5>
 	{:else}
-		<h5>Zutaten</h5>
+		<h5 class="mb-2">Zutaten</h5>
 	{/if}
 
 	{#each ingredientsForCurrentYield as ingredient, i}
-		<div class="ingredientContainer">
+		<div class="mb-2 flex flex-row items-center">
 			{#if allowCheckItems}
-				<Checkbox on:click={(event) => handleSelection(event, i)} />
+				<Checkbox class="peer mr-3" />
 			{/if}
-			<span id={'ingredient-' + i}>
+			<span id={'ingredient-' + i} class="peer-aria-checked:text-muted-foreground">
 				{getIngredientString(ingredient)}
 			</span>
 		</div>
 	{/each}
 </div>
 
-<Dialog
-	bind:open={showCustomQuantityDialog}
-	aria-label="Anzahl Portionen"
-	aria-describedby="simple-content"
->
-	<Content id="simple-content">
-		<Textfield type="number" bind:value={newYield} label="Portionen" />
-	</Content>
-	<Actions>
-		<Button on:click={() => showCustomQuantityDialog = false}>Abbrechen</Button>
-		<Button
-			on:click={() => (currentYield = newYield)}
-			disabled={Number.isNaN(newYield) || newYield <= 0}
-		>OK</Button>
-	</Actions>
-</Dialog>
-
-<style lang="scss">
-	.ingredientsList {
-		display: flex;
-		flex-direction: column;
-
-		:global(.disabled) {
-			color: var(--mdc-theme-text-secondary-on-background);
-		}
-	}
-
-	h5 {
-		margin-bottom: 0.5rem;
-	}
-
-	.ingredientContainer {
-		margin-bottom: 0.5rem;
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-	}
-
-	.customQuantityButton {
-		cursor: pointer;
-	}
-</style>
+<Dialog.Root bind:open={showCustomQuantityDialog}>
+	<Dialog.Content>
+		<Dialog.Header>
+			<Dialog.Title>Anzahl Portionen ändern</Dialog.Title>
+		</Dialog.Header>
+		<Input
+			inputId="newYield"
+			type="number"
+			min="0"
+			bind:value={newYield}
+			label="Portionen"
+			placeholder="Portionen"
+			required
+		/>
+		<Dialog.Footer>
+			<Button
+				type="submit"
+				on:click={() => {
+					currentYield = newYield;
+					showCustomQuantityDialog = false;
+				}}
+				disabled={Number.isNaN(newYield) || newYield <= 0}>OK</Button
+			>
+		</Dialog.Footer>
+	</Dialog.Content>
+</Dialog.Root>

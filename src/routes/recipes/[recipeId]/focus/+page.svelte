@@ -9,7 +9,7 @@
 	import { createError } from '../../../../stores/errormessagestore';
 	import { deleteRecipe } from '$lib/firebase/recipe';
 	import { PUBLIC_IMAGEKIT_STORAGE_URL } from '$env/static/public';
-	import IngredientsList from '../../../../components/IngredientsList.svelte';
+	import IngredientsList from '$lib/components/ui/ingredients-list';
 	import InstructionsList from '../../../../components/InstructionsList.svelte';
 
 	/** @type {import('./$types').PageData} */
