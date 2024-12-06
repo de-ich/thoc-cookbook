@@ -51,7 +51,9 @@
 	{/if}
 	<!-- Actual input -->
 	{#if type !== 'file'}
+		<!-- see https://stackoverflow.com/a/75298645 for setting a dynamic type with two-way binding for inputs -->
 		<input
+			{...{ type }}
 			class={cn(inputBaseClassName, inputClass, 'focus-')}
 			bind:value
 			{readonly}
