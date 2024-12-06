@@ -1,14 +1,5 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import type { RecipeDetails } from '$lib/database/Recipe';
-	import { RecipeYieldType } from '$lib/database/Recipe';
-	import IconButton from '@smui/icon-button';
-	import List, { Item, Text } from '@smui/list';
-	import Chip, { Set, Text as ChipText } from '@smui/chips';
-	import Dialog, { Actions, Content, Title } from '@smui/dialog';
-	import { createError } from '../../../../stores/errormessagestore';
-	import { deleteRecipe } from '$lib/firebase/recipe';
-	import { PUBLIC_IMAGEKIT_STORAGE_URL } from '$env/static/public';
 	import IngredientsList from '$lib/components/ui/ingredients-list';
 	import InstructionsList from '$lib/components/ui/instructions-list';
 
@@ -22,39 +13,14 @@
 	<h4>{recipe.name}</h4>
 </div>
 
-<div class="ingredientsAndInstructionsContainer">
-	<div class="ingredientsContainer">
+<div class="flex flex-col md:flex-row items-start gap-x-10 gap-y-10 mt-8">
+	<div>
 		<IngredientsList {recipe} allowCheckItems={true} />
 	</div>
 
 	<div class="instructionsAndCommentContainer">
-		<div class="instructionsContainer">
+		<div class="flex-grow mb-8 max-w-xl">
 			<InstructionsList {recipe} allowCheckItems={true} />
 		</div>
 	</div>
 </div>
-
-<style lang="scss">
-	.ingredientsAndInstructionsContainer {
-		display: flex;
-		flex-direction: row;
-		align-items: flex-start;
-		column-gap: 2rem;
-		row-gap: 2rem;
-		margin-top: 2rem;
-
-		@media (max-width: 800px) {
-			flex-direction: column;
-		}
-	}
-
-	.ingredientsContainer {
-		max-width: 25rem;
-	}
-
-	.instructionsContainer {
-		flex-grow: 1;
-		margin-bottom: 2rem;
-		max-width: 35rem;
-	}
-</style>
