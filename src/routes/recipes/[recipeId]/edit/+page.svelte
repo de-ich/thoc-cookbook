@@ -3,7 +3,7 @@
 	import { Button } from "$lib/components/ui/button";	
 	import { updateRecipe } from '$lib/firebase/recipe';
 	import { goto, invalidateAll } from '$app/navigation';
-	import RecipeEdit from '../../../../components/RecipeEdit.svelte';
+	import RecipeEdit from '$lib/components/ui/recipe-edit';
 	import { createError } from '../../../../stores/errormessagestore';
 
 	/** @type {import('./$types').PageData} */

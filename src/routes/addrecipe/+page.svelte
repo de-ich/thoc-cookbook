@@ -5,7 +5,7 @@
 	import { Button } from "$lib/components/ui/button";	
 	import { addRecipe } from '$lib/firebase/recipe';
 	import { goto } from '$app/navigation';
-	import RecipeEdit from '../../components/RecipeEdit.svelte';
+	import RecipeEdit from '$lib/components/ui/recipe-edit';
 	import { createError } from '../../stores/errormessagestore';
 
 	let recipeDraft: RecipeDraft;
