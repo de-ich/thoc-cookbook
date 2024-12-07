@@ -4,17 +4,17 @@
 		RecipePreviewWithId,
 		RecipeCompareFunction
 	} from '$lib/database/Recipe';
-	import RecipeCard from '$lib/components/ui/recipe-card';
-	import KeywordSpecifier from '$lib/components/ui/keyword-specifier';
-	import KeywordChips from '$lib/components/ui/keyword-chips';
+	import RecipeCard from '$lib/components/recipe-card';
+	import KeywordSpecifier from '$lib/components/keyword-specifier';
+	import KeywordChips from '$lib/components/keyword-chips';
 	import { getAllKeywords, getAllRecipePreviews } from '$lib/firebase/recipe';
-	import { createError } from '../../stores/errormessagestore';
+	import { createError } from '$lib/stores/errormessagestore';
 	import algoliasearch from 'algoliasearch/lite';
 	import { PUBLIC_ALGOLIA_APPID, PUBLIC_ALGOLIA_APIKEY } from '$env/static/public';
 	import { getHistory, type HistoryEntry } from '$lib/firebase/history';
-	import { Input } from '$lib/components/ui/input';
+	import { Input } from '$lib/shadcn/input';
 	import { Search } from 'lucide-svelte/icons';
-	import { SortButton, SortMethod, SortOrder } from '$lib/components/ui/sort-button';
+	import { SortButton, SortMethod, SortOrder } from '$lib/components/sort-button';
 
 	let allRecipes: RecipePreviewWithId[] = [];
 	let filteredRecipes: RecipePreviewWithId[] = [];

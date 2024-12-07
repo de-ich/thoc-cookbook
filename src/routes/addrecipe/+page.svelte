@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { recipeDraftStore, clearRecipeDraft } from '../../stores/recipedraftstore';
+	import { recipeDraftStore, clearRecipeDraft } from '$lib/stores/recipedraftstore';
 	import { onDestroy } from 'svelte';
 	import type { RecipeDraft } from '$lib/database/Recipe';
-	import { Button } from "$lib/components/ui/button";	
+	import { Button } from "$lib/shadcn/button";	
 	import { addRecipe } from '$lib/firebase/recipe';
 	import { goto } from '$app/navigation';
-	import RecipeEdit from '$lib/components/ui/recipe-edit';
-	import { createError } from '../../stores/errormessagestore';
+	import RecipeEdit from '$lib/components/recipe-edit';
+	import { createError } from '$lib/stores/errormessagestore';
 
 	let recipeDraft: RecipeDraft;
 	const unsubcribe = recipeDraftStore.subscribe((value) => {

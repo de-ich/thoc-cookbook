@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import type { RecipeDetails } from '$lib/database/Recipe';
-	import { IconButton } from '$lib/components/ui/icon-button';
+	import { IconButton } from '$lib/components/icon-button';
 	import Copy from 'lucide-svelte/icons/copy';
 	import ChefHat from 'lucide-svelte/icons/chef-hat';
 	import Pencil from 'lucide-svelte/icons/pencil';
@@ -9,12 +9,12 @@
 	import Clock from 'lucide-svelte/icons/clock';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 	import Chip, { Set, Text as ChipText } from '@smui/chips';
-	import { createError } from '../../../stores/errormessagestore';
+	import { createError } from '$lib/stores/errormessagestore';
 	import { deleteRecipe } from '$lib/firebase/recipe';
 	import { PUBLIC_IMAGEKIT_STORAGE_URL } from '$env/static/public';
-	import IngredientsList from '../../../lib/components/ui/ingredients-list/IngredientsList.svelte';
-	import InstructionsList from '../../../lib/components/ui/instructions-list/InstructionsList.svelte';
-	import ConfirmDeleteRecipeDialog from '$lib/components/ui/confirm-delete-recipe-dialog';
+	import IngredientsList from '$lib/components/ingredients-list';
+	import InstructionsList from '$lib/components/instructions-list';
+	import ConfirmDeleteRecipeDialog from '$lib/dialogs/confirm-delete-recipe-dialog';
 	import { addEntryToHistory } from '$lib/firebase/history';
 
 	/** @type {import('./$types').PageData} */

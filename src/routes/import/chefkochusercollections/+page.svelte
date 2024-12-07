@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { Button } from "$lib/components/ui/button";	
+	import { Button } from '$lib/shadcn/button';
 	import type { RecipeDraft } from '$lib/database/Recipe';
 	import { addRecipe } from '$lib/firebase/recipe';
 	import { fetchRecipesFromAllUserCollections } from '$lib/importer/chefkoch';
 	import Dialog, { Actions, Content, Title } from '@smui/dialog';
 	import Textfield from '@smui/textfield';
-	import { createError } from '../../../stores/errormessagestore';
+	import { createError } from '$lib/stores/errormessagestore';
 
 	let chefkochCookie: string = '';
 	let recipes: RecipeDraft[] = [];
@@ -73,7 +73,7 @@
 		{recipes.length} Rezepte gefunden! Importieren?
 	</Content>
 	<Actions>
-		<Button on:click={() => showDialog = false}>Abbrechen</Button>
+		<Button on:click={() => (showDialog = false)}>Abbrechen</Button>
 		<Button on:click={importRecipes}>Importieren</Button>
 	</Actions>
 </Dialog>

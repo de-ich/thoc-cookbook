@@ -2,12 +2,12 @@
 	import '../app.css';
 	import { onMount } from 'svelte';
 	import { auth } from '../lib/firebase/firebase.client';
-	import { authStore } from '../stores/authstore';
+	import { authStore } from '$lib/stores/authstore';
 	import { browser } from '$app/environment';
-	import Header from '$lib/components/ui/header';
-	import Loading from '$lib/components/ui/loading';
+	import Header from '$lib/components/header';
+	import Loading from '$lib/components/loading';
 	import { LOGIN_PAGE_ROUTE } from './routes';
-	import ErrorDialog from '$lib/components/ui/error-dialog';
+	import ErrorDialog from '$lib/dialogs/error-dialog';
 
 	onMount(() => {
 		const unsubscribe = auth.onAuthStateChanged((user) => {

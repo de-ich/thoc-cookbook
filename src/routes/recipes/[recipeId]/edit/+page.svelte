@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { RecipeDetails } from '$lib/database/Recipe';
-	import { Button } from "$lib/components/ui/button";	
+	import { Button } from '$lib/shadcn/button';
 	import { updateRecipe } from '$lib/firebase/recipe';
 	import { goto, invalidateAll } from '$app/navigation';
-	import RecipeEdit from '$lib/components/ui/recipe-edit';
-	import { createError } from '../../../../stores/errormessagestore';
+	import RecipeEdit from '$lib/components/recipe-edit';
+	import { createError } from '$lib/stores/errormessagestore';
 
 	/** @type {import('./$types').PageData} */
 	export let data: any;
