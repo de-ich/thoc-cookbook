@@ -129,7 +129,7 @@
 
 <div class="flex flex-col">
 	{#if recipe.recipeYield}
-		<h5 class="mb-2">
+		<h5 class="mb-4 flex items-center overflow-y-hidden h-5 max-h-5">
 			Zutaten für
 			<IconButton on:click={decreaseYield}>
 				<Minus class="h-3 w-3" />
@@ -146,7 +146,7 @@
 			<IconButton on:click={increaseYield}>
 				<Plus class="h-3 w-3" />
 			</IconButton>
-			{recipe.recipeYieldType === RecipeYieldType.BakingDish ? 'Backform' : 'Portionen'}
+			{recipe.recipeYieldType === RecipeYieldType.BakingDish ? 'Backform' : 'Portionen'}:
 		</h5>
 	{:else}
 		<h5 class="mb-2">Zutaten</h5>

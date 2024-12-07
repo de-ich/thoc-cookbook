@@ -6,7 +6,6 @@
 	import ChefHat from 'lucide-svelte/icons/chef-hat';
 	import Pencil from 'lucide-svelte/icons/pencil';
 	import Trash2 from 'lucide-svelte/icons/trash-2';
-	import Clock from 'lucide-svelte/icons/clock';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
 	import { createError } from '$lib/stores/errormessagestore';
 	import { deleteRecipe } from '$lib/firebase/recipe';
@@ -16,6 +15,7 @@
 	import ConfirmDeleteRecipeDialog from '$lib/dialogs/confirm-delete-recipe-dialog';
 	import { addEntryToHistory } from '$lib/firebase/history';
 	import KeywordChips from '$lib/components/keyword-chips/KeywordChips.svelte';
+	import { RecipeTime } from '$lib/components/recipe-time';
 
 	/** @type {import('./$types').PageData} */
 	export let data: any;
@@ -33,9 +33,9 @@
 	addEntryToHistory(recipe.id);
 </script>
 
-<div class="headingContainer">
+<div class="flex flex-row flex-wrap items-center gap-4">
 	<h4>{recipe.name}</h4>
-	<div class="headingButtons">
+	<div>
 		<IconButton on:click={() => navigator.clipboard.writeText(window.location.href)}>
 			<Copy class="h-4 w-4" />
 		</IconButton>
@@ -52,8 +52,12 @@
 </div>
 
 {#if (recipe.images || []).length > 0 && typeof recipe.images[0] === 'string'}
-	<div class="imagesContainer">
-		<img src={PUBLIC_IMAGEKIT_STORAGE_URL + 'tr:h-200/' + recipe.images[0]} alt="recipeImage" />
+	<div class="mt-4">
+		<img
+			class="h-40 rounded-lg"
+			src={PUBLIC_IMAGEKIT_STORAGE_URL + 'tr:h-200/' + recipe.images[0]}
+			alt="recipeImage"
+		/>
 	</div>
 {/if}
 
@@ -64,53 +68,32 @@
 {/if}
 
 {#if recipe.prepTime || recipe.cookTime || recipe.restingTime || recipe.totalTime}
-	<div class="recipeTimesContainer">
-		{#if recipe.prepTime}
-			<div class="recipeTimeContainer">
-				<Clock class="h-4 w-4" />
-				<span>Vorbereitungszeit:</span>
-				<span>{recipe.prepTime}min</span>
-			</div>
-		{/if}
-		{#if recipe.cookTime}
-			<div class="recipeTimeContainer">
-				<Clock class="h-4 w-4" />
-				<span>Koch-/Backzeit:</span>
-				<span>{recipe.cookTime}min</span>
-			</div>
-		{/if}
-		{#if recipe.restingTime}
-			<div class="recipeTimeContainer">
-				<Clock class="h-4 w-4" />
-				<span>Ruhezeit:</span>
-				<span>{recipe.restingTime}min</span>
-			</div>
-		{/if}
-		{#if recipe.totalTime}
-			<div class="recipeTimeContainer">
-				<Clock class="h-4 w-4" />
-				<span>Gesamtzeit:</span>
-				<span>{recipe.totalTime}min</span>
-			</div>
-		{/if}
+	<div class="mt-8 flex flex-row flex-wrap gap-x-4 gap-y-1">
+		<RecipeTime label="Vorbereitungszeit:" timeInMinutes={recipe.prepTime} />
+		<RecipeTime label="Koch-/Backzeit:" timeInMinutes={recipe.cookTime} />
+		<RecipeTime label="Ruhezeit:" timeInMinutes={recipe.restingTime} />
+		<RecipeTime label="Gesamtzeit:" timeInMinutes={recipe.totalTime} />
 	</div>
 {/if}
 
 {#if recipe.sourceUrl}
-	<div class="sourceContainer">
+	<div class="mt-8 flex flex-row flex-nowrap items-center gap-2 overflow-hidden">
 		<ExternalLink class="h-4 w-4" />
-		<span>Quelle:</span>
-		<a href={recipe.sourceUrl}>{recipe.sourceUrl}</a>
+		<span class="font-semibold">Quelle:</span>
+		<a
+			class="overflow-hidden overflow-ellipsis whitespace-nowrap hover:bg-primary-foreground"
+			href={recipe.sourceUrl}>{recipe.sourceUrl}</a
+		>
 	</div>
 {/if}
 
-<div class="ingredientsAndInstructionsContainer">
-	<div class="ingredientsContainer">
+<div class="mt-8 flex flex-col items-start gap-8 md:flex-row">
+	<div class="max-w-96">
 		<IngredientsList {recipe} />
 	</div>
 
 	<div class="instructionsAndCommentContainer">
-		<div class="instructionsContainer">
+		<div class="mb-8 max-w-xl flex-grow">
 			<InstructionsList {recipe} />
 		</div>
 
@@ -130,92 +113,3 @@
 	bind:showConfirmDeleteDialog
 	on:delete-recipe={deleteRecipeFromDatabase}
 />
-
-<style lang="scss">
-	.headingContainer {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		flex-wrap: wrap;
-
-		h4 {
-			margin-right: 1rem;
-		}
-	}
-
-	img {
-		height: 10rem;
-		border-radius: 0.5rem;
-	}
-
-	.imagesContainer {
-		margin-top: 1rem;
-	}
-
-	.recipeTimesContainer {
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-		column-gap: 2rem;
-		row-gap: 0.3rem;
-		margin-top: 2rem;
-	}
-
-	.recipeTimeContainer {
-		display: flex;
-		flex-direction: row;
-		justify-items: center;
-		column-gap: 0.5rem;
-
-		span:first-of-type {
-			font-weight: 500;
-		}
-	}
-
-	.sourceContainer {
-		display: flex;
-		flex-direction: row;
-		flex-wrap: nowrap;
-		overflow: hidden;
-		justify-items: center;
-		column-gap: 0.5rem;
-		margin-top: 2rem;
-
-		span:first-of-type {
-			font-weight: 500;
-		}
-
-		a {
-			white-space: nowrap;
-			text-overflow: ellipsis;
-			overflow: hidden;
-
-			&:hover {
-				color: var(--mdc-theme-primary);
-			}
-		}
-	}
-
-	.ingredientsAndInstructionsContainer {
-		display: flex;
-		flex-direction: row;
-		align-items: flex-start;
-		column-gap: 2rem;
-		row-gap: 2rem;
-		margin-top: 2rem;
-
-		@media (max-width: 800px) {
-			flex-direction: column;
-		}
-	}
-
-	.ingredientsContainer {
-		max-width: 25rem;
-	}
-
-	.instructionsContainer {
-		flex-grow: 1;
-		margin-bottom: 2rem;
-		max-width: 35rem;
-	}
-</style>

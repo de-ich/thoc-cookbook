@@ -7,7 +7,7 @@
 </script>
 
 <div class="flex flex-col">
-	<h5 class="mb-2">Zubereitung:</h5>
+	<h5 class="mb-4 flex items-center overflow-y-hidden h-5 max-h-5">Zubereitung:</h5>
 	{#each recipe.instructions as instruction, i}
 		<div class="mb-2 flex flex-row items-center">
 			{#if allowCheckItems}
