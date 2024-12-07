@@ -9,9 +9,10 @@
 	type $$Props = KeywordChipsProps;
 
 	let className: $$Props['class'] = undefined;
-	export {className as class};
+	export { className as class };
 
-	export let selectedKeywords: string[] = [];
+	export let selectedKeywords: $$Props['selectedKeywords'];
+	export let nonInteractive: $$Props['nonInteractive'] = false;
 
 	$: removeKeyword = (keyword: string) => {
 		const index = selectedKeywords.indexOf(keyword);
@@ -19,17 +20,18 @@
 			selectedKeywords.splice(index, 1);
 			selectedKeywords = selectedKeywords;
 		}
-	}
+	};
 </script>
 
-<div class={cn("flex items-center gap-2", className)}>
+<div class={cn('flex items-center gap-2', className)}>
 	{#each selectedKeywords as selectedKeyword}
 		<Badge variant="secondary" class="whitespace-nowrap">
 			{selectedKeyword}
-			<IconButton on:click={() => removeKeyword(selectedKeyword)} class="h-5 w-5 ml-2">
-				<CircleX class="h-4 w-4"></CircleX>
-			</IconButton>
+			{#if !nonInteractive}
+				<IconButton on:click={() => removeKeyword(selectedKeyword)} class="ml-2 h-5 w-5">
+					<CircleX class="h-4 w-4"></CircleX>
+				</IconButton>
+			{/if}
 		</Badge>
 	{/each}
 </div>
-

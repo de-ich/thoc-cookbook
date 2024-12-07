@@ -8,7 +8,6 @@
 	import Trash2 from 'lucide-svelte/icons/trash-2';
 	import Clock from 'lucide-svelte/icons/clock';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
-	import Chip, { Set, Text as ChipText } from '@smui/chips';
 	import { createError } from '$lib/stores/errormessagestore';
 	import { deleteRecipe } from '$lib/firebase/recipe';
 	import { PUBLIC_IMAGEKIT_STORAGE_URL } from '$env/static/public';
@@ -16,6 +15,7 @@
 	import InstructionsList from '$lib/components/instructions-list';
 	import ConfirmDeleteRecipeDialog from '$lib/dialogs/confirm-delete-recipe-dialog';
 	import { addEntryToHistory } from '$lib/firebase/history';
+	import KeywordChips from '$lib/components/keyword-chips/KeywordChips.svelte';
 
 	/** @type {import('./$types').PageData} */
 	export let data: any;
@@ -58,12 +58,8 @@
 {/if}
 
 {#if (recipe.keywords || []).length > 0}
-	<div class="keywordsContainer">
-		<Set chips={recipe.keywords.filter((keyword) => keyword)} let:chip nonInteractive>
-			<Chip {chip}>
-				<ChipText>{chip}</ChipText>
-			</Chip>
-		</Set>
+	<div class="my-4">
+		<KeywordChips selectedKeywords={recipe.keywords.filter((keyword) => keyword)} nonInteractive />
 	</div>
 {/if}
 
