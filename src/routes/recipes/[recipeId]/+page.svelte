@@ -14,7 +14,7 @@
 	import { PUBLIC_IMAGEKIT_STORAGE_URL } from '$env/static/public';
 	import IngredientsList from '../../../lib/components/ui/ingredients-list/IngredientsList.svelte';
 	import InstructionsList from '../../../lib/components/ui/instructions-list/InstructionsList.svelte';
-	import ConfirmDeleteRecipeDialog from '../../../components/dialogs/ConfirmDeleteRecipeDialog.svelte';
+	import ConfirmDeleteRecipeDialog from '$lib/components/ui/confirm-delete-recipe-dialog';
 	import { addEntryToHistory } from '$lib/firebase/history';
 
 	/** @type {import('./$types').PageData} */
@@ -36,17 +36,17 @@
 <div class="headingContainer">
 	<h4>{recipe.name}</h4>
 	<div class="headingButtons">
-		<IconButton on:click={() => navigator.clipboard.writeText(window.location.href)} >
-			<Copy class="w-4 h-4" />
+		<IconButton on:click={() => navigator.clipboard.writeText(window.location.href)}>
+			<Copy class="h-4 w-4" />
 		</IconButton>
 		<IconButton on:click={() => goto(`/recipes/${recipe.id}/focus`)}>
-			<ChefHat class="w-4 h-4" />
+			<ChefHat class="h-4 w-4" />
 		</IconButton>
 		<IconButton on:click={() => goto(`/recipes/${recipe.id}/edit`)}>
-			<Pencil class="w-4 h-4" />
+			<Pencil class="h-4 w-4" />
 		</IconButton>
 		<IconButton on:click={() => (showConfirmDeleteDialog = true)}>
-			<Trash2 class="w-4 h-4" />
+			<Trash2 class="h-4 w-4" />
 		</IconButton>
 	</div>
 </div>
@@ -71,28 +71,28 @@
 	<div class="recipeTimesContainer">
 		{#if recipe.prepTime}
 			<div class="recipeTimeContainer">
-				<Clock class="w-4 h-4" />
+				<Clock class="h-4 w-4" />
 				<span>Vorbereitungszeit:</span>
 				<span>{recipe.prepTime}min</span>
 			</div>
 		{/if}
 		{#if recipe.cookTime}
 			<div class="recipeTimeContainer">
-				<Clock class="w-4 h-4" />
+				<Clock class="h-4 w-4" />
 				<span>Koch-/Backzeit:</span>
 				<span>{recipe.cookTime}min</span>
 			</div>
 		{/if}
 		{#if recipe.restingTime}
 			<div class="recipeTimeContainer">
-				<Clock class="w-4 h-4" />
+				<Clock class="h-4 w-4" />
 				<span>Ruhezeit:</span>
 				<span>{recipe.restingTime}min</span>
 			</div>
 		{/if}
 		{#if recipe.totalTime}
 			<div class="recipeTimeContainer">
-				<Clock class="w-4 h-4" />
+				<Clock class="h-4 w-4" />
 				<span>Gesamtzeit:</span>
 				<span>{recipe.totalTime}min</span>
 			</div>
@@ -102,7 +102,7 @@
 
 {#if recipe.sourceUrl}
 	<div class="sourceContainer">
-		<ExternalLink class="w-4 h-4" />
+		<ExternalLink class="h-4 w-4" />
 		<span>Quelle:</span>
 		<a href={recipe.sourceUrl}>{recipe.sourceUrl}</a>
 	</div>
