@@ -78,9 +78,3 @@
 </TopAppBar>
 
 <ChefkochImportDialog bind:open={showChefkochImportDialog} />
-
-<style lang="scss">
-	:global(.mdc-top-app-bar__title:hover) {
-		cursor: pointer;
-	}
-</style>

@@ -77,7 +77,7 @@
 	}
 </script>
 
-<div class="recipeDraftContainer">
+<div class="flex flex-col gap-6">
 	<Input
 		inputId="recipeTitle"
 		label="Rezepttitel"
@@ -85,8 +85,8 @@
 		required
 		bind:value={recipeDraft.name}
 	/>
-	<div class="yieldAndTimesContainer">
-		<div class="yieldContainer">
+	<div class="flex flex-col items-center gap-8 lg:flex-row">
+		<div class="flex flex-row items-center gap-2">
 			<ToggleGroup.Root
 				type="single"
 				variant="outline"
@@ -105,7 +105,7 @@
 				class="max-w-40"
 			/>
 		</div>
-		<div class="recipeDraftTimesContainer">
+		<div class="flex flex-row flex-wrap justify-center gap-4 lg:ml-auto">
 			<Input
 				inputId="recipePrepTime"
 				type="number"
@@ -168,13 +168,13 @@
 		label="Rezeptbild (Datei)"
 		placeholder="Rezeptbild (Datei)"
 	/>
-	<div class="keywordContainer">
+	<div class="flex flex-col lg:flex-row">
 		<KeywordSpecifier
 			label="Label hinzufügen..."
 			{availableKeywords}
 			bind:selectedKeywords={recipeDraft.keywords}
 		/>
-		<KeywordChips bind:selectedKeywords={recipeDraft.keywords} />
+		<KeywordChips class="lg:ml-4" bind:selectedKeywords={recipeDraft.keywords} />
 	</div>
 	<Textarea inputId="recipeComment" label="Kommentar" bind:value={recipeDraft.comment} />
 	<Input
@@ -185,58 +185,3 @@
 		placeholder="Quelle"
 	/>
 </div>
-
-<style lang="scss">
-	.recipeDraftContainer {
-		display: flex;
-		flex-direction: column;
-		gap: 1.5rem;
-
-		.yieldAndTimesContainer {
-			display: flex;
-			flex-direction: row;
-			gap: 2rem;
-			align-items: center;
-
-			@media (max-width: 1024px) {
-				flex-direction: column;
-			}
-
-			.yieldContainer {
-				display: flex;
-				flex-direction: row;
-				gap: 0.5rem;
-				align-items: center;
-			}
-
-			.recipeDraftTimesContainer {
-				display: flex;
-				flex-direction: row;
-				gap: 1rem;
-				flex-wrap: wrap;
-				justify-content: center;
-
-				@media (min-width: 1025px) {
-					margin-left: auto;
-				}
-			}
-		}
-
-		.keywordContainer {
-			display: flex;
-			flex-direction: row;
-
-			@media (max-width: 1024px) {
-				flex-direction: column;
-			}
-		}
-
-		:global(input[type='file']::file-selector-button) {
-			display: none;
-		}
-
-		:global(:not(.mdc-text-field--label-floating) input[type='file']) {
-			color: transparent;
-		}
-	}
-</style>
