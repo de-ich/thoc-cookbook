@@ -182,11 +182,11 @@
 	</div>
 	{#if loadingRecipes}
 		<div class="mt-20 flex flex-col justify-center">
-			<h6>Rezepte werden geladen...</h6>
+			<h4>Rezepte werden geladen...</h4>
 		</div>
 	{:else}
 		<div class="flex flex-row items-center gap-2">
-			<h6>{filteredRecipes.length} Rezepte gefunden</h6>
+			<h4>{filteredRecipes.length} Rezepte gefunden</h4>
 			<SortButton bind:currentSortMethod={sortMethod} bind:currentSortOrder={sortOrder} />
 		</div>
 		{#each sortedFilteredRecipes as recipe}

@@ -34,7 +34,7 @@
 </script>
 
 <div class="flex flex-row flex-wrap items-center gap-4">
-	<h4>{recipe.name}</h4>
+	<h3>{recipe.name}</h3>
 	<div>
 		<IconButton on:click={() => navigator.clipboard.writeText(window.location.href)}>
 			<Copy class="h-4 w-4" />

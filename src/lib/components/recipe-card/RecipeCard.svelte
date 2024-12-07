@@ -25,6 +25,6 @@
 				{/if}
 			</AspectRatio>
 		</div>
-		<div><span class="font-semibold">{recipe.name}</span></div>
+		<div><h6>{recipe.name}</h6></div>
 	</div>
 </a>

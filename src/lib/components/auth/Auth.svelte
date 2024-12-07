@@ -25,9 +25,9 @@
 </script>
 
 <div
-	class="fixed left-1/2 top-1/2 flex translate-x-[-50%] translate-y-[-50%] flex-col items-center"
+	class="fixed left-1/2 top-1/2 flex translate-x-[-50%] translate-y-[-50%] flex-col items-center gap-8"
 >
-	<h1>Log in</h1>
+	<h2>Log in</h2>
 	<div class="flex flex-col gap-4">
 		<Input
 			bind:value={email}
