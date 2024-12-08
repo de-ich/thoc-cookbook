@@ -10,9 +10,9 @@
 
 <a href={'/recipes/' + recipe.id}>
 	<div
-		class="flex h-20 flex-row items-center gap-4 overflow-hidden rounded-lg bg-secondary hover:bg-primary hover:text-primary-foreground"
+		class="flex h-20 flex-row items-center gap-4 overflow-hidden rounded-lg border hover:text-accent-foreground hover:bg-accent hover:border-primary"
 	>
-		<div class="w-36 shrink-0 overflow-hidden rounded-lg bg-muted-foreground">
+		<div class="w-36 shrink-0 overflow-hidden rounded-lg bg-muted">
 			<AspectRatio ratio={16 / 9}>
 				{#if recipe.previewImage}
 					<img

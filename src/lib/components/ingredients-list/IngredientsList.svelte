@@ -136,7 +136,7 @@
 			</IconButton>
 			<Button
 				variant="ghost"
-				class="px-0.5"
+				class="px-0.5 text-md"
 				on:click={openCustomQuantityDialog}
 				on:keyup={handleCustomQuantityButtonKeyUp}
 				>{recipe.recipeYieldType === RecipeYieldType.BakingDish

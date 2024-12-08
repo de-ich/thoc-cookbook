@@ -25,7 +25,7 @@
 
 <div class={cn('flex items-center gap-2', className)}>
 	{#each selectedKeywords as selectedKeyword}
-		<Badge variant="secondary" class="whitespace-nowrap">
+		<Badge variant="secondary" class="whitespace-nowrap text-sm">
 			{selectedKeyword}
 			{#if !nonInteractive}
 				<IconButton on:click={() => removeKeyword(selectedKeyword)} class="ml-2 h-5 w-5">
