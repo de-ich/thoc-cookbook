@@ -1,12 +1,14 @@
 <script lang="ts">
+	import '../app.css';
 	import { onMount } from 'svelte';
 	import { auth } from '../lib/firebase/firebase.client';
-	import { authStore } from '../stores/authstore';
+	import { authStore } from '$lib/stores/authstore';
 	import { browser } from '$app/environment';
-	import Header from '../components/Header.svelte';
-	import Loading from '../components/Loading.svelte';
+	import Header from '$lib/components/header';
+	import Loading from '$lib/components/loading';
 	import { LOGIN_PAGE_ROUTE } from './routes';
-	import ErrorDialog from '../components/ErrorDialog.svelte';
+	import ErrorDialog from '$lib/dialogs/error-dialog';
+	import { ModeWatcher } from 'mode-watcher';
 
 	onMount(() => {
 		const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -28,6 +30,9 @@
 	});
 </script>
 
+<!-- Used to toggle between light and dark mode-->
+<ModeWatcher />
+
 {#if $authStore?.currentUser}
 	<Header />
 {/if}
@@ -35,21 +40,9 @@
 {#if !$authStore || $authStore.isLoading}
 	<Loading />
 {:else}
-	<div class="mainContainer">
+	<div class="mx-auto mb-8 mt-4 max-w-6xl px-8">
 		<slot />
 	</div>
 {/if}
 
 <ErrorDialog />
-
-<style lang="scss">
-	.mainContainer {
-		max-width: 70rem;
-		padding-left: 2rem;
-		padding-right: 2rem;
-		margin-left: auto;
-		margin-right: auto;
-		margin-top: 1rem;
-		margin-bottom: 2rem;
-	}
-</style>

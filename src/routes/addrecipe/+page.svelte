@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { recipeDraftStore, clearRecipeDraft } from '../../stores/recipedraftstore';
+	import { recipeDraftStore, clearRecipeDraft } from '$lib/stores/recipedraftstore';
 	import { onDestroy } from 'svelte';
 	import type { RecipeDraft } from '$lib/database/Recipe';
-	import Button from '@smui/button';
+	import { Button } from "$lib/shadcn/button";	
 	import { addRecipe } from '$lib/firebase/recipe';
 	import { goto } from '$app/navigation';
-	import RecipeEdit from '../../components/RecipeEdit.svelte';
-	import { createError } from '../../stores/errormessagestore';
+	import RecipeEdit from '$lib/components/recipe-edit';
+	import { createError } from '$lib/stores/errormessagestore';
 
 	let recipeDraft: RecipeDraft;
 	const unsubcribe = recipeDraftStore.subscribe((value) => {
@@ -27,13 +27,6 @@
 
 <RecipeEdit bind:recipeDraft />
 
-<div class="submitButtonContainer">
-	<Button class="submitButton" on:click={addRecipeToDatabase} variant="unelevated">Speichern</Button
-	>
+<div class="mt-4">
+	<Button class="submitButton" on:click={addRecipeToDatabase}>Speichern</Button>
 </div>
-
-<style lang="scss">
-	.submitButtonContainer {
-		margin-top: 1rem;
-	}
-</style>

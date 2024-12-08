@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { Button } from '$lib/shadcn/button';
 	import type { RecipeDraft } from '$lib/database/Recipe';
 	import { addRecipe } from '$lib/firebase/recipe';
 	import { fetchRecipesFromAllUserCollections } from '$lib/importer/chefkoch';
-	import Button, { Label } from '@smui/button';
-	import Dialog, { Actions, Content, Title } from '@smui/dialog';
-	import Textfield from '@smui/textfield';
-	import { createError } from '../../../stores/errormessagestore';
+	import { createError } from '$lib/stores/errormessagestore';
+	import * as AlertDialog from '$lib/shadcn/alert-dialog';
+	import { Input } from '$lib/shadcn/input';
+	import { Textarea } from '$lib/shadcn/textarea';
 
 	let chefkochCookie: string = '';
 	let recipes: RecipeDraft[] = [];
@@ -47,53 +48,49 @@
 	};
 </script>
 
-<Textfield
-	id="recipeTitle"
-	variant="outlined"
+<Input
+	inputId="chefkochCookie"
 	type="text"
+	min="0"
 	bind:value={chefkochCookie}
 	label="Chefkoch Cookie"
-	style="min-width: 25rem;"
+	placeholder="Chefkoch Cookie"
 	required
 />
 
-<Button class="submitButton" on:click={fetchRecipes} variant="unelevated">Importieren</Button>
+<Button class="submitButton" on:click={fetchRecipes}>Importieren</Button>
 
-<Textfield
-	style="width: 100%;min-height: 20rem;"
-	helperLine$style="width: 100%;"
-	textarea
-	required
-	bind:value={log}
-/>
+<Textarea class="min-h-80" inputId="log" bind:value={log} />
 
-<Dialog bind:open={showDialog} aria-labelledby="simple-title" aria-describedby="simple-content">
-	<Title id="simple-title">{recipes.length} Rezepte von Chefkoch.de importieren?</Title>
-	<Content id="simple-content">
-		{recipes.length} Rezepte gefunden! Importieren?
-	</Content>
-	<Actions>
-		<Button>
-			<Label>Abbrechen</Label>
-		</Button>
-		<Button on:click={importRecipes}>
-			<Label>Importieren</Label>
-		</Button>
-	</Actions>
-</Dialog>
+<AlertDialog.Root bind:open={showDialog}>
+	<AlertDialog.Content>
+		<AlertDialog.Header>
+			<AlertDialog.Title>{recipes.length} Rezepte von Chefkoch.de importieren?</AlertDialog.Title>
+		</AlertDialog.Header>
+		<AlertDialog.Description>
+			{recipes.length} Rezepte gefunden! Importieren?
+		</AlertDialog.Description>
+		<AlertDialog.Footer>
+			<AlertDialog.Cancel>Abbrechen</AlertDialog.Cancel>
+			<AlertDialog.Action on:keydown={importRecipes} on:click={importRecipes}
+				>Importieren</AlertDialog.Action
+			>
+		</AlertDialog.Footer>
+	</AlertDialog.Content>
+</AlertDialog.Root>
 
-<Dialog
-	bind:open={showResultDialog}
-	aria-labelledby="simple-title"
-	aria-describedby="simple-content"
->
-	<Title id="simple-title">Erfolg</Title>
-	<Content id="simple-content">
-		{addedRecipes} Rezepte importiert!
-	</Content>
-	<Actions>
-		<Button on:click={() => goto('/recipes')}>
-			<Label>Ok</Label>
-		</Button>
-	</Actions>
-</Dialog>
+<AlertDialog.Root bind:open={showResultDialog}>
+	<AlertDialog.Content>
+		<AlertDialog.Header>
+			<AlertDialog.Title>{recipes.length} Rezepte von Chefkoch.de importieren?</AlertDialog.Title>
+		</AlertDialog.Header>
+		<AlertDialog.Description>
+			{addedRecipes} Rezepte importiert!
+		</AlertDialog.Description>
+		<AlertDialog.Footer>
+			<AlertDialog.Action on:keydown={() => goto('/recipes')} on:click={() => goto('/recipes')}
+				>OK</AlertDialog.Action
+			>
+		</AlertDialog.Footer>
+	</AlertDialog.Content>
+</AlertDialog.Root>
