@@ -14,8 +14,9 @@
 	import InstructionsList from '$lib/components/instructions-list';
 	import ConfirmDeleteRecipeDialog from '$lib/dialogs/confirm-delete-recipe-dialog';
 	import { addEntryToHistory } from '$lib/firebase/history';
-	import KeywordChips from '$lib/components/keyword-chips/KeywordChips.svelte';
+	import KeywordChips from '$lib/components/keyword-chips';
 	import { RecipeTime } from '$lib/components/recipe-time';
+	import { Separator } from '$lib/shadcn/separator';
 
 	/** @type {import('./$types').PageData} */
 	export let data: any;
@@ -91,6 +92,8 @@
 	<div class="max-w-96">
 		<IngredientsList {recipe} />
 	</div>
+
+	<Separator orientation="vertical" class="hidden md:inline-block h-40" />
 
 	<div class="instructionsAndCommentContainer">
 		<div class="mb-8 max-w-xl flex-grow">

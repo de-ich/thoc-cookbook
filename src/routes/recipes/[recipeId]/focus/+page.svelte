@@ -2,6 +2,7 @@
 	import type { RecipeDetails } from '$lib/database/Recipe';
 	import IngredientsList from '$lib/components/ingredients-list';
 	import InstructionsList from '$lib/components/instructions-list';
+	import { Separator } from '$lib/shadcn/separator';
 
 	/** @type {import('./$types').PageData} */
 	export let data: any;
@@ -17,6 +18,8 @@
 	<div>
 		<IngredientsList {recipe} allowCheckItems={true} />
 	</div>
+
+	<Separator orientation="vertical" class="hidden md:inline-block h-40" />
 
 	<div class="instructionsAndCommentContainer">
 		<div class="mb-8 max-w-xl flex-grow">
