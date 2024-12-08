@@ -130,7 +130,7 @@
 <div class="flex flex-col">
 	{#if recipe.recipeYield}
 		<h5 class="mb-4 flex items-center overflow-y-hidden h-5 max-h-5">
-			Zutaten für
+			<span class="text-nowrap">Zutaten für</span>
 			<IconButton on:click={decreaseYield}>
 				<Minus class="h-3 w-3" />
 			</IconButton>
