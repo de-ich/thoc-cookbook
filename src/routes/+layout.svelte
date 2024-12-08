@@ -8,6 +8,7 @@
 	import Loading from '$lib/components/loading';
 	import { LOGIN_PAGE_ROUTE } from './routes';
 	import ErrorDialog from '$lib/dialogs/error-dialog';
+	import { ModeWatcher } from 'mode-watcher';
 
 	onMount(() => {
 		const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -29,6 +30,9 @@
 	});
 </script>
 
+<!-- Used to toggle between light and dark mode-->
+<ModeWatcher />
+
 {#if $authStore?.currentUser}
 	<Header />
 {/if}
@@ -36,7 +40,7 @@
 {#if !$authStore || $authStore.isLoading}
 	<Loading />
 {:else}
-	<div class="max-w-6xl px-8 mx-auto mt-4 mb-8">
+	<div class="mx-auto mb-8 mt-4 max-w-6xl px-8">
 		<slot />
 	</div>
 {/if}

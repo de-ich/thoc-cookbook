@@ -19,6 +19,11 @@
 
 	import { goto } from '$app/navigation';
 
+	import Sun from 'lucide-svelte/icons/sun';
+	import Moon from 'lucide-svelte/icons/moon';
+
+	import { toggleMode } from 'mode-watcher';
+
 	let user: string | null | undefined =
 		$authStore.currentUser?.displayName || $authStore.currentUser?.email;
 
@@ -60,6 +65,13 @@
 				</DropdownMenu.Item>
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>
+
+		<Button on:click={toggleMode} variant="ghost" size="icon">
+			<Sun class="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+			<Moon
+				class="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
+			/>
+		</Button>
 
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger asChild let:builder>
