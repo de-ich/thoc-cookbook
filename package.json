@@ -27,9 +27,7 @@
 		"format-quantity": "^3.0.0",
 		"mode-watcher": "^0.5.0",
 		"parse-ingredient": "^1.2.1",
-		"uuid": "^10.0.0",
-		"tailwind-merge": "^2.5.4",
-		"clsx": "^2.1.1"
+		"uuid": "^10.0.0"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.2.2",
@@ -40,6 +38,7 @@
 		"@typescript-eslint/parser": "^8.0.0-alpha.46",
 		"autoprefixer": "^10.4.20",
 		"bits-ui": "^0.21.16",
+		"clsx": "^2.1.1",
 		"cmdk-sv": "^0.0.18",
 		"eslint": "^9.7.0",
 		"eslint-config-prettier": "^9.1.0",
