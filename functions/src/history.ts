@@ -1,4 +1,4 @@
-import { onCall } from 'firebase-functions/v2/https';
+import { onCall } from 'firebase-functions/https';
 import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 
 const db = getFirestore();

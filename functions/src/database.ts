@@ -1,6 +1,6 @@
 import { FieldValue, getFirestore } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
-import { onDocumentWritten, onDocumentDeleted } from 'firebase-functions/v2/firestore';
+import { onDocumentWritten, onDocumentDeleted } from 'firebase-functions/firestore';
 import { RecipeDetails, RecipePreview, RecipePreviews } from './database/Recipe';
 
 const db = getFirestore();

@@ -1,4 +1,4 @@
-import { HttpsError, onCall } from 'firebase-functions/v2/https';
+import { HttpsError, onCall } from 'firebase-functions/https';
 import { Ingredient, parseIngredient } from 'parse-ingredient';
 import { RecipeDraft } from './database/Recipe';
 
