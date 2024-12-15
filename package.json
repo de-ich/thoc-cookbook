@@ -33,13 +33,12 @@
 		"parse-ingredient": "^1.2.1",
 		"tailwind-merge": "^2.5.5",
 		"tailwind-variants": "^0.3.0",
-		"uuid": "^10.0.0"
+		"uuid": "^11.0.3"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.2.2",
 		"@sveltejs/kit": "^2.5.18",
 		"@sveltejs/vite-plugin-svelte": "^3.1.1",
-		"@types/uuid": "^10.0.0",
 		"@typescript-eslint/eslint-plugin": "^8.0.0-alpha.46",
 		"@typescript-eslint/parser": "^8.0.0-alpha.46",
 		"autoprefixer": "^10.4.20",
