@@ -28,7 +28,7 @@
 		"firebase-admin": "^12.2.0",
 		"firebase-functions": "^6.1.2",
 		"format-quantity": "^3.0.0",
-		"lucide-svelte": "^0.454.0",
+		"lucide-svelte": "^0.468.0",
 		"mode-watcher": "^0.5.0",
 		"parse-ingredient": "^1.2.1",
 		"tailwind-merge": "^2.5.5",
