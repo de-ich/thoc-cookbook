@@ -20,7 +20,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"algoliasearch": "^4.24.0",
+		"@algolia/client-search": "^5.17.1",
 		"bits-ui": "^0.21.16",
 		"clsx": "^2.1.1",
 		"cmdk-sv": "^0.0.18",

@@ -9,7 +9,7 @@
 	import KeywordChips from '$lib/components/keyword-chips';
 	import { getAllKeywords, getAllRecipePreviews } from '$lib/firebase/recipe';
 	import { createError } from '$lib/stores/errormessagestore';
-	import algoliasearch from 'algoliasearch/lite';
+	import { searchClient as algoliasearch, type SearchClient } from '@algolia/client-search';
 	import { PUBLIC_ALGOLIA_APPID, PUBLIC_ALGOLIA_APIKEY } from '$env/static/public';
 	import { getHistory, type HistoryEntry } from '$lib/firebase/history';
 	import { Input } from '$lib/shadcn/input';
@@ -27,8 +27,7 @@
 	let sortMethod: SortMethod = SortMethod.LAST_ACCESS_TIME;
 	let sortOrder: SortOrder = SortOrder.DOWN;
 
-	const searchClient = algoliasearch(PUBLIC_ALGOLIA_APPID, PUBLIC_ALGOLIA_APIKEY);
-	const searchIndex = searchClient.initIndex('recipeDetails');
+	const searchClient: SearchClient = algoliasearch(PUBLIC_ALGOLIA_APPID, PUBLIC_ALGOLIA_APIKEY);
 
 	export const snapshot: import('./$types').Snapshot<any> = {
 		capture: () => {
@@ -69,8 +68,8 @@
 	const createSearchFunction = (searchText: string | undefined) => {
 		if (searchText && searchText.length > 3) {
 			return async (recipes: RecipePreviewWithId[]) => {
-				return await searchIndex
-					.search(searchText)
+				return await searchClient
+					.searchSingleIndex({ indexName: 'recipeDetails', searchParams: { query: searchText } })
 					.then(({ hits }) => {
 						return recipes.filter((recipe) => hits.some((hit) => hit.objectID === recipe.id));
 					})
