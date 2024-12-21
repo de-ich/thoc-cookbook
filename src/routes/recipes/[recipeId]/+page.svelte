@@ -82,7 +82,7 @@
 		<ExternalLink class="h-4 w-4" />
 		<span class="font-semibold">Quelle:</span>
 		<a
-			class="overflow-hidden overflow-ellipsis whitespace-nowrap hover:bg-primary-foreground"
+			class="overflow-hidden overflow-ellipsis whitespace-nowrap hover:bg-accent"
 			href={recipe.sourceUrl}>{recipe.sourceUrl}</a
 		>
 	</div>
