@@ -20,6 +20,7 @@ import { fetchRecipe, fetchRecipesFromAllUserCollections } from './chefkoch';
 import { downloadFile } from './download';
 import { updateRecipePreview, updateKeywords, deleteRecipeImages } from './database';
 import { pushToHistory } from './history';
+import { aiRetrieve } from './ai';
 
 export {
 	fetchRecipe,
@@ -28,5 +29,6 @@ export {
 	updateRecipePreview,
 	updateKeywords,
 	deleteRecipeImages,
-	pushToHistory
+	pushToHistory,
+	aiRetrieve
 };
