@@ -1,8 +1,7 @@
 // import the Genkit and Google AI plugin libraries
 import { gemini15Flash, googleAI } from '@genkit-ai/googleai';
 import { genkit, z } from 'genkit';
-import * as cheerio from 'cheerio';
-import retrieveWebpageContent from './retrieveWebpageContent';
+import retrieveWebpageContent from '../retrieveWebpageContent';
 import { RecipeDraftSchema } from './recipeDraftSchema';
 
 // configure a Genkit instance
@@ -11,56 +10,44 @@ const ai = genkit({
 	model: gemini15Flash // set default model
 });
 
-const webLoaderOutputSchema: any = z.lazy(() =>
-	z.union([z.string(), z.array(z.union([z.string(), z.record(z.string(), webLoaderOutputSchema)]))])
-);
+// a schema for a nested JSON object representing a DOM tree
+const WebContentSchema: any = ai.defineSchema('WebContentSchema',
+	z.lazy(() => z.union([z.string(), z.array(z.union([z.string(), z.record(z.string(), WebContentSchema)]))])
+));
 
-const webLoader = ai.defineTool(
-	{
-		name: 'webLoader',
-		description:
-			'When a URL is received, it accesses the URL, retrieves the main content, filters out unnecessary elements and returns the body as JSON object.',
-		inputSchema: z.object({ url: z.string() }),
-		outputSchema: webLoaderOutputSchema
-	},
-	async ({ url }) => {
-		const content = await retrieveWebpageContent(url);
-		if (content === null) {
-			throw new Error('Failed to retrieve content');
-		}
-		
-		const parsedContent = webLoaderOutputSchema.parse(content);
-		return parsedContent;
-	}
+const RecipeDraftPromptSchema = ai.defineSchema(
+	'RecipeDraftSchema',
+	RecipeDraftSchema
 );
 
 const mainFlow = ai.defineFlow(
 	{
 		name: 'mainFlow',
 		inputSchema: z.string(),
-		//outputSchema: RecipeDraftSchema
+		outputSchema: RecipeDraftSchema
 	},
-	async (input) => {
-		const { text } = await ai.generate({
-			prompt: 
-				`Fetch the main content of the URL ${input} as JSON.
-				The main content should contain a recipe consisting of at least a recipe title, required ingredients and instructions.
-				Retrieve the recipe title, the list of required ingredients as well as the instructions from the JSON object. Format the output as JSON.`,
-			tools: [webLoader],
-			/*config: {
-				temperature: 1.2,
-				topP: 0.9
-			},*/
-			//output: {schema: RecipeDraftSchema}
+	async (url: string) => {
+		const content = await retrieveWebpageContent(url);
+		const parsedContent = WebContentSchema.parse(content);
+		const { output } = await ai.generate({
+			prompt: `Take the following content: ${JSON.stringify(parsedContent)}. It should contain a recipe consisting of at least a recipe title/name, required ingredients and instructions.
+					Besides the recipe name, the list of ingredients and instructions, extract the following information, if available: 
+					Preparation time, cooking/baking time, resting time, total time, a URL pointing to an image for the recipe as well as information about the recipe yield/servings. 
+					The recipe yield might be either given in servings or in the size of a baking dish, e.g. a baking dish with a diameter of 20cm.
+					If no indication af a baking dish is given, assume 'servings' as yield type.
+					If no indication of the recipe yield is given, set the field to 1.
+					Represent all extracted times as single number representing the time in minutes rounded to zero decimals. If a range of times is given, use the mean value. Leave out any information that is not available in the given data.
+					For the ingredients, use the following structure: An ingredient is usually represented by a quantity, an optional unit (of measure) and a description. 
+					Sometimes, a second quantity is given to represent a range. If no range is given, the second quantity should not be set.`,
+			output: { schema: RecipeDraftPromptSchema }
 		});
-		return text;
+
+		if (output == null) {
+			throw new Error("Response doesn't satisfy schema.");
+		}
+
+		return output;
 	}
 );
 
 ai.startFlowServer({ flows: [mainFlow] });
-
-// (async () => {
-// 	// make a generation request
-// 	const { text } = await ai.generate('Hello, Gemini!');
-// 	console.log(text);
-// })();

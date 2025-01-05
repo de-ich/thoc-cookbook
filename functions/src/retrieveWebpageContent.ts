@@ -54,8 +54,6 @@ const getContent = async (url: string) => {
 	const jsonContent = serializeToJSON(content);
 
 	return jsonContent;
-
-	//return JSON.stringify(jsonContent);
 };
 
 export default getContent;
