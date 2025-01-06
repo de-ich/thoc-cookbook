@@ -16,6 +16,8 @@
 	import { createError } from '$lib/stores/errormessagestore';
 
 	import ChefkochImportDialog from '$lib/dialogs/chefkoch-import-dialog';
+	import AiImportDialog from '$lib/dialogs/ai-import-dialog';
+	import Bot from 'lucide-svelte/icons/bot';
 
 	import { goto } from '$app/navigation';
 
@@ -36,6 +38,7 @@
 	}
 
 	let showChefkochImportDialog = false;
+	let showAiImportDialog = false;
 </script>
 
 <TopAppBar>
@@ -62,6 +65,10 @@
 				<DropdownMenu.Item on:click={() => (showChefkochImportDialog = true)}>
 					<img class="mr-2 h-4 w-4" src={chefkochLogo} alt="chefkoch-logo" />
 					<span>chefkoch.de</span>
+				</DropdownMenu.Item>
+				<DropdownMenu.Item on:click={() => (showAiImportDialog = true)}>
+					<Bot class="mr-2 h-4 w-4" />
+					<span>AI</span>
 				</DropdownMenu.Item>
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>
@@ -90,3 +97,4 @@
 </TopAppBar>
 
 <ChefkochImportDialog bind:open={showChefkochImportDialog} />
+<AiImportDialog bind:open={showAiImportDialog} />
