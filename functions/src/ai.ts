@@ -3,6 +3,8 @@ import { defineSecret } from 'firebase-functions/params';
 import { onInit } from 'firebase-functions/v2/core';
 import { extractRecipe } from './genkit/aiRetriever';
 import { RecipeDraft } from './database/Recipe';
+import { RecipeDraftSchema as GenkitRecipeDraftSchema} from './genkit/aiRetriever';
+import { z } from 'genkit';
 
 // Load the Google GenAI API key from the Firebase environment
 const googleGenAiApiKey = defineSecret('GOOGLE_GENAI_API_KEY');
@@ -33,12 +35,38 @@ export const aiRetrieve = onCall({ maxInstances: 1 }, async (request) => {
   }
 });
 
-const convertToPartialRecipe = (extractedRecipe: any): RecipeDraft => {
+type GenkitRecipeDraft = z.infer<typeof GenkitRecipeDraftSchema>;
+
+const convertToPartialRecipe = (extractedRecipe: GenkitRecipeDraft): RecipeDraft => {
 	if (!extractedRecipe.name) {
 		throw new Error('Unable to parse recipe name from extracted recipe!');
 	}
-  
-	const recipe: any = extractedRecipe;
+
+	const recipe: RecipeDraft = {
+		images: extractedRecipe.recipeImage ? [extractedRecipe.recipeImage] : [],
+		ingredients: extractedRecipe.ingredients
+			.filter((i) => i !== undefined)
+			.map((ingredient) => ({
+				quantity: ingredient.quantity || null,
+				quantity2: ingredient.quantity2 || null,
+				unitOfMeasure: ingredient.unitOfMeasure || null,
+				unitOfMeasureID: null,
+				description: ingredient.description,
+				isGroupHeader: false
+			})),
+		name: extractedRecipe.name,
+		instructions: extractedRecipe.instructions,
+		sourceUrl: null,
+		sourceId: null,
+		prepTime: extractedRecipe.preparationTime || null,
+		cookTime: extractedRecipe.cookingTime || null,
+		restingTime: extractedRecipe.restingTime || null,
+		totalTime: extractedRecipe.totalTime || null,
+		recipeYield: extractedRecipe.recipeYield ? parseInt(extractedRecipe.recipeYield) : null,
+		recipeYieldType: extractedRecipe.recipeYieldType,
+		keywords: [],
+		comment: null
+	};
 
 	return recipe;
 };
