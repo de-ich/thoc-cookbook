@@ -5,8 +5,8 @@
       "codebase": "default"
     },
     {
-      "source": "puppeteer-functions",
-      "codebase": "puppeteer-functions",
+      "source": "genkit-functions",
+      "codebase": "genkit-functions",
       "ignore": [
         "node_modules",
         ".git",
