@@ -2,6 +2,8 @@ const createBrowserless = require('browserless');
 const getHTML = require('html-get');
 import * as cheerio from 'cheerio';
 
+// FIXME does not work on Firebase Functions, probably related to: https://stackoverflow.com/questions/77779601/error-could-not-find-chrome-ver-119-0-6045-105-this-can-occur-if-either
+
 const getContent = async (url: string) => {
 	// Spawn Chromium process once
 	const browserlessFactory = createBrowserless();
