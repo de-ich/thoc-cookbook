@@ -15,8 +15,10 @@
 	import { clearRecipeDraft } from '$lib/stores/recipedraftstore';
 	import { createError } from '$lib/stores/errormessagestore';
 
-	import ChefkochImportDialog from '$lib/dialogs/chefkoch-import-dialog';
-	import AiImportDialog from '$lib/dialogs/ai-import-dialog';
+	import { fetchRecipe as fetchRecipeViaAI } from '$lib/importer/ai';
+	import { fetchRecipe as fetchRecipeFromChefkoch } from '$lib/importer/chefkoch';
+	import RecipeUrlImportDialog from '$lib/dialogs/recipe-url-import-dialog';
+
 	import Bot from 'lucide-svelte/icons/bot';
 
 	import { goto } from '$app/navigation';
@@ -96,5 +98,13 @@
 	</div>
 </TopAppBar>
 
-<ChefkochImportDialog bind:open={showChefkochImportDialog} />
-<AiImportDialog bind:open={showAiImportDialog} />
+<RecipeUrlImportDialog
+	bind:open={showChefkochImportDialog}
+	title="Rezept von Chefkoch.de importieren"
+	fetchRecipeCallable={fetchRecipeFromChefkoch}
+/>
+<RecipeUrlImportDialog
+	bind:open={showAiImportDialog}
+	title="Rezept per KI importieren"
+	fetchRecipeCallable={fetchRecipeViaAI}
+/>
