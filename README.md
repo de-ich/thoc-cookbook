@@ -30,3 +30,8 @@ npm run dev -- --open
 ## Deploy Firebase Hosting
 
 - `firebase deploy --only hosting`
+
+## Deploy Firebase Functions
+
+- `firebase deploy --only functions:default`
+- `firebase deploy --only functions:genkit`
