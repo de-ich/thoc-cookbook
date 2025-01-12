@@ -5,9 +5,8 @@
 	import * as AlertDialog from '$lib/shadcn/alert-dialog';
 	import { Input } from '$lib/shadcn/input';
 	import { Button } from '$lib/shadcn/button';
-	import { LoaderCircle } from 'lucide-svelte';
-	import { clsx } from 'clsx';
 	import type { RecipeDraft } from '$lib/database/Recipe';
+	import LongRunningActionButtonText from '$lib/components/long-running-action-button-text';
 
 	export let open: boolean = true;
 	export let fetchRecipeCallable: (url: string) => Promise<RecipeDraft>;
@@ -76,9 +75,7 @@
 				on:click={() => importRecipe(recipeUrl)}
 				disabled={recipeUrl == null || fetchingRecipe}
 			>
-				<span class={clsx(fetchingRecipe && 'invisible')}>Vorschau</span><LoaderCircle
-					class={clsx('absolute h-4 w-4 animate-spin', !fetchingRecipe && 'invisible')}
-				/></Button
+				<LongRunningActionButtonText text="Vorschau" actionIsRunning={fetchingRecipe} /></Button
 			>
 		</AlertDialog.Footer>
 	</AlertDialog.Content>

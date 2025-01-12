@@ -7,8 +7,6 @@
 	import Pencil from 'lucide-svelte/icons/pencil';
 	import Trash2 from 'lucide-svelte/icons/trash-2';
 	import ExternalLink from 'lucide-svelte/icons/external-link';
-	import { createError } from '$lib/stores/errormessagestore';
-	import { deleteRecipe } from '$lib/firebase/recipe';
 	import { PUBLIC_IMAGEKIT_STORAGE_URL } from '$env/static/public';
 	import IngredientsList from '$lib/components/ingredients-list';
 	import InstructionsList from '$lib/components/instructions-list';
@@ -24,12 +22,6 @@
 	let recipe: RecipeDetails = data.recipe;
 
 	let showConfirmDeleteDialog = false;
-
-	const deleteRecipeFromDatabase = () => {
-		deleteRecipe(recipe.id)
-			.then(() => goto('/recipes/'))
-			.catch(createError);
-	};
 
 	addEntryToHistory(recipe.id);
 </script>
@@ -93,7 +85,7 @@
 		<IngredientsList {recipe} />
 	</div>
 
-	<Separator orientation="vertical" class="hidden md:inline-block h-40" />
+	<Separator orientation="vertical" class="hidden h-40 md:inline-block" />
 
 	<div class="instructionsAndCommentContainer">
 		<div class="mb-8 max-w-xl flex-grow">
@@ -111,8 +103,4 @@
 	</div>
 </div>
 
-<ConfirmDeleteRecipeDialog
-	recipeName={recipe.name}
-	bind:showConfirmDeleteDialog
-	on:delete-recipe={deleteRecipeFromDatabase}
-/>
+<ConfirmDeleteRecipeDialog {recipe} bind:open={showConfirmDeleteDialog} />

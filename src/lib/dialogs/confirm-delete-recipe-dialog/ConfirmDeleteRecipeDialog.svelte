@@ -1,26 +1,42 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
+	import { goto } from '$app/navigation';
 	import * as AlertDialog from '$lib/shadcn/alert-dialog';
+	import { Button } from '$lib/shadcn/button';
+	import LongRunningActionButtonText from '$lib/components/long-running-action-button-text';
+	import type { RecipeDetails } from '$lib/database/Recipe';
+	import { deleteRecipe } from '$lib/firebase/recipe';
+	import { createError } from '$lib/stores/errormessagestore';
 
-	export let showConfirmDeleteDialog = false;
-	export let recipeName: string;
+	export let open = false;
+	export let recipe: RecipeDetails;
 
-	const dispatch = createEventDispatcher();
+	let deletingRecipe: boolean = false;
+
+	const deleteRecipeFromDatabase = () => {
+		deletingRecipe = true;
+
+		deleteRecipe(recipe.id)
+			.then(() => goto('/recipes/'))
+			.catch(createError)
+			.finally(() => {
+				deletingRecipe = false;
+				open = false;
+			});
+	};
 </script>
 
-<AlertDialog.Root bind:open={showConfirmDeleteDialog}>
+<AlertDialog.Root bind:open>
 	<AlertDialog.Content>
 		<AlertDialog.Header>
 			<AlertDialog.Title>Rezept löschen</AlertDialog.Title>
 		</AlertDialog.Header>
 		<AlertDialog.Description>
-			Rezept <span class="font-bold">{recipeName}</span> wirklich löschen?
+			Rezept <span class="font-bold">{recipe.name}</span> wirklich löschen?
 		</AlertDialog.Description>
 		<AlertDialog.Footer>
 			<AlertDialog.Cancel>Abbrechen</AlertDialog.Cancel>
-			<AlertDialog.Action
-				on:keydown={() => dispatch('delete-recipe')}
-				on:click={() => dispatch('delete-recipe')}>Löschen</AlertDialog.Action
+			<Button on:keydown={deleteRecipeFromDatabase} on:click={deleteRecipeFromDatabase}>
+				<LongRunningActionButtonText text="Löschen" actionIsRunning={deletingRecipe} /></Button
 			>
 		</AlertDialog.Footer>
 	</AlertDialog.Content>
