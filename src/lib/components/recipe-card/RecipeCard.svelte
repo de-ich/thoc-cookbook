@@ -10,7 +10,7 @@
 
 <a href={'/recipes/' + recipe.id}>
 	<div
-		class="flex h-20 flex-row items-center gap-4 overflow-hidden rounded-lg border hover:text-accent-foreground hover:bg-accent hover:border-primary"
+		class="flex h-20 flex-row items-center gap-4 overflow-hidden rounded-lg border hover:border-primary hover:bg-accent hover:text-accent-foreground"
 	>
 		<div class="w-36 shrink-0 overflow-hidden rounded-lg bg-muted">
 			<AspectRatio ratio={16 / 9}>
@@ -25,6 +25,6 @@
 				{/if}
 			</AspectRatio>
 		</div>
-		<div><h6>{recipe.name}</h6></div>
+		<div class="max-h-20 overflow-hidden pb-1 pr-1 pt-1"><h6 class="overflow-hidden">{recipe.name}</h6></div>
 	</div>
 </a>
