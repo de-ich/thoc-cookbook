@@ -21,7 +21,7 @@
 	"type": "module",
 	"devDependencies": {
 		"@algolia/client-search": "^5.19.0",
-		"@sveltejs/adapter-node": "^5.2.12",
+		"@sveltejs/adapter-auto": "^4.0.0", 
 		"@sveltejs/kit": "^2.5.18",
 		"@sveltejs/vite-plugin-svelte": "^3.1.1",
 		"@typescript-eslint/eslint-plugin": "^8.19.1",
