@@ -19,7 +19,7 @@
 	export let label: $$Props['label'] = undefined;
 	export let required: $$Props['required'] = false;
 
-	let inputBaseClassName = 'placeholder:text-muted-foreground flex h-full w-full rounded-md text-sm focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 resize-none px-3';
+	let inputBaseClassName = 'placeholder:text-muted-foreground flex h-full w-full rounded-md text-sm focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 resize-none px-3';
 
 	$: labelValue = required ? `${label}*` : label;
 

@@ -22,7 +22,7 @@
 	<Separator orientation="vertical" class="hidden md:inline-block h-40" />
 
 	<div class="instructionsAndCommentContainer">
-		<div class="mb-8 max-w-xl flex-grow">
+		<div class="mb-8 max-w-xl grow">
 			<InstructionsList {recipe} allowCheckItems={true} />
 		</div>
 	</div>

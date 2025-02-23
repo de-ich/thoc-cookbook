@@ -74,7 +74,7 @@
 		<ExternalLink class="h-4 w-4" />
 		<span class="font-semibold">Quelle:</span>
 		<a
-			class="overflow-hidden overflow-ellipsis whitespace-nowrap hover:bg-accent"
+			class="overflow-hidden text-ellipsis whitespace-nowrap hover:bg-accent"
 			href={recipe.sourceUrl}>{recipe.sourceUrl}</a
 		>
 	</div>
@@ -88,7 +88,7 @@
 	<Separator orientation="vertical" class="hidden h-40 md:inline-block" />
 
 	<div class="instructionsAndCommentContainer">
-		<div class="mb-8 max-w-xl flex-grow">
+		<div class="mb-8 max-w-xl grow">
 			<InstructionsList {recipe} />
 		</div>
 

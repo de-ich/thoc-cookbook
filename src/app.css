@@ -1,10 +1,29 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-@font-face {
-  font-family: "Outfit";
-  src: url("/fonts/Outfit/Outfit-VariableFont_wght.ttf");
+@config '../tailwind.config.ts';
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+@layer utilities {
+  @font-face {
+    font-family: 'Outfit';
+    src: url('/fonts/Outfit/Outfit-VariableFont_wght.ttf');
+  }
 }
  
 @layer base {
@@ -79,7 +98,7 @@
     @apply scroll-m-20 text-base font-semibold;
   }
   p {
-    @apply leading-7 [&:not(:first-child)]:mt-6;
+    @apply leading-7 not-first:mt-6;
   }
   blockquote {
     @apply mt-6 border-l-2 pl-6 italic;

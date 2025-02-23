@@ -165,7 +165,7 @@
 			label="Rezept suchen..."
 			showClearIcon
 			bind:value={searchText}
-			class="order-1 flex-shrink-0 flex-grow basis-3/5 md:order-2"
+			class="order-1 shrink-0 grow basis-3/5 md:order-2"
 		>
 			<Search slot="icon" class="h-4 w-4" />
 		</Input>
