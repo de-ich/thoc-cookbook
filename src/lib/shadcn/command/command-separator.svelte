@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Command as CommandPrimitive } from "cmdk-sv";
+	import { Command as CommandPrimitive } from "bits-ui";
 	import { cn } from "$lib/utils.js";
 
 	type $$Props = CommandPrimitive.SeparatorProps;
