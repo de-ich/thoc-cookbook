@@ -1,12 +1,4 @@
-import type { HTMLInputAttributes } from "svelte/elements";
 import Root from "./textarea.svelte";
-
-type Props = HTMLInputAttributes & {
-	inputId: string;
-	inputClass?: string;
-	label?: string;
-	required?: boolean;
-};
 
 type FormTextareaEvent<T extends Event = Event> = T & {
 	currentTarget: EventTarget & HTMLTextAreaElement;
@@ -29,10 +21,8 @@ type TextareaEvents = {
 
 export {
 	Root,
-	type Props,
 	//
 	Root as Textarea,
-	type Props as TextareaProps,
 	type TextareaEvents,
 	type FormTextareaEvent,
 };
