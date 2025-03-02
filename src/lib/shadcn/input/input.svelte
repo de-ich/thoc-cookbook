@@ -1,125 +1,46 @@
 <script lang="ts">
-	import type { InputEvents, InputProps } from './index.js';
-	import { Label } from '$lib/shadcn/label/index.js';
-	import { cn } from '$lib/utils.js';
-	import { X } from 'lucide-svelte';
-	import IconButton from '$lib/components/icon-button';
+	import type { HTMLInputAttributes, HTMLInputTypeAttribute } from "svelte/elements";
+	import type { WithElementRef } from "bits-ui";
+	import { cn } from "$lib/utils.js";
 
-	type $$Props = InputProps;
-	type $$Events = InputEvents;
+	type InputType = Exclude<HTMLInputTypeAttribute, "file">;
 
-	let className: $$Props['class'] = undefined;
-	export let value: $$Props['value'] = undefined;
-	export { className as class };
+	type Props = WithElementRef<
+		Omit<HTMLInputAttributes, "type"> &
+			({ type: "file"; files?: FileList } | { type?: InputType; files?: undefined })
+	>;
 
-	// Workaround for https://github.com/sveltejs/svelte/issues/9305
-	// Fixed in Svelte 5, but not backported to 4.x.
-	export let readonly: $$Props['readonly'] = undefined;
-
-	export let type: $$Props['type'] = 'text';
-
-	export let inputId: $$Props['inputId'];
-	export let inputClass: $$Props['inputClass'] = undefined;
-	export let label: $$Props['label'] = undefined;
-	export let required: $$Props['required'] = false;
-	export let showClearIcon: $$Props['showClearIcon'] = false;
-	export let suffix: $$Props['suffix'] = undefined;
-	export let files: $$Props['files'] = undefined;
-
-	let inputBaseClassName =
-		'peer placeholder:text-muted-foreground flex grow h-10 leading-10 w-full file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50';
-
-	$: labelValue = required ? `${label}*` : label;
-
-	$: isValid = (required ?? false) ? (value?.length ?? 0) > 0 : true;
-	$: isInvalidClassName = isValid ? '' : 'border-destructive focus-visible:ring-destructive';
-	$: labelClassName = isValid ? '' : 'text-destructive';
+	let {
+		ref = $bindable(null),
+		value = $bindable(),
+		type,
+		files = $bindable(),
+		class: className,
+		...restProps
+	}: Props = $props();
 </script>
 
-<div
-	class={cn(
-		'relative flex w-full items-center rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-within:border-ring',
-		className,
-		isInvalidClassName
-	)}
->
-	<!-- (optional) icon at the beginning of the input passed via the 'icon' slot -->
-	{#if $$slots.icon}
-		<span class="mr-2">
-			<slot name="icon"></slot>
-		</span>
-	{/if}
-	<!-- Actual input -->
-	{#if type !== 'file'}
-		<!-- see https://stackoverflow.com/a/75298645 for setting a dynamic type with two-way binding for inputs -->
-		<input
-			{...{ type }}
-			class={cn(inputBaseClassName, inputClass, 'focus-')}
-			bind:value
-			{readonly}
-			on:blur
-			on:change
-			on:click
-			on:focus
-			on:focusin
-			on:focusout
-			on:keydown
-			on:keypress
-			on:keyup
-			on:mouseover
-			on:mouseenter
-			on:mouseleave
-			on:mousemove
-			on:paste
-			on:input
-			on:wheel|passive
-			{...$$restProps}
-		/>
-	{:else}
-		<!-- file input needs to be treated differently, see https://github.com/huntabyte/shadcn-svelte/discussions/286 and https://github.com/huntabyte/shadcn-svelte/issues/478 -->
-		<input
-			class={cn(inputBaseClassName, inputClass)}
-			type="file"
-			bind:value
-			bind:files
-			{readonly}
-			on:blur
-			on:change
-			on:click
-			on:focus
-			on:focusin
-			on:focusout
-			on:keydown
-			on:keypress
-			on:keyup
-			on:mouseover
-			on:mouseenter
-			on:mouseleave
-			on:mousemove
-			on:paste
-			on:input
-			on:wheel|passive
-			{...$$restProps}
-		/>
-	{/if}
-	<!-- (optional) Label (displayed as part of the top border of the input)-->
-	{#if label}
-		<Label
-			for={inputId}
-			class={cn(
-				'absolute top-0 -translate-x-1 -translate-y-1/2 bg-background px-1 text-xs font-normal text-muted-foreground peer-focus:font-semibold peer-focus:text-foreground',
-				labelClassName
-			)}>{labelValue}</Label
-		>
-	{/if}
-	<!-- (optional) Suffix displayed at the end of the input field-->
-	{#if suffix}
-		<span class="pl-2 text-muted-foreground">{suffix}</span>
-	{/if}
-	<!-- (optional) Icon button to clear the input-->
-	{#if showClearIcon}
-		<IconButton on:click={() => (value = undefined)}>
-			<X class="h-4 w-4" />
-		</IconButton>
-	{/if}
-</div>
+{#if type === "file"}
+	<input
+		bind:this={ref}
+		class={cn(
+			"border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+			className
+		)}
+		type="file"
+		bind:files
+		bind:value
+		{...restProps}
+	/>
+{:else}
+	<input
+		bind:this={ref}
+		class={cn(
+			"border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+			className
+		)}
+		{type}
+		bind:value
+		{...restProps}
+	/>
+{/if}
