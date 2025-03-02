@@ -39,12 +39,12 @@
 		}
 	}
 
-	let showChefkochImportDialog = false;
-	let showAiImportDialog = false;
+	let showChefkochImportDialog = $state(false);
+	let showAiImportDialog = $state(false);
 </script>
 
 <TopAppBar>
-	<Button variant="ghost" on:click={() => goto('/')} class="text-xl hover:bg-inherit"
+	<Button variant="ghost" onclick={() => goto('/')} class="text-xl hover:bg-inherit"
 		>THOC Cookbook</Button
 	>
 	<div class="ml-auto">
@@ -58,24 +58,24 @@
 		</IconButton>
 
 		<DropdownMenu.Root>
-			<DropdownMenu.Trigger asChild let:builder>
-				<IconButton builders={[builder]}><Import class="h-4 w-4" /></IconButton>
+			<DropdownMenu.Trigger >
+				<IconButton><Import class="h-4 w-4" /></IconButton>
 			</DropdownMenu.Trigger>
 			<DropdownMenu.Content class="w-56">
 				<DropdownMenu.Label>Rezept importieren</DropdownMenu.Label>
 				<DropdownMenu.Separator />
-				<DropdownMenu.Item on:click={() => (showChefkochImportDialog = true)}>
+				<DropdownMenu.Item onclick={() => (showChefkochImportDialog = true)}>
 					<img class="mr-2 h-4 w-4" src={chefkochLogo} alt="chefkoch-logo" />
 					<span>chefkoch.de</span>
 				</DropdownMenu.Item>
-				<DropdownMenu.Item on:click={() => (showAiImportDialog = true)}>
+				<DropdownMenu.Item onclick={() => (showAiImportDialog = true)}>
 					<Bot class="mr-2 h-4 w-4" />
 					<span>AI</span>
 				</DropdownMenu.Item>
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>
 
-		<Button on:click={toggleMode} variant="ghost" size="icon">
+		<Button onclick={toggleMode} variant="ghost" size="icon">
 			<Sun class="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
 			<Moon
 				class="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
@@ -83,13 +83,13 @@
 		</Button>
 
 		<DropdownMenu.Root>
-			<DropdownMenu.Trigger asChild let:builder>
-				<IconButton builders={[builder]}><User class="h-4 w-4" /></IconButton>
+			<DropdownMenu.Trigger >
+				<IconButton><User class="h-4 w-4" /></IconButton>
 			</DropdownMenu.Trigger>
 			<DropdownMenu.Content class="w-56">
 				<DropdownMenu.Label>{user}</DropdownMenu.Label>
 				<DropdownMenu.Separator />
-				<DropdownMenu.Item on:click={logout}>
+				<DropdownMenu.Item onclick={logout}>
 					<Logout class="mr-2 h-4 w-4" />
 					<span>Logout</span>
 				</DropdownMenu.Item>
