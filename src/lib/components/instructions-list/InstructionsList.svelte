@@ -2,12 +2,16 @@
 	import type { RecipeDetails } from '$lib/database/Recipe';
 	import { Checkbox } from '$lib/shadcn/checkbox';
 
-	export let recipe: RecipeDetails;
-	export let allowCheckItems = false;
+	export type Props = {
+		recipe: RecipeDetails;
+		allowCheckItems?: boolean;
+	};
+
+	let { recipe, allowCheckItems = false }: Props = $props();
 </script>
 
 <div class="flex flex-col">
-	<h5 class="mb-4 flex items-center overflow-y-hidden h-5 max-h-5">Zubereitung:</h5>
+	<h5 class="mb-4 flex h-5 max-h-5 items-center overflow-y-hidden">Zubereitung:</h5>
 	{#each recipe.instructions as instruction, i}
 		<div class="mb-2 flex flex-row items-center">
 			{#if allowCheckItems}
