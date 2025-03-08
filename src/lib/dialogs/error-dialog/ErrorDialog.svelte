@@ -1,29 +1,20 @@
 <script lang="ts">
 	import * as AlertDialog from '$lib/shadcn/alert-dialog';
 	import { confirmError, errorMessageStore } from '$lib/stores/errormessagestore';
-	import { onDestroy } from 'svelte';
 
-	let errorMessage: string | null = null;
-	const unsubscribeErrorMesssageStore = errorMessageStore.subscribe((newErrorMessage) => {
-		errorMessage = newErrorMessage;
-	});
-	$: showErrorDialog = errorMessage != null && errorMessage.length > 0;
-
-	onDestroy(() => {
-		unsubscribeErrorMesssageStore();
-	});
+	let showErrorDialog = $derived($errorMessageStore != null && $errorMessageStore.length > 0);
 </script>
 
-<AlertDialog.Root closeOnEscape={false} open={showErrorDialog}>
-	<AlertDialog.Content>
+<AlertDialog.Root open={showErrorDialog}>
+	<AlertDialog.Content escapeKeydownBehavior="ignore">
 		<AlertDialog.Header>
 			<AlertDialog.Title>Error</AlertDialog.Title>
 		</AlertDialog.Header>
 		<AlertDialog.Description>
-			{errorMessage}
+			{$errorMessageStore}
 		</AlertDialog.Description>
 		<AlertDialog.Footer>
-			<AlertDialog.Action on:keydown={confirmError} on:click={confirmError}>OK</AlertDialog.Action>
+			<AlertDialog.Action onkeydown={confirmError} onclick={confirmError}>OK</AlertDialog.Action>
 		</AlertDialog.Footer>
 	</AlertDialog.Content>
 </AlertDialog.Root>
