@@ -17,7 +17,7 @@
 		recipeDraft?: RecipeDraft;
 	};
 
-	let { recipeDraft = getEmptyRecipeDraft() }: Props = $props();
+	let { recipeDraft = $bindable(getEmptyRecipeDraft()) }: Props = $props();
 
 	let availableKeywords: string[] = $state([]);
 
