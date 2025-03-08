@@ -8,15 +8,23 @@
 	import type { RecipeDraft } from '$lib/database/Recipe';
 	import LongRunningActionButtonText from '$lib/components/long-running-action-button-text';
 
-	export let open: boolean = true;
-	export let fetchRecipeCallable: (url: string) => Promise<RecipeDraft>;
-	export let title: string = 'Rezept per URL importieren';
+	export type Props = {
+		open: boolean;
+		fetchRecipeCallable: (url: string) => Promise<RecipeDraft>;
+		title: string;
+	};
 
-	let recipeUrl: string | null = null;
+	let {
+		open = $bindable(true),
+		fetchRecipeCallable,
+		title = 'Rezept per URL importieren'
+	}: Props = $props();
 
-	let fetchingRecipe: boolean = false;
+	let recipeUrl: string | null = $state(null);
 
-	function importRecipe(recipeUrlToImport: string | null) {
+	let fetchingRecipe: boolean = $state(false);
+
+	const importRecipe = (recipeUrlToImport: string | null) => {
 		// keep track of the currently active import to supported cancelable imports
 		const currentImportUrl = recipeUrlToImport;
 
@@ -43,7 +51,7 @@
 					open = false;
 				}
 			});
-	}
+	};
 </script>
 
 <AlertDialog.Root
@@ -71,8 +79,8 @@
 		<AlertDialog.Footer>
 			<AlertDialog.Cancel>Abbrechen</AlertDialog.Cancel>
 			<Button
-				on:keydown={() => importRecipe(recipeUrl)}
-				on:click={() => importRecipe(recipeUrl)}
+				onkeydown={() => importRecipe(recipeUrl)}
+				onclick={() => importRecipe(recipeUrl)}
 				disabled={recipeUrl == null || fetchingRecipe}
 			>
 				<LongRunningActionButtonText text="Vorschau" actionIsRunning={fetchingRecipe} /></Button

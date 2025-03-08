@@ -1,5 +1,10 @@
-import Root from './RecipeUrlImportDialog.svelte';
+import Root, { type Props } from './RecipeUrlImportDialog.svelte';
 
-export { Root, Root as RecipeUrlImportDialog };
+export {
+	Root,
+	type Props,
+	Root as RecipeUrlImportDialog,
+	type Props as RecipeUrlImportDialogProps
+};
 
 export default Root;
