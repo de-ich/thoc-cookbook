@@ -9,14 +9,21 @@
 		CalendarArrowUp,
 		Check
 	} from 'lucide-svelte/icons';
+	import { type ButtonProps } from '$lib/components/icon-button';
+	import { SortMethod, SortOrder } from './index.js';
 
-	import { type SortButtonProps, SortMethod, SortOrder } from './index.js';
+	export type Props = ButtonProps & {
+		currentSortMethod: SortMethod;
+		currentSortOrder: SortOrder;
+	};
 
-	type $$Props = SortButtonProps;
+	let {
+		currentSortMethod = SortMethod.LAST_ACCESS_TIME,
+		currentSortOrder = SortOrder.DOWN,
+		...restProps
+	}: Props = $props();
 
-	let open = false;
-	export let currentSortMethod: $$Props['currentSortMethod'] = SortMethod.LAST_ACCESS_TIME;
-	export let currentSortOrder: $$Props['currentSortOrder'] = SortOrder.DOWN;
+	let open = $state(false);
 
 	const setSorting = (sortMethod: SortMethod, sortOrder: SortOrder) => {
 		currentSortMethod = sortMethod;
@@ -26,8 +33,8 @@
 </script>
 
 <Popover.Root bind:open>
-	<Popover.Trigger asChild let:builder>
-		<IconButton builders={[builder]} {...$$restProps}>
+	<Popover.Trigger>
+		<IconButton {...restProps}>
 			{#if currentSortMethod === SortMethod.LAST_ACCESS_TIME && currentSortOrder === SortOrder.DOWN}
 				<CalendarArrowDown class="h-4 w-4" />
 			{:else if currentSortMethod === SortMethod.LAST_ACCESS_TIME && currentSortOrder === SortOrder.UP}
@@ -50,21 +57,21 @@
 				</Command.Item>
 				<Command.Item onSelect={() => setSorting(SortMethod.ALPHABETICALLY, SortOrder.DOWN)}
 					>Alphabetisch (absteigend)
-                    {#if currentSortMethod === SortMethod.ALPHABETICALLY && currentSortOrder === SortOrder.DOWN}
-                    <Check class="ml-auto h-4 w-4" />
-                    {/if}</Command.Item
+					{#if currentSortMethod === SortMethod.ALPHABETICALLY && currentSortOrder === SortOrder.DOWN}
+						<Check class="ml-auto h-4 w-4" />
+					{/if}</Command.Item
 				>
 				<Command.Item onSelect={() => setSorting(SortMethod.LAST_ACCESS_TIME, SortOrder.UP)}
 					>Zuletzt angeschaut (älteste zuerst)
-                    {#if currentSortMethod === SortMethod.LAST_ACCESS_TIME && currentSortOrder === SortOrder.UP}
-                    <Check class="ml-auto h-4 w-4" />
-                    {/if}</Command.Item
+					{#if currentSortMethod === SortMethod.LAST_ACCESS_TIME && currentSortOrder === SortOrder.UP}
+						<Check class="ml-auto h-4 w-4" />
+					{/if}</Command.Item
 				>
 				<Command.Item onSelect={() => setSorting(SortMethod.LAST_ACCESS_TIME, SortOrder.DOWN)}
 					>Zuletzt angeschaut (neueste zuerst)
-                    {#if currentSortMethod === SortMethod.LAST_ACCESS_TIME && currentSortOrder === SortOrder.DOWN}
-                    <Check class="ml-auto h-4 w-4" />
-                    {/if}</Command.Item
+					{#if currentSortMethod === SortMethod.LAST_ACCESS_TIME && currentSortOrder === SortOrder.DOWN}
+						<Check class="ml-auto h-4 w-4" />
+					{/if}</Command.Item
 				>
 			</Command.Group>
 		</Command.Root>

@@ -1,6 +1,4 @@
-import Root from './SortButton.svelte';
-
-import { type IconButtonProps } from '$lib/components/icon-button';
+import Root, { type Props } from './SortButton.svelte';
 
 enum SortMethod {
 	ALPHABETICALLY,
@@ -12,16 +10,11 @@ enum SortOrder {
 	DOWN
 }
 
-type SortButtonProps = IconButtonProps & {
-	currentSortMethod: SortMethod;
-	currentSortOrder: SortOrder;
-};
-
 export {
 	Root,
 	Root as SortButton,
-	type SortButtonProps,
-	type SortButtonProps as Props,
+	type Props,
+	type Props as SortButtonProps,
 	SortMethod,
 	SortOrder
 };
