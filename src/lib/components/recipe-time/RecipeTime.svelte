@@ -1,19 +1,18 @@
 <script lang="ts">
 	import { cn } from '$lib/utils.js';
-	import type { RecipeTimeProps } from './index.js';
 	import Clock from 'lucide-svelte/icons/clock';
+	import type { HTMLAttributes } from 'svelte/elements';
 
-	type $$Props = RecipeTimeProps;
+	export type Props = HTMLAttributes<HTMLDivElement> & {
+		label: string;
+		timeInMinutes: number | null;
+	};
 
-	export let label: $$Props['label'];
-	export let timeInMinutes: $$Props['timeInMinutes'] = null;
-
-    let className: $$Props['class'] = undefined;
-    export { className as class };
+	let { label, timeInMinutes = null, class: className, ...restProps }: Props = $props();
 </script>
 
 {#if timeInMinutes}
-	<div class={cn("flex flex-row items-center gap-2", className)} {...$$restProps}>
+	<div class={cn('flex flex-row items-center gap-2', className)} {...restProps}>
 		<Clock class="h-4 w-4" />
 		<span class="font-semibold">{label}</span>
 		<span>{timeInMinutes}min</span>

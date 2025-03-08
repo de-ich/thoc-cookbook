@@ -1,11 +1,5 @@
-import Root from './RecipeTime.svelte';
-import type { HTMLBaseAttributes } from 'svelte/elements';
+import Root, { type Props } from './RecipeTime.svelte';
 
-type RecipeTimeProps = HTMLBaseAttributes & {
-	label: string;
-	timeInMinutes: number | null;
-};
-
-export { Root, Root as RecipeTime, type RecipeTimeProps, type RecipeTimeProps as Props };
+export { Root, Root as RecipeTime, type Props, type Props as RecipeTimeProps };
 
 export default Root;
