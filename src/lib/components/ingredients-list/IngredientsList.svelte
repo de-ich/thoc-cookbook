@@ -10,16 +10,19 @@
 	import Plus from 'lucide-svelte/icons/plus';
 	import Minus from 'lucide-svelte/icons/minus';
 
-	export let recipe: RecipeDetails;
-	export let allowCheckItems = false;
+	export type Props = {
+		recipe: RecipeDetails;
+		allowCheckItems?: boolean;
+	};
+
+	let { recipe, allowCheckItems = false }: Props = $props();
 
 	const DEFAULT_SERVINGS = 1;
 	const DEFAULT_BAKING_DISH_SIZE = 26;
 
-	let currentYield = recipe.recipeYield || 1;
-	$: ingredientsForCurrentYield = recipe.ingredients.map((ingredient) =>
-		getIngredientWithUpdatedCounts(ingredient, currentYield, recipe.recipeYieldType)
-	);
+	const initialYield = recipe.recipeYield || 1;
+	let currentYield = $state(initialYield);
+	let newYield = $state(initialYield);
 
 	const increaseYield = () => {
 		if (currentYield < 1) {
@@ -112,7 +115,7 @@
 		};
 	};
 
-	let showCustomQuantityDialog = false;
+	let showCustomQuantityDialog = $state(false);
 
 	const handleCustomQuantityButtonKeyUp = (event: KeyboardEvent) => {
 		if (event.key === 'Enter') {
@@ -124,26 +127,30 @@
 		showCustomQuantityDialog = true;
 	};
 
-	$: newYield = currentYield;
+	let ingredientsForCurrentYield = $derived(
+		recipe.ingredients.map((ingredient) =>
+			getIngredientWithUpdatedCounts(ingredient, currentYield, recipe.recipeYieldType)
+		)
+	);
 </script>
 
 <div class="flex flex-col">
 	{#if recipe.recipeYield}
-		<h5 class="mb-4 flex items-center overflow-y-hidden h-5 max-h-5">
+		<h5 class="mb-4 flex h-5 max-h-5 items-center overflow-y-hidden">
 			<span class="text-nowrap">Zutaten für</span>
-			<IconButton on:click={decreaseYield}>
+			<IconButton onclick={decreaseYield}>
 				<Minus class="h-3 w-3" />
 			</IconButton>
 			<Button
 				variant="ghost"
-				class="px-0.5 text-md"
-				on:click={openCustomQuantityDialog}
-				on:keyup={handleCustomQuantityButtonKeyUp}
+				class="text-md px-0.5"
+				onclick={openCustomQuantityDialog}
+				onkeyup={handleCustomQuantityButtonKeyUp}
 				>{recipe.recipeYieldType === RecipeYieldType.BakingDish
 					? getQuantityDisplayValue(currentYield) + 'er'
 					: getQuantityDisplayValue(currentYield)}</Button
 			>
-			<IconButton on:click={increaseYield}>
+			<IconButton onclick={increaseYield}>
 				<Plus class="h-3 w-3" />
 			</IconButton>
 			{recipe.recipeYieldType === RecipeYieldType.BakingDish ? 'Backform' : 'Portionen'}:
@@ -181,7 +188,7 @@
 		<Dialog.Footer>
 			<Button
 				type="submit"
-				on:click={() => {
+				onclick={() => {
 					currentYield = newYield;
 					showCustomQuantityDialog = false;
 				}}
