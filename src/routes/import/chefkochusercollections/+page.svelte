@@ -9,10 +9,10 @@
 	import { Input } from '$lib/shadcn/input';
 	import { Textarea } from '$lib/shadcn/textarea';
 
-	let chefkochCookie: string = '';
-	let recipes: RecipeDraft[] = [];
+	let chefkochCookie: string = $state('');
+	let recipes: RecipeDraft[] = $state([]);
 
-	let showDialog = false;
+	let showDialog = $state(false);
 
 	let fetchRecipes = () => {
 		log += 'Fetching recipes...';
@@ -25,10 +25,10 @@
 			.catch((error) => console.error('an error occurred: ', error));
 	};
 
-	let log: string = '';
+	let log: string = $state('');
 
-	let addedRecipes = 0;
-	let showResultDialog = addedRecipes != 0;
+	let addedRecipes = $state(0);
+	let showResultDialog = $derived(addedRecipes != 0);
 
 	let importRecipes = () => {
 		log += '\nImporting Recipes';
@@ -58,11 +58,11 @@
 	required
 />
 
-<Button class="submitButton" on:click={fetchRecipes}>Importieren</Button>
+<Button class="submitButton" onclick={fetchRecipes}>Importieren</Button>
 
 <Textarea class="min-h-80" inputId="log" bind:value={log} />
 
-<AlertDialog.Root bind:open={showDialog}>
+<AlertDialog.Root open={showDialog}>
 	<AlertDialog.Content>
 		<AlertDialog.Header>
 			<AlertDialog.Title>{recipes.length} Rezepte von Chefkoch.de importieren?</AlertDialog.Title>
@@ -72,14 +72,14 @@
 		</AlertDialog.Description>
 		<AlertDialog.Footer>
 			<AlertDialog.Cancel>Abbrechen</AlertDialog.Cancel>
-			<AlertDialog.Action on:keydown={importRecipes} on:click={importRecipes}
+			<AlertDialog.Action onkeydown={importRecipes} onclick={importRecipes}
 				>Importieren</AlertDialog.Action
 			>
 		</AlertDialog.Footer>
 	</AlertDialog.Content>
 </AlertDialog.Root>
 
-<AlertDialog.Root bind:open={showResultDialog}>
+<AlertDialog.Root open={showResultDialog}>
 	<AlertDialog.Content>
 		<AlertDialog.Header>
 			<AlertDialog.Title>{recipes.length} Rezepte von Chefkoch.de importieren?</AlertDialog.Title>
@@ -88,7 +88,7 @@
 			{addedRecipes} Rezepte importiert!
 		</AlertDialog.Description>
 		<AlertDialog.Footer>
-			<AlertDialog.Action on:keydown={() => goto('/recipes')} on:click={() => goto('/recipes')}
+			<AlertDialog.Action onkeydown={() => goto('/recipes')} onclick={() => goto('/recipes')}
 				>OK</AlertDialog.Action
 			>
 		</AlertDialog.Footer>
