@@ -1,5 +1,10 @@
-import Root from './ConfirmDeleteRecipeDialog.svelte';
+import Root, { type Props } from './ConfirmDeleteRecipeDialog.svelte';
 
-export { Root, Root as ConfirmDeleteRecipeDialog };
+export {
+	Root,
+	type Props,
+	Root as ConfirmDeleteRecipeDialog,
+	type Props as ConfirmDeleteRecipeDialogProps
+};
 
 export default Root;

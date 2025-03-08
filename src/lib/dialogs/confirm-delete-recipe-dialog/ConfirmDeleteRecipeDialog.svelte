@@ -7,10 +7,14 @@
 	import { deleteRecipe } from '$lib/firebase/recipe';
 	import { createError } from '$lib/stores/errormessagestore';
 
-	export let open = false;
-	export let recipe: RecipeDetails;
+	export type Props = {
+		open: boolean;
+		recipe: RecipeDetails;
+	};
 
-	let deletingRecipe: boolean = false;
+	let { open = $bindable(false), recipe }: Props = $props();
+
+	let deletingRecipe: boolean = $state(false);
 
 	const deleteRecipeFromDatabase = () => {
 		deletingRecipe = true;
@@ -35,7 +39,7 @@
 		</AlertDialog.Description>
 		<AlertDialog.Footer>
 			<AlertDialog.Cancel>Abbrechen</AlertDialog.Cancel>
-			<Button on:keydown={deleteRecipeFromDatabase} on:click={deleteRecipeFromDatabase}>
+			<Button onkeydown={deleteRecipeFromDatabase} onclick={deleteRecipeFromDatabase}>
 				<LongRunningActionButtonText text="Löschen" actionIsRunning={deletingRecipe} /></Button
 			>
 		</AlertDialog.Footer>
