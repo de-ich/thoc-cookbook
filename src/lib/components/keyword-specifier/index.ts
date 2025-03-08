@@ -1,17 +1,5 @@
-import Root from './KeywordSpecifier.svelte';
-import type { HTMLBaseAttributes } from 'svelte/elements';
+import Root, { type Props } from './KeywordSpecifier.svelte';
 
-type KeywordSpecifierProps = HTMLBaseAttributes & {
-	label: string;
-	availableKeywords: string[];
-	selectedKeywords: string[];
-};
-
-export {
-	Root,
-	Root as KeywordFilter,
-	type KeywordSpecifierProps,
-	type KeywordSpecifierProps as Props
-};
+export { Root, Root as KeywordFilter, type Props, type Props as KeywordSpecifierProps };
 
 export default Root;

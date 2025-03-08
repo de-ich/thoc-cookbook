@@ -2,36 +2,39 @@
 	import { Button } from '$lib/shadcn/button/index.js';
 	import * as Popover from '$lib/shadcn/popover/index.js';
 	import * as Command from '$lib/shadcn/command/index.js';
+	import type { HTMLBaseAttributes } from 'svelte/elements';
 
-	import type { KeywordSpecifierProps } from './index.js';
 	import { cn } from '$lib/utils.js';
 
-	type $$Props = KeywordSpecifierProps;
+	export type Props = HTMLBaseAttributes & {
+		label: string;
+		availableKeywords: string[];
+		selectedKeywords: string[];
+	};
 
-	let className: $$Props['class'] = undefined;
-	export { className as class };
+	let {
+		class: className = undefined,
+		label,
+		availableKeywords,
+		selectedKeywords = $bindable()
+	}: Props = $props();
 
-	export let label: $$Props['label'];
-	export let availableKeywords: $$Props['availableKeywords'];
-	export let selectedKeywords: $$Props['selectedKeywords'];
+	let remainingKeywords = $derived(
+		availableKeywords.filter((keyword) => !selectedKeywords.includes(keyword))
+	);
 
-	$: remainingKeywords = availableKeywords.filter((keyword) => !selectedKeywords.includes(keyword));
+	let open = $state(false);
 
-	let open = false;
-
-	const addKeyword = async (keyword: string) => {
+	const addKeyword = (keyword: string) => {
 		if ((keyword || '').length > 0 && !selectedKeywords.includes(keyword)) {
 			selectedKeywords.push(keyword);
-			// Make sure everything relying on the keywords gets updated
-			selectedKeywords = selectedKeywords;
 		}
 	};
 </script>
 
-<Popover.Root bind:open let:ids>
-	<Popover.Trigger asChild let:builder>
+<Popover.Root bind:open>
+	<Popover.Trigger>
 		<Button
-			builders={[builder]}
 			variant="outline"
 			role="combobox"
 			aria-expanded={open}
@@ -46,7 +49,7 @@
 			<Command.Empty>Kein Label gefunden.</Command.Empty>
 			<Command.Group>
 				{#each remainingKeywords as keyword}
-					<Command.Item value={keyword} onSelect={addKeyword}>
+					<Command.Item value={keyword} onselect={() => addKeyword(keyword)}>
 						{keyword}
 					</Command.Item>
 				{/each}
