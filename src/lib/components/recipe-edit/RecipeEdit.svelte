@@ -11,11 +11,15 @@
 	import Input from '$lib/shadcn/input/input.svelte';
 	import { Textarea } from '$lib/shadcn/textarea';
 
-	// either pass in an existing Recipe/RecipeDraft (when editing a recipe) or use an
-	// empty draft (when creating a new recipe)
-	export let recipeDraft: RecipeDraft = getEmptyRecipeDraft();
+	export type Props = {
+		// either pass in an existing Recipe/RecipeDraft (when editing a recipe) or use an
+		// empty draft (when creating a new recipe)
+		recipeDraft?: RecipeDraft;
+	};
 
-	let availableKeywords: string[] = [];
+	let { recipeDraft = getEmptyRecipeDraft() }: Props = $props();
+
+	let availableKeywords: string[] = $state([]);
 
 	getAllKeywords().then((keywords) => (availableKeywords = keywords));
 
@@ -24,36 +28,42 @@
 		recipeDraft = { ...getEmptyRecipeDraft(), ...recipeDraft };
 	});
 
-	let instructions = recipeDraft.instructions.join('\n');
-	$: {
+	let instructions = $state(recipeDraft.instructions.join('\n'));
+
+	$effect(() => {
 		recipeDraft.instructions = instructions.split('\n').map((instruction) => instruction.trim());
-	}
+	});
 
-	let ingredients = recipeDraft.ingredients
-		.map((ingredient) => {
-			let ret =
-				(ingredient.quantity != null ? formatQuantity(ingredient.quantity) : '') +
-				(ingredient.quantity2 != null ? '-' + formatQuantity(ingredient.quantity2) : '');
+	let ingredients = $state(
+		recipeDraft.ingredients
+			.map((ingredient) => {
+				let ret =
+					(ingredient.quantity != null ? formatQuantity(ingredient.quantity) : '') +
+					(ingredient.quantity2 != null ? '-' + formatQuantity(ingredient.quantity2) : '');
 
-			if (ingredient.unitOfMeasure) {
-				ret += ingredient.unitOfMeasure;
-			}
+				if (ingredient.unitOfMeasure) {
+					ret += ingredient.unitOfMeasure;
+				}
 
-			if (ingredient.description) {
-				ret += ' ' + ingredient.description;
-			}
+				if (ingredient.description) {
+					ret += ' ' + ingredient.description;
+				}
 
-			return ret.trim();
-		})
-		.filter((ingredient) => ingredient !== '')
-		.join('\n');
+				return ret.trim();
+			})
+			.filter((ingredient) => ingredient !== '')
+			.join('\n')
+	);
 
-	$: {
+	$effect(() => {
 		recipeDraft.ingredients = parseIngredient(ingredients);
-	}
+	});
 
-	let recipeImageUrls = recipeDraft.images.filter((image) => typeof image === 'string').join('\n');
-	$: {
+	let recipeImageUrls = $state(
+		recipeDraft.images.filter((image) => typeof image === 'string').join('\n')
+	);
+
+	$effect(() => {
 		const existingImageFiles = recipeDraft.images.filter((image) => typeof image !== 'string');
 		const newImages: (string | File)[] = [];
 		newImages.push(...existingImageFiles);
@@ -61,10 +71,11 @@
 			newImages.push(...recipeImageUrls.split('\n').map((imageUrl) => imageUrl.trim()));
 		}
 		recipeDraft.images = newImages;
-	}
+	});
 
-	let recipeImageFiles: FileList;
-	$: {
+	let recipeImageFiles: FileList | undefined = $state(undefined);
+
+	$effect(() => {
 		const existingImageUrl = recipeDraft.images.filter((image) => typeof image === 'string');
 		const newImages: (string | File)[] = [];
 		newImages.push(...existingImageUrl);
@@ -74,7 +85,7 @@
 			}
 		}
 		recipeDraft.images = newImages;
-	}
+	});
 </script>
 
 <div class="flex flex-col gap-6">

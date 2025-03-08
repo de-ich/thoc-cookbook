@@ -1,5 +1,5 @@
-import Root from './RecipeEdit.svelte';
+import Root, {type Props} from './RecipeEdit.svelte';
 
-export { Root, Root as RecipeEdit };
+export { Root, type Props, Root as RecipeEdit type Props as RecipeEditProps };
 
 export default Root;
