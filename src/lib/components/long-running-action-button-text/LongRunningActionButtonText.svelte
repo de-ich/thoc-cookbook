@@ -2,8 +2,12 @@
 	import { LoaderCircle } from 'lucide-svelte';
 	import { clsx } from 'clsx';
 
-	export let text: string;
-	export let actionIsRunning: boolean;
+	export type Props = {
+		text: string;
+		actionIsRunning: boolean;
+	};
+
+	let { text, actionIsRunning }: Props = $props();
 </script>
 
 <span class={clsx(actionIsRunning && 'invisible')}>{text}</span><LoaderCircle
