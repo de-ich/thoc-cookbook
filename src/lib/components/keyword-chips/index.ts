@@ -1,11 +1,5 @@
-import Root from './KeywordChips.svelte';
-import type { HTMLBaseAttributes } from 'svelte/elements';
+import Root, { type Props } from './KeywordChips.svelte';
 
-type KeywordChipsProps = HTMLBaseAttributes & {
-	selectedKeywords: string[];
-	nonInteractive?: boolean;
-};
-
-export { Root, Root as KeywordChips, type KeywordChipsProps, type KeywordChipsProps as Props };
+export { Root, Root as KeywordChips, type Props as KeywordChipsProps, type Props };
 
 export default Root;
