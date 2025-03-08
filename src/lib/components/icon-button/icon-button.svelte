@@ -1,23 +1,14 @@
-<script lang="ts">
-	import { Button } from "$lib/shadcn/button/index.js";
-	import { type Events, type Props } from "./index.js";
+<script lang="ts" module>
+	import { Button } from '$lib/shadcn/button/index.js';
+	import { type Props } from '$lib/shadcn/button';
 
-	type $$Events = Events;
-	type $$Props = Props;
-
-	let className: $$Props["class"] = undefined;
-	export let builders: $$Props["builders"] = [];
-	export { className as class };
+	export type ButtonProps = Omit<Props, 'variant' | 'size'>;
 </script>
 
-<Button 
-	{builders}
-	variant="ghost" 
-	size="icon" 
-	class="{className}"
-	{...$$restProps}
-	on:click
-	on:keydown
->
-	<slot />
+<script lang="ts">
+	let { class: className = '', children, ...restProps }: ButtonProps = $props();
+</script>
+
+<Button variant="ghost" size="icon" class={className} {...restProps}>
+	{@render children?.()}
 </Button>

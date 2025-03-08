@@ -1,17 +1,11 @@
-import type { Button as ButtonPrimitive } from 'bits-ui';
-import Root from './icon-button.svelte';
-
-type Props = ButtonPrimitive.Props;
-type Events = ButtonPrimitive.Events;
+import Root, { type ButtonProps } from './icon-button.svelte';
 
 export {
 	Root,
-	type Props,
-	type Events,
+	type ButtonProps as Props,
 	//
 	Root as IconButton,
-	type Props as IconButtonProps,
-	type Events as IconButtonEvents
+	type ButtonProps
 };
 
 export default Root;
