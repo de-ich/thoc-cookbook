@@ -1,27 +1,29 @@
 <script lang="ts">
-	import type { HTMLInputAttributes, HTMLInputTypeAttribute } from "svelte/elements";
-	import type { WithElementRef } from "bits-ui";
+	import type { HTMLInputAttributes, HTMLInputTypeAttribute } from 'svelte/elements';
+	import type { WithElementRef } from 'bits-ui';
 	import { Label } from '$lib/shadcn/label';
 	import { IconButton } from '$lib/components/icon-button';
 	import { X } from 'lucide-svelte';
-	import { cn } from "$lib/utils.js";
+	import { cn } from '$lib/utils.js';
+	import type { Snippet } from 'svelte';
 
-	type InputType = Exclude<HTMLInputTypeAttribute, "file">;
+	type InputType = Exclude<HTMLInputTypeAttribute, 'file'>;
 
 	type Props = WithElementRef<
-		Omit<HTMLInputAttributes, "type"> &
-			({ type: "file"; files?: FileList } | { type?: InputType; files?: undefined }) & 
-			{
+		Omit<HTMLInputAttributes, 'type'> &
+			({ type: 'file'; files?: FileList } | { type?: InputType; files?: undefined }) & {
 				inputId: string;
 				inputClass?: string;
 				label?: string;
 				required?: boolean;
-				showClearIcon? : boolean;
+				showClearIcon?: boolean;
 				suffix?: string;
+				icon: Snippet;
 			}
 	>;
 
 	let {
+		icon,
 		ref = $bindable(null),
 		value = $bindable(),
 		type,
@@ -42,26 +44,28 @@
 	let labelValue = $derived(required ? `${label}*` : label);
 
 	let isValid = $derived((required ?? false) ? (value?.length ?? 0) > 0 : true);
-	let isInvalidClassName = $derived(isValid ? '' : 'border-destructive focus-visible:ring-destructive');
+	let isInvalidClassName = $derived(
+		isValid ? '' : 'border-destructive focus-visible:ring-destructive'
+	);
 	let labelClassName = $derived(isValid ? '' : 'text-destructive');
 </script>
 
 <div
 	class={cn(
-		'relative flex w-full items-center rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-within:border-ring',
+		'border-input bg-background ring-offset-background focus-within:border-ring relative flex w-full items-center rounded-md border px-3 py-2 text-sm',
 		className,
 		isInvalidClassName
 	)}
 >
 	<!-- (optional) icon at the beginning of the input passed via the 'icon' slot -->
-	{#if $$slots.icon}
+	{#if icon}
 		<span class="mr-2">
-			<slot name="icon"></slot>
+			{@render icon?.()}
 		</span>
 	{/if}
 
 	<!-- Actual input -->
-	{#if type === "file"}
+	{#if type === 'file'}
 		<input
 			bind:this={ref}
 			class={cn(inputBaseClassName, inputClass)}
@@ -85,14 +89,14 @@
 		<Label
 			for={inputId}
 			class={cn(
-				'absolute top-0 -translate-x-1 -translate-y-1/2 bg-background px-1 text-xs font-normal text-muted-foreground peer-focus:font-semibold peer-focus:text-foreground',
+				'bg-background text-muted-foreground peer-focus:text-foreground absolute top-0 -translate-x-1 -translate-y-1/2 px-1 text-xs font-normal peer-focus:font-semibold',
 				labelClassName
 			)}>{labelValue}</Label
 		>
 	{/if}
 	<!-- (optional) Suffix displayed at the end of the input field-->
 	{#if suffix}
-		<span class="pl-2 text-muted-foreground">{suffix}</span>
+		<span class="text-muted-foreground pl-2">{suffix}</span>
 	{/if}
 	<!-- (optional) Icon button to clear the input-->
 	{#if showClearIcon}
