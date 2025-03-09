@@ -4,8 +4,13 @@
 	import InstructionsList from '$lib/components/instructions-list';
 	import { Separator } from '$lib/shadcn/separator';
 
-	/** @type {import('./$types').PageData} */
-	export let data: any;
+	
+	interface Props {
+		/** @type {import('./$types').PageData} */
+		data: any;
+	}
+
+	let { data }: Props = $props();
 
 	let recipe: RecipeDetails = data.recipe;
 </script>
