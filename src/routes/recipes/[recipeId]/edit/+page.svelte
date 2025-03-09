@@ -6,14 +6,17 @@
 	import RecipeEdit from '$lib/components/recipe-edit';
 	import { createError } from '$lib/stores/errormessagestore';
 	import LongRunningActionButtonText from '$lib/components/long-running-action-button-text';
-	import { clsx } from 'clsx';
+	
+	interface Props {
+		/** @type {import('./$types').PageData} */
+		data: any;
+	}
 
-	/** @type {import('./$types').PageData} */
-	export let data: any;
+	let { data }: Props = $props();
 
-	let recipe: RecipeDetails = data.recipe;
+	let recipe: RecipeDetails = $state(data.recipe);
 
-	let editInProgress = false;
+	let editInProgress = $state(false);
 
 	const updateRecipeInDatabase = async () => {
 		editInProgress = true;
@@ -31,7 +34,7 @@
 <RecipeEdit bind:recipeDraft={recipe} />
 
 <div class="mt-4">
-	<Button class="submitButton" disabled={editInProgress} on:click={updateRecipeInDatabase}>
+	<Button class="submitButton" disabled={editInProgress} onclick={updateRecipeInDatabase}>
 		<LongRunningActionButtonText text="Speichern" actionIsRunning={editInProgress} />
 	</Button>
 </div>
