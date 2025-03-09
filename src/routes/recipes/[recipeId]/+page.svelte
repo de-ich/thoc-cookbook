@@ -16,12 +16,16 @@
 	import { RecipeTime } from '$lib/components/recipe-time';
 	import { Separator } from '$lib/shadcn/separator';
 
-	/** @type {import('./$types').PageData} */
-	export let data: any;
+	interface Props {
+		/** @type {import('./$types').PageData} */
+		data: any;
+	}
+
+	let { data }: Props = $props();
 
 	let recipe: RecipeDetails = data.recipe;
 
-	let showConfirmDeleteDialog = false;
+	let showConfirmDeleteDialog = $state(false);
 
 	addEntryToHistory(recipe.id);
 </script>
@@ -29,16 +33,16 @@
 <div class="flex flex-row flex-wrap items-center gap-4">
 	<h3>{recipe.name}</h3>
 	<div>
-		<IconButton on:click={() => navigator.clipboard.writeText(window.location.href)}>
+		<IconButton onclick={() => navigator.clipboard.writeText(window.location.href)}>
 			<Copy class="h-4 w-4" />
 		</IconButton>
-		<IconButton on:click={() => goto(`/recipes/${recipe.id}/focus`)}>
+		<IconButton onclick={() => goto(`/recipes/${recipe.id}/focus`)}>
 			<ChefHat class="h-4 w-4" />
 		</IconButton>
-		<IconButton on:click={() => goto(`/recipes/${recipe.id}/edit`)}>
+		<IconButton onclick={() => goto(`/recipes/${recipe.id}/edit`)}>
 			<Pencil class="h-4 w-4" />
 		</IconButton>
-		<IconButton on:click={() => (showConfirmDeleteDialog = true)}>
+		<IconButton onclick={() => (showConfirmDeleteDialog = true)}>
 			<Trash2 class="h-4 w-4" />
 		</IconButton>
 	</div>
@@ -74,7 +78,7 @@
 		<ExternalLink class="h-4 w-4" />
 		<span class="font-semibold">Quelle:</span>
 		<a
-			class="overflow-hidden text-ellipsis whitespace-nowrap hover:bg-accent"
+			class="hover:bg-accent overflow-hidden text-ellipsis whitespace-nowrap"
 			href={recipe.sourceUrl}>{recipe.sourceUrl}</a
 		>
 	</div>
