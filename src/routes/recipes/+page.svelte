@@ -164,8 +164,8 @@
 			class="order-1 shrink-0 grow basis-3/5 md:order-2"
 		>
 			{#snippet icon()}
-						<Search  class="h-4 w-4" />
-					{/snippet}
+				<Search  class="h-4 w-4" />
+			{/snippet}
 		</Input>
 		<KeywordSpecifier
 			label="Nach Label filtern..."

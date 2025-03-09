@@ -18,7 +18,7 @@
 				required?: boolean;
 				showClearIcon?: boolean;
 				suffix?: string;
-				icon: Snippet;
+				icon?: Snippet;
 			}
 	>;
 
@@ -100,7 +100,7 @@
 	{/if}
 	<!-- (optional) Icon button to clear the input-->
 	{#if showClearIcon}
-		<IconButton on:click={() => (value = undefined)}>
+		<IconButton onclick={() => (value = undefined)}>
 			<X class="h-4 w-4" />
 		</IconButton>
 	{/if}

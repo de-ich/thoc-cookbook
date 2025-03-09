@@ -49,7 +49,7 @@
 			<Command.Empty>Kein Label gefunden.</Command.Empty>
 			<Command.Group>
 				{#each remainingKeywords as keyword}
-					<Command.Item value={keyword} onselect={() => addKeyword(keyword)}>
+					<Command.Item value={keyword} onclick={() => addKeyword(keyword)}>
 						{keyword}
 					</Command.Item>
 				{/each}

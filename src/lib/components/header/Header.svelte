@@ -49,7 +49,7 @@
 	>
 	<div class="ml-auto">
 		<IconButton
-			on:click={() => {
+			onclick={() => {
 				clearRecipeDraft();
 				goto('/addrecipe');
 			}}
