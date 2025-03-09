@@ -17,15 +17,18 @@
 	import { SortButton, SortMethod, SortOrder } from '$lib/components/sort-button';
 
 	let allRecipes: RecipePreviewWithId[] = [];
-	let filteredRecipes: RecipePreviewWithId[] = [];
-	let sortedFilteredRecipes: RecipePreviewWithId[] = [];
-	let searchText: string | undefined;
-	let keywords: string[] = [];
+	let filteredRecipes: RecipePreviewWithId[] = $state([]);
+	let keywords: string[] = $state([]);
 	let historyEntries: HistoryEntry[] = [];
-	let selectedKeywords: string[] = [];
-	let loadingRecipes = true;
-	let sortMethod: SortMethod = SortMethod.LAST_ACCESS_TIME;
-	let sortOrder: SortOrder = SortOrder.DOWN;
+	let loadingRecipes = $state(true);
+
+	let sortedFilteredRecipes: RecipePreviewWithId[] = $derived.by(() =>
+		sortRecipes(filteredRecipes, historyEntries, sortMethod, sortOrder)
+	);
+	let searchText: string | undefined = $state(undefined);
+	let selectedKeywords: string[] = $state([]);
+	let sortMethod: SortMethod = $state(SortMethod.LAST_ACCESS_TIME);
+	let sortOrder: SortOrder = $state(SortOrder.DOWN);
 
 	const searchClient: SearchClient = algoliasearch(PUBLIC_ALGOLIA_APPID, PUBLIC_ALGOLIA_APIKEY);
 
@@ -146,16 +149,9 @@
 		return 0;
 	};
 
-	$: {
-		searchText = searchText;
+	$effect(() => {
 		startSearch();
-		loadingRecipes = loadingRecipes;
-		selectedKeywords = selectedKeywords;
-	}
-
-	$: {
-		sortedFilteredRecipes = sortRecipes(filteredRecipes, historyEntries, sortMethod, sortOrder);
-	}
+	});
 </script>
 
 <div class="flex w-full flex-col gap-4">
@@ -167,7 +163,9 @@
 			bind:value={searchText}
 			class="order-1 shrink-0 grow basis-3/5 md:order-2"
 		>
-			<Search slot="icon" class="h-4 w-4" />
+			{#snippet icon()}
+						<Search  class="h-4 w-4" />
+					{/snippet}
 		</Input>
 		<KeywordSpecifier
 			label="Nach Label filtern..."

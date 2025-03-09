@@ -18,8 +18,8 @@
 	};
 
 	let {
-		currentSortMethod = SortMethod.LAST_ACCESS_TIME,
-		currentSortOrder = SortOrder.DOWN,
+		currentSortMethod = $bindable(SortMethod.LAST_ACCESS_TIME),
+		currentSortOrder = $bindable(SortOrder.DOWN),
 		...restProps
 	}: Props = $props();
 
