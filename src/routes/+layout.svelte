@@ -9,6 +9,12 @@
 	import { LOGIN_PAGE_ROUTE } from './routes';
 	import ErrorDialog from '$lib/dialogs/error-dialog';
 	import { ModeWatcher } from 'mode-watcher';
+	
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
+
+	let { children }: Props = $props();
 
 	onMount(() => {
 		const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -41,7 +47,7 @@
 	<Loading />
 {:else}
 	<div class="mx-auto mb-8 mt-4 max-w-6xl px-8">
-		<slot />
+		{@render children?.()}
 	</div>
 {/if}
 
