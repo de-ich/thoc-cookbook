@@ -7,6 +7,7 @@
 	import RecipeEdit from '$lib/components/recipe-edit';
 	import { createError } from '$lib/stores/errormessagestore';
 	import LongRunningActionButtonText from '$lib/components/long-running-action-button-text';
+	import type { RecipeDraft } from '$lib/database/Recipe';
 
 	onDestroy(() => {
 		clearRecipeDraft();
@@ -23,9 +24,13 @@
 				addingInProgress = false;
 			});
 	};
+
+	const recipeDraftModifiedCallback = (recipeDraft: RecipeDraft) => {
+		recipeDraftStore.set(recipeDraft);
+	};
 </script>
 
-<RecipeEdit bind:recipeDraft={$recipeDraftStore} />
+<RecipeEdit recipeDraft={$recipeDraftStore} recipeDraftModifiedCallback={recipeDraftModifiedCallback} />
 
 <div class="mt-4">
 	<Button class="submitButton" disabled={addingInProgress} onclick={addRecipeToDatabase}>

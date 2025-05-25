@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { RecipeDetails } from '$lib/database/Recipe';
+	import type { RecipeDetails, RecipeDraft } from '$lib/database/Recipe';
 	import { Button } from '$lib/shadcn/button';
 	import { updateRecipe } from '$lib/firebase/recipe';
 	import { goto, invalidateAll } from '$app/navigation';
@@ -15,13 +15,14 @@
 	let { data }: Props = $props();
 
 	let recipe: RecipeDetails = $state(data.recipe);
+	let modifiedRecipe = $state(recipe);
 
 	let editInProgress = $state(false);
 
 	const updateRecipeInDatabase = async () => {
 		editInProgress = true;
 
-		const newRecipeId = await updateRecipe(recipe).catch(createError);
+		const newRecipeId = await updateRecipe(modifiedRecipe).catch(createError);
 
 		invalidateAll()
 			.then(() => goto('/recipes/' + newRecipeId))
@@ -29,9 +30,13 @@
 				editInProgress = false;
 			});
 	};
+
+	const recipeDraftModifiedCallback = (recipeDraft: RecipeDraft) => {
+		modifiedRecipe = {...recipe, ...recipeDraft };
+	};
 </script>
 
-<RecipeEdit bind:recipeDraft={recipe} />
+<RecipeEdit recipeDraft={recipe} recipeDraftModifiedCallback={recipeDraftModifiedCallback} />
 
 <div class="mt-4">
 	<Button class="submitButton" disabled={editInProgress} onclick={updateRecipeInDatabase}>
