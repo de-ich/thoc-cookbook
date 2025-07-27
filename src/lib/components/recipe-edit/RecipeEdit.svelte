@@ -59,7 +59,7 @@
 	let totalTime = $state(recipeDraft?.totalTime ?? null);
 	let recipeYield = $state(recipeDraft?.recipeYield ?? null);
 	let recipeYieldType = $state(recipeDraft?.recipeYieldType ?? RecipeYieldType.Serving);
-	let keywords = $state(recipeDraft?.keywords ?? []);
+	let keywords = $state([...(recipeDraft?.keywords ?? [])]);
 	let comment = $state(recipeDraft?.comment ?? null);
 	let recipeImageUrls = $state(recipeDraft?.images.filter((image) => typeof image === 'string').join('\n') ?? '');
 	let recipeImageFiles: FileList | undefined = $state(undefined);
