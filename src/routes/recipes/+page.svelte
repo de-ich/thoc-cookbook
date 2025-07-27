@@ -19,16 +19,16 @@
 	let allRecipes: RecipePreviewWithId[] = [];
 	let filteredRecipes: RecipePreviewWithId[] = $state([]);
 	let keywords: string[] = $state([]);
-	let historyEntries: HistoryEntry[] = [];
+	let historyEntries: HistoryEntry[] = $state([]);
 	let loadingRecipes = $state(true);
-
-	let sortedFilteredRecipes: RecipePreviewWithId[] = $derived.by(() =>
-		sortRecipes(filteredRecipes, historyEntries, sortMethod, sortOrder)
-	);
 	let searchText: string | undefined = $state(undefined);
 	let selectedKeywords: string[] = $state([]);
 	let sortMethod: SortMethod = $state(SortMethod.LAST_ACCESS_TIME);
 	let sortOrder: SortOrder = $state(SortOrder.DOWN);
+
+	let sortedFilteredRecipes: RecipePreviewWithId[] = $derived.by(() => {
+		return sortRecipes(filteredRecipes, historyEntries, sortMethod, sortOrder);
+	});
 
 	const searchClient: SearchClient = algoliasearch(PUBLIC_ALGOLIA_APPID, PUBLIC_ALGOLIA_APIKEY);
 
@@ -61,7 +61,9 @@
 		.finally(() => (loadingRecipes = false));
 
 	getAllKeywords().then((kw) => (keywords = [...kw]));
-	getHistory().then((h) => (historyEntries = h.entries));
+	getHistory().then((h) => {
+		historyEntries = h.entries;
+	});
 
 	const startSearch = async () => {
 		let keywordFilteredRecipes = filterRecipesByKeywords(allRecipes);
@@ -164,7 +166,7 @@
 			class="order-1 shrink-0 grow basis-3/5 md:order-2"
 		>
 			{#snippet icon()}
-				<Search  class="h-4 w-4" />
+				<Search class="h-4 w-4" />
 			{/snippet}
 		</Input>
 		<KeywordSpecifier
