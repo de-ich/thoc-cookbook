@@ -27,6 +27,7 @@
 		"format-quantity": "^3.0.0",
 		"mode-watcher": "^0.5.0",
 		"parse-ingredient": "^1.2.1",
+		"style-to-object": "^1.0.8",
 		"tailwind-merge": "^3.0.2",
 		"tailwind-variants": "^0.3.0",
 		"uuid": "^11.0.5"
