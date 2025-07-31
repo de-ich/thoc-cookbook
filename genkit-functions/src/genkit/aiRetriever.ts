@@ -1,5 +1,5 @@
 // import the Genkit and Google AI plugin libraries
-import { gemini15Flash, googleAI } from '@genkit-ai/googleai';
+import { googleAI } from '@genkit-ai/googleai';
 import { genkit, z } from 'genkit';
 import retrieveWebpageContent from './retrieveWebpageContent';
 import { RecipeYieldType } from '../database/Recipe';
@@ -7,7 +7,7 @@ import { RecipeYieldType } from '../database/Recipe';
 // configure a Genkit instance
 const ai = genkit({
 	plugins: [googleAI()],
-	model: gemini15Flash // set default model
+	model: googleAI.model('gemini-2.5-flash-lite') // set default model
 });
 
 // The genkit schema for a nested JSON object representing a DOM tree
