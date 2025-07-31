@@ -34,4 +34,4 @@ npm run dev -- --open
 ## Deploy Firebase Functions
 
 - `firebase deploy --only functions:default`
-- `firebase deploy --only functions:genkit`
+- `firebase deploy --only functions:genkit-functions`
