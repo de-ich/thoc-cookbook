@@ -13,31 +13,33 @@
 	export type Props = {
 		recipe: RecipeDetails;
 		allowCheckItems?: boolean;
+		initialYield?: number;
+		yieldChangedCallback?: (newYield: number) => any;
 	};
-
-	let { recipe, allowCheckItems = false }: Props = $props();
+	
+	let { recipe, allowCheckItems = false, initialYield, yieldChangedCallback }: Props = $props();
 
 	const DEFAULT_SERVINGS = 1;
 	const DEFAULT_BAKING_DISH_SIZE = 26;
 
-	const initialYield = recipe.recipeYield || 1;
-	let currentYield = $state(initialYield);
-	let newYield = $state(initialYield);
+	const initialYieldNumber = Number.parseFloat(
+		(initialYield ?? recipe.recipeYield ?? DEFAULT_SERVINGS) as unknown as string
+	);
+
+	let currentYield = $state(initialYieldNumber);
+	let newYield = $state(initialYieldNumber);
+
+	const updateYield = (newYieldValue: number) => {
+		currentYield = newYieldValue;
+		yieldChangedCallback?.(currentYield);
+	};
 
 	const increaseYield = () => {
-		if (currentYield < 1) {
-			currentYield *= 2;
-		} else {
-			currentYield += 1;
-		}
+		updateYield(currentYield < 1 ? currentYield *= 2:currentYield += 1);
 	};
 
 	const decreaseYield = () => {
-		if (currentYield <= 1) {
-			currentYield /= 2;
-		} else {
-			currentYield -= 1;
-		}
+		updateYield(currentYield <= 1 ? currentYield /= 2 : currentYield -= 1);
 	};
 
 	const getIngredientString = (ingredient: Ingredient): string => {
@@ -189,7 +191,7 @@
 			<Button
 				type="submit"
 				onclick={() => {
-					currentYield = newYield;
+					updateYield(newYield);
 					showCustomQuantityDialog = false;
 				}}
 				disabled={Number.isNaN(newYield) || newYield <= 0}>OK</Button

@@ -15,14 +15,25 @@
 	import KeywordChips from '$lib/components/keyword-chips';
 	import { RecipeTime } from '$lib/components/recipe-time';
 	import { Separator } from '$lib/shadcn/separator';
+	import { page } from '$app/state';
 
 	interface Props {
 		/** @type {import('./$types').PageData} */
 		data: any;
 	}
-
+	const yieldParam = Number.parseFloat(page.url.searchParams.get('yield') ?? '');
+	let initialYield = Number.isNaN(yieldParam) ? undefined : yieldParam;
+	
+	const yieldChangedCallback = (newYield: number) => {
+		page.url.searchParams.set('yield', newYield.toString());
+		goto(page.url.pathname + '?' + page.url.searchParams.toString(), {
+			keepFocus: true,
+			replaceState: true
+		});
+	};
+	
 	let { data }: Props = $props();
-
+	
 	let recipe: RecipeDetails = data.recipe;
 
 	let showConfirmDeleteDialog = $state(false);
@@ -86,7 +97,7 @@
 
 <div class="mt-8 flex flex-col items-start gap-8 md:flex-row">
 	<div class="max-w-96">
-		<IngredientsList {recipe} />
+		<IngredientsList {recipe} {initialYield} {yieldChangedCallback} />
 	</div>
 
 	<Separator orientation="vertical" class="hidden h-40 md:inline-block" />
