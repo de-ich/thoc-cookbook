@@ -15,6 +15,7 @@
 	import { Input } from '$lib/shadcn/input';
 	import { Search } from 'lucide-svelte/icons';
 	import { SortButton, SortMethod, SortOrder } from '$lib/components/sort-button';
+	import { tick } from 'svelte';
 
 	let allRecipes: RecipePreviewWithId[] = [];
 	let filteredRecipes: RecipePreviewWithId[] = $state([]);
@@ -25,6 +26,9 @@
 	let selectedKeywords: string[] = $state([]);
 	let sortMethod: SortMethod = $state(SortMethod.LAST_ACCESS_TIME);
 	let sortOrder: SortOrder = $state(SortOrder.DOWN);
+	let snapshotRestored = $state(false);
+	let previousScrollYPositionRestored = false;
+	let previousScrollYPosition = 0;
 
 	let sortedFilteredRecipes: RecipePreviewWithId[] = $derived.by(() => {
 		return sortRecipes(filteredRecipes, historyEntries, sortMethod, sortOrder);
@@ -32,16 +36,32 @@
 
 	const searchClient: SearchClient = algoliasearch(PUBLIC_ALGOLIA_APPID, PUBLIC_ALGOLIA_APIKEY);
 
+	// restore scroll position after navigation, e.g. returning from recipe details page
+	$effect.pre(() => {
+		if (snapshotRestored && !previousScrollYPositionRestored) {
+			// use tick to wait until DOM is updated, i.e. recipes are rendered; after that, we can restore scroll position
+			tick().then(() => {
+				window.scrollTo(0, previousScrollYPosition);
+				previousScrollYPositionRestored = true;
+			});
+		}
+	});
+
 	export const snapshot: import('./$types').Snapshot<any> = {
 		capture: () => {
 			return {
 				searchText: searchText,
-				selectedKeywords: selectedKeywords
+				selectedKeywords: selectedKeywords,
+				sortedFilteredRecipes: sortedFilteredRecipes,
+				previousScrollYPosition: window.scrollY
 			};
 		},
 		restore: (snapshot: any) => {
 			searchText = snapshot.searchText;
 			selectedKeywords = snapshot.selectedKeywords;
+			sortedFilteredRecipes = snapshot.sortedFilteredRecipes;
+			previousScrollYPosition = snapshot.previousScrollYPosition;
+			snapshotRestored = true;
 		}
 	};
 
@@ -183,13 +203,13 @@
 			<KeywordChips bind:selectedKeywords class="order-3 basis-full" />
 		{/if}
 	</div>
-	{#if loadingRecipes}
+	{#if !snapshotRestored && loadingRecipes}
 		<div class="mt-20 flex flex-col justify-center">
 			<h4>Rezepte werden geladen...</h4>
 		</div>
 	{:else}
 		<div class="flex flex-row items-center gap-2">
-			<h4>{filteredRecipes.length} Rezepte gefunden</h4>
+			<h4>{sortedFilteredRecipes.length} Rezepte gefunden</h4>
 			<SortButton bind:currentSortMethod={sortMethod} bind:currentSortOrder={sortOrder} />
 		</div>
 		{#each sortedFilteredRecipes as recipe}
