@@ -51,19 +51,21 @@
 		});
 	};
 
-	getAllRecipePreviews()
-		.then(convertToListOfRecipePreviewsWithId)
-		.then((recipes) => {
+	Promise.all([
+		getAllRecipePreviews().then(convertToListOfRecipePreviewsWithId),
+		getAllKeywords(),
+		getHistory()
+	])
+		.then(([recipes, kw, history]) => {
 			allRecipes = recipes;
 			filteredRecipes = [...recipes];
+			keywords = [...kw];
+			historyEntries = history.entries;
 		})
-		.catch((error) => createError('Unable to retrieve recipes: ' + error.message || ''))
-		.finally(() => (loadingRecipes = false));
-
-	getAllKeywords().then((kw) => (keywords = [...kw]));
-	getHistory().then((h) => {
-		historyEntries = h.entries;
-	});
+		.catch((error) => createError('Unable to retrieve data: ' + error.message || ''))
+		.finally(() => {
+			loadingRecipes = false;
+		});
 
 	const startSearch = async () => {
 		let keywordFilteredRecipes = filterRecipesByKeywords(allRecipes);
@@ -152,7 +154,9 @@
 	};
 
 	$effect(() => {
-		startSearch();
+		if (!loadingRecipes) {
+			startSearch();
+		}
 	});
 </script>
 
