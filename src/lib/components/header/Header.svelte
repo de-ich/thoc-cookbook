@@ -44,7 +44,7 @@
 </script>
 
 <TopAppBar>
-	<Button variant="ghost" onclick={() => goto('/')} class="text-xl hover:bg-inherit"
+	<Button variant="ghost" onclick={() => goto('/')} class="text-xl hover:bg-inherit cursor-pointer"
 		>THOC Cookbook</Button
 	>
 	<div class="ml-auto">
