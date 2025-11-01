@@ -21,11 +21,11 @@
 		/** @type {import('./$types').PageData} */
 		data: any;
 	}
-	const yieldParam = Number.parseFloat(page.url.searchParams.get('yield') ?? '');
+	const yieldParam = Number.parseFloat(page.url.searchParams.get('servings') ?? '');
 	let initialYield = Number.isNaN(yieldParam) ? undefined : yieldParam;
 	
 	const yieldChangedCallback = (newYield: number) => {
-		page.url.searchParams.set('yield', newYield.toString());
+		page.url.searchParams.set('servings', newYield.toString());
 		goto(page.url.pathname + '?' + page.url.searchParams.toString(), {
 			keepFocus: true,
 			replaceState: true
