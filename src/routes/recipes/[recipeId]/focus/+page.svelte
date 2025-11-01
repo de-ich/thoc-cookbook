@@ -4,6 +4,10 @@
 	import InstructionsList from '$lib/components/instructions-list';
 	import { Separator } from '$lib/shadcn/separator';
 	import { getServingsFromQuery, updateServingsInQuery } from '$lib/servings-handler';
+	import { IconButton } from '$lib/components/icon-button';
+	import { ArrowLeft } from 'lucide-svelte';
+	import { goto } from '$app/navigation';
+	import { page } from '$app/state';
 
 	
 	interface Props {
@@ -18,8 +22,13 @@
 	
 </script>
 
-<div class="headingContainer">
+<div class="flex flex-row flex-wrap items-center gap-4">
 	<h4>{recipe.name}</h4>
+	<div>
+		<IconButton onclick={() => goto(`/recipes/${recipe.id}?${page.url.searchParams.toString()}`)}>
+			<ArrowLeft class="h-4 w-4" />
+		</IconButton>
+	</div>
 </div>
 
 <div class="mt-8 flex flex-col items-start gap-x-10 gap-y-10 md:flex-row">
