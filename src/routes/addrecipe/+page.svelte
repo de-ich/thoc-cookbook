@@ -36,4 +36,7 @@
 	<Button class="submitButton" disabled={addingInProgress} onclick={addRecipeToDatabase}>
 		<LongRunningActionButtonText text="Speichern" actionIsRunning={addingInProgress} /></Button
 	>
+	<Button variant="outline" disabled={addingInProgress} onclick={() => goto('/recipes')}>
+		<LongRunningActionButtonText text="Abbrechen" actionIsRunning={addingInProgress} />
+	</Button>
 </div>

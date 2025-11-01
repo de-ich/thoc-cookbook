@@ -39,7 +39,10 @@
 <RecipeEdit recipeDraft={recipe} recipeDraftModifiedCallback={recipeDraftModifiedCallback} />
 
 <div class="mt-4">
-	<Button class="submitButton" disabled={editInProgress} onclick={updateRecipeInDatabase}>
+	<Button disabled={editInProgress} onclick={updateRecipeInDatabase}>
 		<LongRunningActionButtonText text="Speichern" actionIsRunning={editInProgress} />
+	</Button>
+	<Button variant="outline" disabled={editInProgress} onclick={() => goto('/recipes/' + recipe.id)}>
+		<LongRunningActionButtonText text="Abbrechen" actionIsRunning={editInProgress} />
 	</Button>
 </div>
