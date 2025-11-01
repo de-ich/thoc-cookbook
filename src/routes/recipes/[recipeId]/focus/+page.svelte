@@ -3,6 +3,7 @@
 	import IngredientsList from '$lib/components/ingredients-list';
 	import InstructionsList from '$lib/components/instructions-list';
 	import { Separator } from '$lib/shadcn/separator';
+	import { getServingsFromQuery, updateServingsInQuery } from '$lib/servings-handler';
 
 	
 	interface Props {
@@ -11,8 +12,10 @@
 	}
 
 	let { data }: Props = $props();
-
 	let recipe: RecipeDetails = data.recipe;
+
+	const initialServings = getServingsFromQuery();
+	
 </script>
 
 <div class="headingContainer">
@@ -21,7 +24,7 @@
 
 <div class="mt-8 flex flex-col items-start gap-x-10 gap-y-10 md:flex-row">
 	<div>
-		<IngredientsList {recipe} allowCheckItems={true} />
+		<IngredientsList {recipe} initialYield={initialServings} yieldChangedCallback={updateServingsInQuery} allowCheckItems={true} />
 	</div>
 
 	<Separator orientation="vertical" class="hidden md:inline-block h-40" />

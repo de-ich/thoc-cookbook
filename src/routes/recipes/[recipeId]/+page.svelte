@@ -16,25 +16,17 @@
 	import { RecipeTime } from '$lib/components/recipe-time';
 	import { Separator } from '$lib/shadcn/separator';
 	import { page } from '$app/state';
+	import { getServingsFromQuery, updateServingsInQuery } from '$lib/servings-handler';
 
 	interface Props {
 		/** @type {import('./$types').PageData} */
 		data: any;
 	}
-	const yieldParam = Number.parseFloat(page.url.searchParams.get('servings') ?? '');
-	let initialYield = Number.isNaN(yieldParam) ? undefined : yieldParam;
-	
-	const yieldChangedCallback = (newYield: number) => {
-		page.url.searchParams.set('servings', newYield.toString());
-		goto(page.url.pathname + '?' + page.url.searchParams.toString(), {
-			keepFocus: true,
-			replaceState: true
-		});
-	};
 	
 	let { data }: Props = $props();
-	
 	let recipe: RecipeDetails = data.recipe;
+	
+	const initialServings = getServingsFromQuery();
 
 	let showConfirmDeleteDialog = $state(false);
 
@@ -47,7 +39,7 @@
 		<IconButton onclick={() => navigator.clipboard.writeText(window.location.href)}>
 			<Copy class="h-4 w-4" />
 		</IconButton>
-		<IconButton onclick={() => goto(`/recipes/${recipe.id}/focus`)}>
+		<IconButton onclick={() => goto(`/recipes/${recipe.id}/focus?${page.url.searchParams.toString()}`)}>
 			<ChefHat class="h-4 w-4" />
 		</IconButton>
 		<IconButton onclick={() => goto(`/recipes/${recipe.id}/edit`)}>
@@ -97,7 +89,7 @@
 
 <div class="mt-8 flex flex-col items-start gap-8 md:flex-row">
 	<div class="max-w-96">
-		<IngredientsList {recipe} {initialYield} {yieldChangedCallback} />
+		<IngredientsList {recipe} initialYield={initialServings} yieldChangedCallback={updateServingsInQuery} />
 	</div>
 
 	<Separator orientation="vertical" class="hidden h-40 md:inline-block" />
