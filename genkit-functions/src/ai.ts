@@ -18,23 +18,28 @@ onInit(() => {
 });
 
 export const aiRetrieve = onCall({ maxInstances: 1 }, async (request) => {
-  const recipeUrl = request.data.recipeUrl as string;
+  	const recipeUrl = request.data.recipeUrl as string;
   
-  try {
-      const extractedRecipe = recipeUrl.startsWith('data:image/') ?
-	  	await extractRecipeFromImage(recipeUrl) :
-		await extractRecipe(recipeUrl);
-      const partialRecipe = convertToPartialRecipe(extractedRecipe);
-      partialRecipe.sourceUrl = recipeUrl;
-      return partialRecipe;
+	const recipeUrlIsDataImageUrl = recipeUrl.startsWith('data:image/');
 
-  } catch (error) {
-      throw new HttpsError(
-          'internal',
-          (error as Error)?.message ||
-          'Unable to parse recipe information from response from chefkoch.de!'
-      );
-  }
+  	try {
+    	const extractedRecipe = recipeUrlIsDataImageUrl
+			? await extractRecipeFromImage(recipeUrl)
+			: await extractRecipe(recipeUrl);
+      	const partialRecipe = convertToPartialRecipe(extractedRecipe);
+
+		if (!recipeUrlIsDataImageUrl) {
+			partialRecipe.sourceUrl = recipeUrl;
+		}
+		return partialRecipe;
+
+	} catch (error) {
+		throw new HttpsError(
+			'internal',
+			(error as Error)?.message ||
+				`Unable to parse recipe information from ${recipeUrlIsDataImageUrl ? 'image' : 'URL'}! AI did not return valid recipe data.`,
+		);
+	}
 });
 
 type GenkitRecipeDraft = z.infer<typeof GenkitRecipeDraftSchema>;
