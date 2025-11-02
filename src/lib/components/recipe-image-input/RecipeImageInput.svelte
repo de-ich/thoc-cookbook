@@ -19,7 +19,6 @@
         
         reader.onload = (e) => {
             recipeUrl = e.target?.result as string;
-            console.log("Loaded image URL:", recipeUrl);
         };
         reader.readAsDataURL(file);
     });
@@ -33,5 +32,4 @@
     placeholder="Rezeptbild (Datei)"
     accept="image/*"
     multiple={false}
-    capture="environment"
 />
