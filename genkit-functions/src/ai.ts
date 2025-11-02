@@ -1,7 +1,7 @@
 import { HttpsError, onCall } from 'firebase-functions/https';
 import { defineSecret } from 'firebase-functions/params';
 import { onInit } from 'firebase-functions/v2/core';
-import { extractRecipe } from './genkit/aiRetriever';
+import { extractRecipe, extractRecipeFromImage } from './genkit/aiRetriever';
 import { RecipeDraft } from './database/Recipe';
 import { RecipeDraftSchema as GenkitRecipeDraftSchema} from './genkit/aiRetriever';
 import { z } from 'genkit';
@@ -21,7 +21,9 @@ export const aiRetrieve = onCall({ maxInstances: 1 }, async (request) => {
   const recipeUrl = request.data.recipeUrl as string;
   
   try {
-      const extractedRecipe = await extractRecipe(recipeUrl);
+      const extractedRecipe = recipeUrl.startsWith('data:image/') ?
+	  	await extractRecipeFromImage(recipeUrl) :
+		await extractRecipe(recipeUrl);
       const partialRecipe = convertToPartialRecipe(extractedRecipe);
       partialRecipe.sourceUrl = recipeUrl;
       return partialRecipe;
