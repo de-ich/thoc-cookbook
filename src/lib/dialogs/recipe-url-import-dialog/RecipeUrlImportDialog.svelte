@@ -3,28 +3,30 @@
 	import { recipeDraftStore } from '$lib/stores/recipedraftstore';
 	import { createError } from '$lib/stores/errormessagestore';
 	import * as AlertDialog from '$lib/shadcn/alert-dialog';
-	import { Input } from '$lib/shadcn/input';
 	import { Button } from '$lib/shadcn/button';
 	import type { RecipeDraft } from '$lib/database/Recipe';
 	import LongRunningActionButtonText from '$lib/components/long-running-action-button-text';
+	import type { Snippet } from 'svelte';
 
 	export type Props = {
 		open: boolean;
+		recipeUrl: string | undefined;
 		fetchRecipeCallable: (url: string) => Promise<RecipeDraft>;
 		title: string;
+		children: Snippet;
 	};
 
 	let {
 		open = $bindable(true),
+		recipeUrl = $bindable(undefined),
 		fetchRecipeCallable,
-		title = 'Rezept per URL importieren'
+		title = 'Rezept per URL importieren',
+		children
 	}: Props = $props();
-
-	let recipeUrl: string | null = $state(null);
 
 	let fetchingRecipe: boolean = $state(false);
 
-	const importRecipe = (recipeUrlToImport: string | null) => {
+	const importRecipe = (recipeUrlToImport: string | undefined) => {
 		// keep track of the currently active import to supported cancelable imports
 		const currentImportUrl = recipeUrlToImport;
 
@@ -46,7 +48,7 @@
 			.finally(() => {
 				if (recipeUrlToImport === currentImportUrl) {
 					// reset state in case this import was the "currently active" import
-					recipeUrl = null;
+					recipeUrl = undefined;
 					fetchingRecipe = false;
 					open = false;
 				}
@@ -57,6 +59,7 @@
 <AlertDialog.Root
 	bind:open
 	onOpenChange={() => {
+		recipeUrl = undefined;
 		// reset fetching recipe to allow canceling potentially active imports
 		fetchingRecipe = false;
 	}}
@@ -66,15 +69,7 @@
 			<AlertDialog.Title>{title}</AlertDialog.Title>
 		</AlertDialog.Header>
 		<AlertDialog.Description>
-			<Input
-				inputId="recipeUrl"
-				type="url"
-				min="0"
-				bind:value={recipeUrl}
-				label="Rezept-URL"
-				placeholder="Rezept-URL"
-				required
-			/>
+			{@render children()}
 		</AlertDialog.Description>
 		<AlertDialog.Footer>
 			<AlertDialog.Cancel>Abbrechen</AlertDialog.Cancel>
