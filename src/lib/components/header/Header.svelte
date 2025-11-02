@@ -19,6 +19,7 @@
 	import { fetchRecipe as fetchRecipeFromChefkoch } from '$lib/importer/chefkoch';
 	import RecipeUrlImportDialog from '$lib/dialogs/recipe-url-import-dialog';
 	import RecipeUrlInput from '../recipe-url-input/RecipeUrlInput.svelte';
+	import RecipeImageInput from '../recipe-image-input/RecipeImageInput.svelte';
 
 	import Bot from 'lucide-svelte/icons/bot';
 
@@ -46,6 +47,8 @@
 	let showAiUrlImportDialog = $state(false);
 	let aiImportUrl: string | undefined = $state(undefined);
 
+	let showAiImageImportDialog = $state(false);
+	let aiImageImportUrl: string | undefined = $state(undefined);
 </script>
 
 <TopAppBar>
@@ -73,9 +76,13 @@
 					<img class="mr-2 h-4 w-4" src={chefkochLogo} alt="chefkoch-logo" />
 					<span>chefkoch.de</span>
 				</DropdownMenu.Item>
-				<DropdownMenu.Item onclick={() => (showAiImportDialog = true)}>
+				<DropdownMenu.Item onclick={() => (showAiUrlImportDialog = true)}>
 					<Bot class="mr-2 h-4 w-4" />
-					<span>AI</span>
+					<span>AI (per Rezept-URL)</span>
+				</DropdownMenu.Item>
+				<DropdownMenu.Item onclick={() => (showAiImageImportDialog = true)}>
+					<Bot class="mr-2 h-4 w-4" />
+					<span>AI (per Bild)</span>
 				</DropdownMenu.Item>
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>
@@ -119,4 +126,13 @@
 	fetchRecipeCallable={fetchRecipeViaAI}
 	>
 	<RecipeUrlInput bind:recipeUrl={aiImportUrl} />
+</RecipeUrlImportDialog>
+
+<RecipeUrlImportDialog
+	title="Rezept per KI importieren"
+	bind:open={showAiImageImportDialog}
+	bind:recipeUrl={aiImageImportUrl}
+	fetchRecipeCallable={fetchRecipeViaAI}
+	>
+	<RecipeImageInput bind:recipeUrl={aiImageImportUrl} />
 </RecipeUrlImportDialog>
