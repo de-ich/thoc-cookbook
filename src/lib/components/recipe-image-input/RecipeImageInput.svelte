@@ -13,15 +13,69 @@
             recipeUrl = undefined;
             return;
         }
-        
+
         const file = recipeImageFiles[0];
-        const reader = new FileReader();
         
-        reader.onload = (e) => {
-            recipeUrl = e.target?.result as string;
-        };
-        reader.readAsDataURL(file);
+        (async () => {
+            recipeUrl = await getResizedImageAsDataUrl(file);
+            console.log("Resized image data URL:", recipeUrl);
+        })();
     });
+
+    const MAX_IMAGE_SIZE = 1000; // Maximum width or height in pixels (larger images will be resized)
+
+    const getResizedImageAsDataUrl = (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const originalImageDataUrl = e.target?.result as string;
+                const img = new Image();
+                img.onload = () => {
+
+                    // Get original image dimensions
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width <= MAX_IMAGE_SIZE && height <= MAX_IMAGE_SIZE) {
+                        // No resizing needed
+                        resolve(originalImageDataUrl);
+                        console.log("No resizing needed for image.");
+                        return;
+                    }
+                    
+                    // Calculate new dimensions while maintaining aspect ratio
+                    if (width > height) {
+                        if (width > MAX_IMAGE_SIZE) {
+                            height = height * (MAX_IMAGE_SIZE / width);
+                            width = MAX_IMAGE_SIZE;
+                        }
+                    } else {
+                        if (height > MAX_IMAGE_SIZE) {
+                            width = width * (MAX_IMAGE_SIZE / height);
+                            height = MAX_IMAGE_SIZE;
+                        }
+                    }
+
+                    const canvas = document.createElement("canvas");
+                    const ctx = canvas.getContext("2d");
+
+                    // Set canvas dimensions
+                    canvas.width = width;
+                    canvas.height = height;
+
+                    // Draw the resized image
+                    ctx?.drawImage(img, 0, 0, width, height);
+
+                    // Get the data URL of the resized image
+                    const dataUrl = canvas.toDataURL("image/png");
+                    resolve(dataUrl);
+                };
+                img.src = originalImageDataUrl;
+            };
+            reader.onerror = (error) => reject(error);
+            reader.readAsDataURL(file);
+        });
+    };
 </script>
 
 <Input
