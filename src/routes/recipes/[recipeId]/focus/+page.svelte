@@ -20,6 +20,34 @@
 
 	const initialServings = getServingsFromQuery();
 	
+	let wakeLock: any = null;
+
+	const requestWakeLock  = async () => {
+
+		try {
+			wakeLock = await navigator.wakeLock.request('screen');
+			wakeLock.addEventListener('release', () => {
+				console.log('Wakelock released');
+			});
+			console.log('Wakelock acquired');
+		} catch (err: Error | any) {
+			console.error(`Error acquiring wakelock: ${err.name}, ${err.message}`);
+		}
+	};
+
+	const handleVisibilityChange = () => {
+		if (wakeLock !== null && document.visibilityState === 'visible') {
+			requestWakeLock();
+		}
+	}
+
+	if ('wakeLock' in navigator) {
+		// initial wake lock request
+		requestWakeLock();
+	
+		// reaquire wake lock if tab is re-focused
+		document.addEventListener('visibilitychange', handleVisibilityChange);
+	}
 </script>
 
 <div class="flex flex-row flex-wrap items-center gap-4">
