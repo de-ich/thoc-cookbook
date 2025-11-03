@@ -84,6 +84,5 @@
     bind:files={recipeImageFiles}
     label="Rezeptbild (Datei)"
     placeholder="Rezeptbild (Datei)"
-    accept="image/*"
-    multiple={false}
+    accept="image/*;capture=camera"
 />
